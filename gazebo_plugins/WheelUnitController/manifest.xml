@@ -1,0 +1,14 @@
+<package>
+  <description brief="Gazebo Wheelunit Controller">
+
+     Description to be added...
+  </description>
+  <author>Okke Hendriks</author>
+  <!--<license>BSD</license>-->
+  <review status="unreviewed" notes=""/>
+  <!--<url>http://ros.org/wiki/webcam_publisher</url>-->
+  <depend package="roscpp"/>
+  <depend package="roslib"/>
+  <depend package="rosconsole"/>
+
+</package>
