@@ -4,10 +4,16 @@ if (PKG_CONFIG_FOUND)
   pkg_check_modules(GAZEBO gazebo)
 endif()
 
+include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+
+MESSAGE ("This is roscomm:")
+rosbuild_find_ros_package(roscomm)
+MESSAGE ("${roscomm_PACKAGE_PATH}/msg_gen/cpp/include/")
+include_directories(${roscomm_PACKAGE_PATH}/msg_gen/cpp/include/)
 
          
 include_directories(${GAZEBO_INCLUDE_DIRS})
-include_directories(~/rosepc1/rosbee_control_wireless/msg_gen/cpp/include/)
+#include_directories(${find rosbee_control_wireless}/msg_gen/cpp/include/)
 
 include_directories(${GAZEBO_INCLUDE_DIRS})
 link_directories(${GAZEBO_LIBRARY_DIRS})

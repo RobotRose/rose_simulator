@@ -14,8 +14,8 @@
 #include <ros/ros.h>
 #include <ros/console.h>
 
-#include "rosbee_control_wireless/lift.h"
-#include "rosbee_control_wireless/lift_control.h"
+#include "roscomm/lift.h"
+#include "roscomm/lift_control.h"
 
 #include <boost/bind.hpp>
 #include <gazebo/gazebo.hh>
