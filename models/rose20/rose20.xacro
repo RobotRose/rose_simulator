@@ -1,0 +1,610 @@
+<robot name="Rose20" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:property name="base_size_x" value="0.76" />
+  <xacro:property name="base_size_y" value="0.58" />
+  <xacro:property name="base_size_z" value="0.05" />
+  <xacro:property name="base_pose_x" value="0.0" />
+  <xacro:property name="base_pose_y" value="0.0" />
+  <xacro:property name="base_pose_z" value="0.195" />
+
+
+  <gazebo static="true"/>
+
+  <!-- Used for fixing robot to Gazebo 'base_link' -->
+  <link name="world"/>
+
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="base"/>
+  </joint>
+
+  <link name='base'>
+    <collision name='base_collision'>
+      <origin xyz="${base_pose_x} ${base_pose_y} ${base_pose_z}" rpy="0 0 0"/>
+      <geometry>
+          <box size="${base_size_x} ${base_size_x} ${base_size_x}"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <origin xyz="${base_pose_x} ${base_pose_y} ${base_pose_z}" rpy="0 0 0"/>
+      <mass>30.0</mass>
+      <inertia 
+        ixx="1.0" ixy="0.0" ixz="0.0" 
+        iyy="1.0" iyz="0.0" 
+        izz="1.0"/>
+    </inertial>   
+      
+    <visual name='base_visual'>
+      <origin xyz="${base_pose_x} ${base_pose_y} ${base_pose_z}" rpy="0 0 0"/>
+      <geometry>
+         <box size="${base_size_x} ${base_size_x} ${base_size_x}"/>
+      </geometry>
+    </visual>
+  </link>  
+  
+  <include>
+    <uri>model://wheel_unit_60mm</uri>
+    <name>wheel_FL</name>
+    <pose>0.28 -0.23 0 0 0 -1.5707</pose>
+  </include>
+
+  <include>
+    <uri>model://wheel_unit_60mm</uri>
+    <name>wheel_FR</name>
+    <pose>0.28 0.23 0 0 0 1.5707</pose>
+  </include>
+  
+  <include>
+    <uri>model://wheel_unit_60mm</uri>
+    <name>wheel_BL</name>
+    <pose>-0.305 -0.23 0 0 0 -1.5707</pose>
+  </include>
+
+  <include>
+    <uri>model://wheel_unit_60mm</uri>
+    <name>wheel_BR</name>
+    <pose>-0.305 0.23 0 0 0 1.5707</pose>
+  </include>
+  
+  
+   <!-- Fix wheel units to base -->    
+  <joint type="revolute" name="wheel_FL_hinge">
+    <pose>0 0 0 0 0 0</pose>
+    <child>wheel_FL::wheel_base</child>
+    <parent>base</parent>
+    <axis>
+      <xyz>0 0 0</xyz>
+      <limit>
+        <upper>0</upper>
+        <lower>0</lower>
+      </limit>
+    </axis>
+  </joint>
+  
+  <joint type="revolute" name="wheel_FR_hinge">
+    <pose>0 0 0 0 0 0</pose>
+    <child>wheel_FR::wheel_base</child>
+    <parent>base</parent>
+    <axis>
+      <xyz>0 0 0</xyz>
+      <limit>
+        <upper>0</upper>
+        <lower>0</lower>
+      </limit>
+    </axis>
+  </joint>
+  
+  <joint type="revolute" name="wheel_BL_hinge">
+    <pose>0 0 0 0 0 0</pose>
+    <child>wheel_BL::wheel_base</child>
+    <parent>base</parent>
+    <axis>
+      <xyz>0 0 0</xyz>
+      <limit>
+        <upper>0</upper>
+        <lower>0</lower>
+      </limit>
+    </axis>
+  </joint>
+  
+  <joint type="revolute" name="wheel_BR_hinge">
+    <pose>0 0 0 0 0 0</pose>
+    <child>wheel_BR::wheel_base</child>
+    <parent>base</parent>
+    <axis>
+      <xyz>0 0 0</xyz>
+      <limit>
+        <upper>0</upper>
+        <lower>0</lower>
+      </limit>
+    </axis>
+  </joint>
+  
+  <!-- Lift mid-->
+  <link name='lift_mid'>
+    <pose> 0.20 0 0.361 0 0.785 0</pose>
+    <inertial>
+      <pose> 0 0 0 0 0 0</pose>
+      <mass>0.5</mass>
+    </inertial>
+    
+    <collision name='lift_mid_collision'>
+      <geometry>
+        <box>
+          <size>0.41 0.115 0.05</size>
+        </box>
+      </geometry>
+    </collision> 
+            
+    <visual name='lift_mid_visual'>
+      <geometry>
+        <box>
+          <size>0.41 0.115 0.05</size>
+        </box>
+      </geometry>
+    </visual>
+ </link> 
+ 
+ <!-- lift left -->
+  <link name='lift_left'>
+    <pose> 0.06 0.24 0.361 0 0.785 0</pose>
+    <inertial>
+      <pose> 0 0 0 0 0 0</pose>
+      <mass>0.5</mass>
+    </inertial>
+    
+    <collision name='lift_left_collision'>
+      <geometry>
+        <box>
+          <size>0.41 0.09 0.05</size>
+        </box>
+      </geometry>
+    </collision> 
+      
+    <visual name='lift_left_visual'>
+      <geometry>
+        <box>
+          <size>0.41 0.09 0.05</size>
+        </box>
+      </geometry>10.000
+    </visual>
+  </link> 
+ 
+ <!-- lift right --> 
+ <link name='lift_right'>
+    <pose> 0.06 -0.24 0.361 0 0.785 0</pose>
+    <inertial>
+      <pose> 0 0 0 0 0 0</pose>
+      <mass>0.5</mass>
+    </inertial>   
+         
+    <collision name='lift_right_collision'>
+      <geometry>
+        <box>
+          <size>0.41 0.09 0.05</size>
+        </box>
+      </geometry>
+    </collision>      
+    <visual name='lift_right_visual'>
+      <geometry>
+        <box>
+          <size>0.41 0.09 0.05</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>   
+  
+  <!-- lift top --> 
+ <link name='lift_top'>
+    <pose> -0.06 0 0.55 0 0 0</pose>
+    <inertial>
+      <pose> 0 0 0 0 0 0</pose>
+      <mass>30.0</mass>
+    </inertial>   
+         
+    <collision name='lift_top_bar_collision'>
+      <geometry>
+        <box>
+          <size>0.06 0.56 0.06</size>
+        </box>
+      </geometry>
+    </collision>        
+    <visual name='lift_top_bar_visual'>
+      <geometry>
+        <box>
+          <size>0.06 0.56 0.06</size>
+        </box>
+      </geometry>
+    </visual>
+    
+    <collision name='lift_top_collision'>
+      <pose> 0 0 0.285 0 0 0</pose>
+      <geometry>
+        <box>
+          <size>0.29 0.24 0.57</size>
+        </box>
+      </geometry>
+    </collision>        
+    <visual name='lift_top_visual'>
+      <pose> 0 0 0.285 0 0 0</pose>
+      <geometry>
+        <box>
+          <size>0.29 0.24 0.57</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>  
+  
+  <!-- Lift joints -->    
+  <joint type="revolute" name="lift_mid_bottom_hinge">
+    <pose>0.19 0.0 0 0 0 0</pose>
+    <child>lift_mid</child>
+    <parent>base</parent>
+    <axis>
+      <xyz>0 1 0</xyz>
+      <limit>
+        <upper>0.785</upper>
+        <lower>-0.785</lower>
+      </limit>
+      <dynamics>
+        <damping>1</damping>
+        <friction>1</friction>
+      </dynamics>
+    </axis>
+  </joint>
+  
+  <joint type="revolute" name="lift_mid_top_hinge">
+    <pose>-0.19 0.0 0 0 0 0</pose>
+    <child>lift_mid</child>
+    <parent>lift_top</parent>
+    <axis>
+      <xyz>0 1 0</xyz>
+      <limit>
+        <upper>0.785</upper>
+        <lower>-0.785</lower>
+      </limit>
+      <dynamics>
+        <damping>1</damping>
+        <friction>1</friction>
+      </dynamics>
+    </axis>
+  </joint>
+  
+  <joint type="revolute" name="lift_left_bottom_hinge">
+    <pose>0.19 0 0 0 0 0</pose>
+    <child>lift_left</child>
+    <parent>base</parent>
+    <axis>
+      <xyz>0 1 0</xyz>
+      <limit>
+        <upper>0.785</upper>
+        <lower>-0.785</lower>
+      </limit>
+      <dynamics>
+        <damping>1</damping>
+        <friction>1</friction>
+      </dynamics>
+    </axis>
+  </joint>
+  <joint type="revolute" name="lift_left_top_hinge">
+    <pose>-0.19 0 0 0 0 0</pose>
+    <child>lift_left</child>
+    <parent>lift_top</parent>
+    <axis>
+      <xyz>0 1 0</xyz>
+      <limit>
+        <upper>0.785</upper>
+        <lower>-0.785</lower>
+      </limit>
+      <dynamics>
+        <damping>1</damping>
+        <friction>1</friction>
+      </dynamics>
+    </axis>
+  </joint>
+  
+  <joint type="revolute" name="lift_right_bottom_hinge">
+    <pose>0.19 0 0 0 0 0</pose>
+    <child>lift_right</child>
+    <parent>base</parent>
+    <axis>
+      <xyz>0 1 0</xyz>
+      <limit>
+        <upper>0.785</upper>
+        <lower>-0.785</lower>
+      </limit>
+      <dynamics>
+        <damping>1</damping>
+        <friction>1</friction>
+      </dynamics>
+    </axis>
+  </joint>
+  <joint type="revolute" name="lift_right_top_hinge">
+    <pose>-0.19 0 0 0 0 0</pose>
+    <child>lift_right</child>
+    <parent>lift_top</parent>
+    <axis>
+      <xyz>0 1 0</xyz>
+      <limit>
+        <upper>0.785</upper>
+        <lower>-0.785</lower>
+      </limit>
+      <dynamics>
+        <damping>1</damping>
+        <friction>1</friction>
+      </dynamics>
+    </axis>
+  </joint>
+  
+  <!-- START base -> lift mechanism -->    
+  <link name='base_lift_axle'>
+    <pose> -0.14 0 0.155 0 1.5707 1.5707</pose>        
+    <collision name='base_lift_axle_collision'>
+      <geometry>
+        <cylinder>
+          <radius>.02</radius>
+          <length>.19</length>
+        </cylinder>
+      </geometry>
+    </collision> 
+      
+    <visual name='base_lift_axle_visual'>
+      <geometry>
+        <cylinder>
+          <radius>.02</radius>
+          <length>.19</length>
+        </cylinder>
+      </geometry>
+    </visual>
+  </link>  
+  
+  <link name='lift_lift_axle'>
+    <pose> 0.30 0 0.155 0 1.5707 1.5707</pose>        
+    <collision name='lift_lift_axle_collision'>
+      <geometry>
+        <cylinder>
+          <radius>.02</radius>
+          <length>.19</length>
+        </cylinder>
+      </geometry>
+    </collision>
+      
+    <visual name='lift_lift_axle_visual'>
+      <geometry>
+        <cylinder>
+          <radius>.02</radius>
+          <length>.19</length>
+        </cylinder>
+      </geometry>
+    </visual>
+  </link> 
+  
+  <joint type="revolute" name="base_lift_axle_hinge">
+    <pose>0 0 0 0 0 0</pose>
+    <child>base_lift_axle</child>
+    <parent>base</parent>
+    <axis>
+      <xyz>0 1 0</xyz>
+    </axis>
+  </joint>
+  
+  <joint type="revolute" name="lift_lift_axle_hinge">
+    <pose>0 0 0 0 0 0</pose>
+    <child>lift_lift_axle</child>
+    <parent>lift_mid</parent>
+    <axis>
+      <xyz>0 1 0</xyz>
+    </axis>
+  </joint>
+  
+  <joint type="prismatic" name="base_lift_prismatic">
+    <pose>0 0 0 0 0 0</pose>
+    <child>lift_lift_axle</child>
+    <parent>base_lift_axle</parent>
+    <axis>
+      <xyz>1 0 0</xyz>
+      <!--<limit>
+        <upper>0.02</upper>
+        <lower>-0.02</lower>
+      </limit> -->
+      <dynamics>
+        <damping>100000</damping>
+        <friction>1000000</friction>
+      </dynamics>
+    </axis>
+  </joint>
+  
+  <plugin name="LiftController" filename="libLiftController.so"/>
+  
+  <!-- END base -> lift mechanism -->
+   
+   
+  <!-- START neck -->
+  <link name='neck_pan'>
+    <pose> 0 0 1.59 0 0.0 0</pose>
+    <inertial>
+      <pose> 0 0 0 0 0 0</pose>
+      <mass>0.25</mass>
+    </inertial>
+    <collision name='neck_pan_collision'>
+      <pose>0 0 0 0 0 0</pose>
+      <geometry>
+        <box>
+          <size>0.05 0.03 0.04</size>
+        </box>
+      </geometry>
+    </collision>        
+    <visual name='neck_pan_visual'>
+      <pose>0 0 0 0 0 0</pose>
+      <geometry>
+        <box>
+          <size>0.05 0.03 0.04</size>
+        </box>
+      </geometry>
+    </visual>
+  
+  </link>
+  <link name='neck_tilt'>
+    <pose> 0 0 1.6375 0 0.0 0</pose>
+    <inertial>
+      <pose> 0 0 0 0 0 0</pose>
+      <mass>0.25</mass>
+    </inertial>
+    <collision name='neck_tilt_collision'>
+      <pose>0 0 0 0 0 0</pose>
+      <geometry>
+        <box>
+          <size>0.033 0.04 0.055</size>
+        </box>
+      </geometry>
+    </collision>        
+    <visual name='neck_tilt_visual'>
+      <pose>0 0 0 0 0 0</pose>
+      <geometry>
+        <box>
+          <size>0.033 0.04 0.055</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+  
+  
+  <joint name="neck_fix_joint" type="revolute">
+    <pose> 0 0 -0.02 0 0.0 0</pose>
+    <child>neck_pan</child>
+    <parent>lift_top</parent>
+    <axis>
+      <xyz>1 0 0</xyz>
+      <limit>
+        <upper>0</upper>
+        <lower>0</lower>
+      </limit>
+
+    </axis>
+  </joint>
+  
+  <joint name="neck_pan_joint" type="revolute">
+    <pose> 0 0 -0.0275 0 0.0 0</pose>
+    <child>neck_tilt</child>
+    <parent>neck_pan</parent>
+    <axis>
+      <xyz>0 0 1</xyz>
+      <limit>
+        <upper>0.7853</upper>
+        <lower>-0.7853</lower>
+      </limit>
+      <dynamics>
+        <damping>100</damping>
+        <friction>100</friction>
+      </dynamics>
+    </axis> 
+  </joint>
+  
+  <!-- END neck -->
+
+  <!-- START kinect -->
+  
+  <link name='kinect'>
+    <pose> 0.022 0 1.70 0 0.0 0</pose>
+    <inertial>
+      <pose> 0 0 0 0 0 0</pose>
+      <mass>0.5</mass>
+    </inertial>
+    <collision name='kinect_collision'>
+      <pose>0 0 0 0 0 0</pose>
+      <geometry>
+        <box>
+          <size>0.07 0.28 0.04</size>
+        </box>
+      </geometry>
+    </collision>        
+    <visual name='kinect_visual'> 
+      <pose>0 0 0 0 0 0</pose>
+      <geometry>
+        <mesh>
+          <uri>model://kinect/meshes/kinect.dae</uri>
+        </mesh>
+      </geometry>
+    </visual>   
+    
+   
+    <sensor type="depth" name="kinect">
+      <update_rate>20.0</update_rate>
+      <camera name="head">
+        <horizontal_fov>1.047198</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.050000</near>
+          <far>3.000000</far>
+        </clip>
+      </camera>
+      <plugin name="kinect_controller" filename="libgazebo_ros_openni_kinect.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>20.0</updateRate>
+        <pointCloudCutoff>0.001</pointCloudCutoff>
+        <imageTopicName>/camera/rgb/image_raw</imageTopicName>
+        <pointCloudTopicName>/camera/depth/points</pointCloudTopicName>
+        <cameraInfoTopicName>/camera/camera_info</cameraInfoTopicName>
+        <depthImageTopicName>/camera/depth/image_raw</depthImageTopicName>
+        <depthImageInfoTopicName>/camera/depth/camera_info</depthImageInfoTopicName> 
+        <depthImageCameraInfoTopicName>/camera/depth/camera_info</depthImageCameraInfoTopicName>    
+        <cameraName>kinect_sensor</cameraName>
+        <frameName>kinect</frameName>
+        <distortion_k1>0.00000001</distortion_k1>
+        <distortion_k2>0.00000001</distortion_k2>
+        <distortion_k3>0.00000001</distortion_k3>
+        <distortion_t1>0.00000001</distortion_t1>
+        <distortion_t2>0.00000001</distortion_t2>
+      </plugin>
+    </sensor>
+  </link>  
+  
+  
+  
+  <joint name="neck_tilt_joint" type="revolute">
+    <pose> -0.022 0 -0.05 0 0.0 0</pose>
+    <child>kinect</child>
+    <parent>neck_tilt</parent>
+    <axis>
+      <xyz>0 1 0</xyz>
+      <limit>
+        <upper>1.5707</upper>
+        <lower>-1.5707</lower>
+      </limit>
+      <dynamics>
+        <damping>100</damping>
+        <friction>100</friction>
+      </dynamics>
+    </axis>
+  </joint>
+  
+  
+  <plugin name="NeckController" filename="libNeckController.so"/>
+
+  </plugin>
+  <!-- END kinect -->
+
+  <!-- START Hokuyo -->
+  <include>
+    <uri>model://hokuyo</uri>
+    <pose>0.38 0 0 0 0 0</pose>
+  </include>
+
+  <joint name="hokuyo_joint" type="revolute">
+    <child>hokuyo::link</child>
+    <parent>base</parent>
+    <axis>
+      <xyz>0 0 1</xyz>
+      <limit>
+        <upper>0</upper>
+        <lower>0</lower>
+      </limit>
+    </axis>
+  </joint>
+  <!-- END Hokuyo -->
+</robot>
