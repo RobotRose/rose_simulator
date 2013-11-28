@@ -1,5 +1,10 @@
 <robot name="Rose20" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+  <xacro:include filename="../common.xacro" />
+  <xacro:include filename="../wheel_unit_60mm/wheel_unit_60mm_macro.xacro" />
+
+  
+
   <xacro:property name="base_size_x" value="0.76" />
   <xacro:property name="base_size_y" value="0.58" />
   <xacro:property name="base_size_z" value="0.05" />
@@ -7,8 +12,13 @@
   <xacro:property name="base_pose_y" value="0.0" />
   <xacro:property name="base_pose_z" value="0.195" />
 
+  <xacro:property name="wheel_front_x"    value="0.28" />
+  <xacro:property name="wheel_back_x"     value="-0.305" />
+  <xacro:property name="wheelbase_width"  value="0.23" />
 
-  <gazebo static="true"/>
+  <gazebo>
+    <static>false</static>
+  </gazebo>
 
   <!-- Used for fixing robot to Gazebo 'base_link' -->
   <link name="world"/>
@@ -43,6 +53,11 @@
     </visual>
   </link>  
   
+  <xacro:wheel_unit_60mm name="wheel_FL"/>
+  <xacro:wheel_unit_60mm name="wheel_FR"/>
+  <xacro:wheel_unit_60mm name="wheel_BL"/>
+  <xacro:wheel_unit_60mm name="wheel_BR"/>
+<!--  
   <include>
     <uri>model://wheel_unit_60mm</uri>
     <name>wheel_FL</name>
@@ -66,60 +81,40 @@
     <name>wheel_BR</name>
     <pose>-0.305 0.23 0 0 0 1.5707</pose>
   </include>
+-->
   
   
    <!-- Fix wheel units to base -->    
-  <joint type="revolute" name="wheel_FL_hinge">
-    <pose>0 0 0 0 0 0</pose>
-    <child>wheel_FL::wheel_base</child>
-    <parent>base</parent>
-    <axis>
-      <xyz>0 0 0</xyz>
-      <limit>
-        <upper>0</upper>
-        <lower>0</lower>
-      </limit>
-    </axis>
+  <joint name="joint_wheel_axle" type="fixed">
+    <parent link="base"/>
+    <child link="wheel_FL_wheel_base"/>
+    <axis xyz="0 1 0" />
+    <origin xyz="${wheel_front_x} ${-wheelbase_width} 0" rpy="0 0 -${pi/2}"/>  
+  </joint>
+
+  <joint name="joint_wheel_axle" type="fixed">
+    <parent link="base"/>
+    <child link="wheel_FR_wheel_base"/>
+    <axis xyz="0 1 0" />
+    <origin xyz="${wheel_front_x} ${wheelbase_width} 0" rpy="0 0 ${pi/2}"/>  
+  </joint>
+
+  <joint name="joint_wheel_axle" type="fixed">
+    <parent link="base"/>
+    <child link="wheel_BL_wheel_base"/>
+    <axis xyz="0 1 0" />
+    <origin xyz="${wheel_back_x} ${-wheelbase_width} 0" rpy="0 0 -${pi/2}"/>  
+  </joint>
+
+  <joint name="joint_wheel_axle" type="fixed">
+    <parent link="base"/>
+    <child link="wheel_BR_wheel_base"/>
+    <axis xyz="0 1 0" />
+    <origin xyz="${wheel_back_x} ${wheelbase_width} 0" rpy="0 0 ${pi/2}"/>  
   </joint>
   
-  <joint type="revolute" name="wheel_FR_hinge">
-    <pose>0 0 0 0 0 0</pose>
-    <child>wheel_FR::wheel_base</child>
-    <parent>base</parent>
-    <axis>
-      <xyz>0 0 0</xyz>
-      <limit>
-        <upper>0</upper>
-        <lower>0</lower>
-      </limit>
-    </axis>
-  </joint>
-  
-  <joint type="revolute" name="wheel_BL_hinge">
-    <pose>0 0 0 0 0 0</pose>
-    <child>wheel_BL::wheel_base</child>
-    <parent>base</parent>
-    <axis>
-      <xyz>0 0 0</xyz>
-      <limit>
-        <upper>0</upper>
-        <lower>0</lower>
-      </limit>
-    </axis>
-  </joint>
-  
-  <joint type="revolute" name="wheel_BR_hinge">
-    <pose>0 0 0 0 0 0</pose>
-    <child>wheel_BR::wheel_base</child>
-    <parent>base</parent>
-    <axis>
-      <xyz>0 0 0</xyz>
-      <limit>
-        <upper>0</upper>
-        <lower>0</lower>
-      </limit>
-    </axis>
-  </joint>
+
+
   
   <!-- Lift mid-->
   <link name='lift_mid'>
@@ -586,7 +581,6 @@
   
   <plugin name="NeckController" filename="libNeckController.so"/>
 
-  </plugin>
   <!-- END kinect -->
 
   <!-- START Hokuyo -->
@@ -607,4 +601,5 @@
     </axis>
   </joint>
   <!-- END Hokuyo -->
+
 </robot>
