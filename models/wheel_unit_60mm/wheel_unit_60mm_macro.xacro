@@ -48,7 +48,18 @@
   <xacro:property name="wheel_pose_p" value="0.0" />
   <xacro:property name="wheel_pose_y" value="0.0" />
 
-  <xacro:macro name="wheel_unit_60mm" params="name">
+  <xacro:macro name="wheel_unit_60mm" params="name parent xyz rpy">
+
+  	  <!-- link to parent -->
+      <joint name="${parent}_${name}_joint" type="continuous">
+	    <axis xyz="0 1 0" />
+	    <limit lower="0.0" upper="0.0" effort="7" velocity="0"/> 
+	    <dynamics damping="1.0" friction="0.0" />
+	    <origin xyz="0 0 0" rpy="0 0 0" />
+	    <parent link="${parent}"/>
+	    <child link="${name}_wheel_base"/>
+	  </joint>
+
 	  <!-- wheel base -->
 	  <link name='${name}_wheel_base'>
 	    <xacro:default_box  xyz=  "0 0 ${wheel_mount_axle_length/2 + wheel_base_size_z/2}" 

@@ -3,7 +3,9 @@
   <xacro:include filename="../common.xacro" />
   <xacro:include filename="wheel_unit_60mm_macro.xacro" />
 
-  <xacro:wheel_unit_60mm name="test_wheel"/>
+  <xacro:wheel_unit_60mm name="test"/>
+
+
 
   <gazebo>
     <static>false</static>
