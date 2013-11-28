@@ -5,13 +5,11 @@ if (PKG_CONFIG_FOUND)
 endif()
       
 include_directories(${GAZEBO_INCLUDE_DIRS})
-
-include_directories(${GAZEBO_INCLUDE_DIRS})
 link_directories(${GAZEBO_LIBRARY_DIRS})
 
 
 add_library(WheelUnitController SHARED WheelUnitController.cpp)
 target_link_libraries(WheelUnitController ${GAZEBO_libraries})
-
 set_target_properties(WheelUnitController PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/../)
+
 

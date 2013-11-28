@@ -11,10 +11,6 @@ rosbuild_find_ros_package(roscomm)
 MESSAGE ("${roscomm_PACKAGE_PATH}/msg_gen/cpp/include/")
 include_directories(${roscomm_PACKAGE_PATH}/msg_gen/cpp/include/)
 
-         
-include_directories(${GAZEBO_INCLUDE_DIRS})
-#include_directories(${find rosbee_control_wireless}/msg_gen/cpp/include/)
-
 include_directories(${GAZEBO_INCLUDE_DIRS})
 link_directories(${GAZEBO_LIBRARY_DIRS})
 
