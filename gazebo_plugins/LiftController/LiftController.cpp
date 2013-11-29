@@ -20,12 +20,37 @@ void LiftController::Load(physics::ModelPtr parent, sdf::ElementPtr /*sdf*/)
 {  
   // Store the pointer to the model
   model_ = parent;
+
+  controller_name_ = "WheelUnitController";
   
   // Update event
   updateConnection_ = event::Events::ConnectWorldUpdateBegin(boost::bind(&LiftController::OnUpdate, this, _1));
   
-  // Get the joint
-  lift_prism_joint_ = model_->GetJoint("base_lift_prismatic");       
+   // Get the liftjoints  
+  if (sdf_->HasElement("bottom_lift_joint"))
+  {
+    bottom_joint_string_  = sdf->Get<std::string>("bottom_lift_joint");
+    bottom_joint_         = model_->GetJoint(bottom_joint_string_);
+    top_namespace_        = ReplaceString(bottom_joint_string_, "::", "/"); 
+  }
+  if (sdf_->HasElement("top_lift_joint"))
+  {
+    top_joint_string_ = sdf->Get<std::string>("top_lift_joint");
+    top_joint_        = model_->GetJoint(top_joint_string_);
+    top_namespace_    = ReplaceString(top_joint_string_, "::", "/");  
+  }
+
+  // Check if we sucessfully got the joints from the model
+  if(bottom_joint_)
+    ROS_INFO("(%s): Bottom lift joint found: %s", controller_name_.c_str(), bottom_joint_string_.c_str());
+  else
+    ROS_ERROR("(%s): Bottom lift not found: %s, correctly set <bottom_lift_joint>insert_joint_name_here</bottom_lift_joint>", controller_name_.c_str() , bottom_joint_string_.c_str());   
+        
+  if(top_joint_)
+    ROS_INFO("(%s): Top lift joint found: %s", controller_name_.c_str(), top_joint_string_.c_str());
+  else
+    ROS_ERROR("(%s): Top lift joint not found: %s, correctly set <top_lift_joint>insert_joint_name_here</top_lift_joint>", controller_name_.c_str(), top_joint_string_.c_str());   
+        
 
   // ROS connection
   int argc = 0;

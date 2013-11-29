@@ -41,11 +41,15 @@ private:
   double                    cur_lift_position_;
   double                    joint_target_pos_;
   int                       lift_target_pose_;
+  std::string               controller_name_;
   
   ros::Subscriber           lift_pose_request_sub_;
       
   physics::ModelPtr         model_;
-  gazebo::physics::JointPtr lift_prism_joint_;            
+  std::string               bottom_joint_string_;
+  std::string               top_joint_string_;
+  gazebo::physics::JointPtr bottom_joint_;  
+  gazebo::physics::JointPtr top_joint_;           
   event::ConnectionPtr      updateConnection_;
   
   common::Time              curr_time_;

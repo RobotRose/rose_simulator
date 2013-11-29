@@ -31,12 +31,11 @@ void WheelUnitController::Load(physics::ModelPtr model, sdf::ElementPtr sdf)
   // Update event
   updateConnection_ = event::Events::ConnectWorldUpdateBegin(boost::bind(&WheelUnitController::OnUpdate, this, _1));
   
-  controller_name_      = "WheelUnitControl";    
+  controller_name_      = "WheelUnitController";    
   // Get caster and wheel joints  
   if (sdf_->HasElement("caster"))
   {
     caster_joint_string_  = sdf->Get<std::string>("caster");
-    ROS_DEBUG_NAMED(controller_name_.c_str(), caster_joint_string_.c_str());
     caster_joint_         = model_->GetJoint(caster_joint_string_);
     caster_namespace_     = ReplaceString(caster_joint_string_, "::", "/"); 
 
@@ -48,7 +47,6 @@ void WheelUnitController::Load(physics::ModelPtr model, sdf::ElementPtr sdf)
   if (sdf_->HasElement("wheel"))
   {
     wheel_joint_string_ = sdf->Get<std::string>("wheel");
-    ROS_DEBUG_NAMED(controller_name_.c_str(), wheel_joint_string_.c_str());
     wheel_joint_        = model_->GetJoint(wheel_joint_string_);
     wheel_namespace_    = ReplaceString(wheel_joint_string_, "::", "/");  
   }
