@@ -50,31 +50,28 @@
 
   <xacro:macro name="wheel_unit_60mm" params="name parent xyz rpy">
 
-  	  <!-- link to parent -->
-      <joint name="${parent}_${name}_joint" type="continuous">
-	    <axis xyz="0 1 0" />
-	    <limit lower="0.0" upper="0.0" effort="7" velocity="0"/> 
-	    <dynamics damping="1.0" friction="0.0" />
-	    <origin xyz="0 0 0" rpy="0 0 0" />
+  	  <!-- link to parent 
+      <joint name="${parent}_${name}_joint" type="fixed">
+	    <axis xyz="0 1 0"/>
+	    <origin xyz="${xyz}" rpy="${rpy}" />
 	    <parent link="${parent}"/>
 	    <child link="${name}_wheel_base"/>
 	  </joint>
 
-	  <!-- wheel base -->
 	  <link name='${name}_wheel_base'>
 	    <xacro:default_box  xyz=  "0 0 ${wheel_mount_axle_length/2 + wheel_base_size_z/2}" 
 	                        rpy=  "0 0 0" 
 	                        size= "${wheel_base_size_x} ${wheel_base_size_y} ${wheel_base_size_z}"/>  
 	    <xacro:default_inertial mass="0.5"/>
-	  </link>
+	  </link>-->
 
-	  <!-- joint between wheel_base and wheel_mount_axle -->    
-	  <joint name="${name}_joint_base" type="revolute">
-	    <parent link="${name}_wheel_base"/>
+	  <!-- joint between parent and wheel_mount_axle -->    
+	  <joint name="${name}_joint_caster" type="revolute">
+	    <parent link="${parent}"/>
 	    <child link="${name}_wheel_mount_axle"/>
-	    <origin xyz="${wheel_base_size_x/2 - wheel_mount_axle_radius - 0.01} 0 0" rpy="0 0 0"/>
+	    <origin xyz="${xyz}" rpy="${rpy}"/>
 	    <axis xyz="0 0 1" />
-	    <dynamics damping="10.0" friction="1.0"/>  
+	    <dynamics damping="1.0" friction="0.0"/>  
 	    <limit effort="10.0" lower="${-wheel_base_angle}" upper="${wheel_base_angle}" velocity="0.5"/>  
 	  </joint>
 
@@ -152,18 +149,7 @@
 	      <origin xyz="0 0 0" rpy="0 0 0"/>
 	      <geometry>
 	        <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
-	      </geometry>      
-	      <surface>
-	        <friction>
-	          <ode>
-	            <mu>0.85</mu>
-	            <mu2>0.85</mu2>
-	            <fdir1>1 1 0</fdir1>
-	            <slip1>0.0</slip1>
-	            <slip2>0.0</slip2>
-	          </ode>
-	        </friction>
-	      </surface>
+	      </geometry>  
 	    </collision>
 	    <visual>
 	      <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -173,9 +159,17 @@
 	    </visual>
 	  </link>
 
+	  <gazebo reference="${name}_wheel">
+
+	    <mu1>0.850000</mu1>
+        <mu2>0.850000</mu2>
+        <fdir1>1.000000 1.000000 0.000000</fdir1>
+
+	  </gazebo>
+
 	  <gazebo >
 	    <plugin name="${name}_wheel_unit_controller" filename="libWheelUnitController.so">
-	      <caster>${name}_joint_base</caster>
+	      <caster>${name}_joint_caster</caster>
 	      <wheel>${name}_joint_wheel</wheel> 
 	    </plugin>
 	  </gazebo>

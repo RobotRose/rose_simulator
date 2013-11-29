@@ -39,6 +39,11 @@ void WheelUnitController::Load(physics::ModelPtr model, sdf::ElementPtr sdf)
     ROS_DEBUG_NAMED(controller_name_.c_str(), caster_joint_string_.c_str());
     caster_joint_         = model_->GetJoint(caster_joint_string_);
     caster_namespace_     = ReplaceString(caster_joint_string_, "::", "/"); 
+
+    if(caster_joint_->GetChild()->GetWorldPose().rot.z >= 0)
+      wheel_direction_ = 1.0;
+    else
+      wheel_direction_ = -1.0;
   }
   if (sdf_->HasElement("wheel"))
   {
@@ -47,22 +52,6 @@ void WheelUnitController::Load(physics::ModelPtr model, sdf::ElementPtr sdf)
     wheel_joint_        = model_->GetJoint(wheel_joint_string_);
     wheel_namespace_    = ReplaceString(wheel_joint_string_, "::", "/");  
   }
-
-
-  // Determine wheel orientation
-  std::string wheel_name = wheel_joint_string_.substr(0, wheel_joint_string_.find("::"));
-  ROS_DEBUG_NAMED(controller_name_.c_str(), (wheel_name + "_hinge").c_str());
-  gazebo::physics::JointPtr joint = model_->GetJoint(wheel_name + "_hinge");
-  if(joint)
-  {
-    if(joint->GetChild()->GetWorldPose().rot.z > 0)
-      wheel_direction_ = 1.0;
-    else
-      wheel_direction_ = -1.0;
-  }
-  else
-    wheel_direction_ = 1.0;
-    
     
   if(caster_joint_)
     ROS_INFO("(%s): Caster joint found: %s", controller_name_.c_str(), caster_joint_string_.c_str());
@@ -75,8 +64,8 @@ void WheelUnitController::Load(physics::ModelPtr model, sdf::ElementPtr sdf)
     ROS_ERROR("(%s): Wheel joint not found: %s, correctly set <wheel>insert_wheel_joint_name_here</wheel>", controller_name_.c_str(), wheel_joint_string_.c_str());   
     
   // Initialize caster & wheel PID controllers
-  PID_caster_.Init(20.0, 1.0, 0.0, 50.0, -50.0, 150.0, -150.0);
-  PID_wheel_.Init(20.0, 1.0, 0.0, 50.0, -50.0, 150.0, -150.0);
+  PID_caster_.Init(200.0, 1.0, 0.0, 50.0, -50.0, 1500.0, -1500.0);
+  PID_wheel_.Init(200.0, 1.0, 0.0, 50.0, -50.0, 1500.0, -1500.0);
   
   // ROS connection
   int argc = 0;
@@ -93,14 +82,13 @@ void WheelUnitController::Load(physics::ModelPtr model, sdf::ElementPtr sdf)
   // Subscribers
   sub_caster_pos_   = n_.subscribe("/" + caster_namespace_ + "/req_pos", 1, &WheelUnitController::CB_SetRequestedCasterPos, this);
   sub_wheel_vel_  = n_.subscribe("/" + wheel_namespace_ + "/req_vel", 1, &WheelUnitController::CB_SetRequestedWheelVel, this);
-   
-   
+      
   // Initialize variables
-  cur_caster_pos_   = caster_joint_->GetAngle(1).Radian();
+  cur_caster_pos_ = caster_joint_->GetAngle(1).Radian();
   cur_caster_vel_ = caster_joint_->GetVelocity(1);
-  cur_wheel_pos_    = wheel_joint_->GetAngle(1).Radian();
+  cur_wheel_pos_  = wheel_joint_->GetAngle(1).Radian();
   cur_wheel_vel_  = wheel_joint_->GetVelocity(1);
-  req_caster_pos_   = 0.7507;
+  req_caster_pos_ = 0.7507;
   req_wheel_vel_  = 2.0 * wheel_direction_;
 }
 
@@ -130,7 +118,6 @@ void WheelUnitController::OnUpdate(const common::UpdateInfo & /*info*/)
   msg.data   = cur_wheel_vel_ * (1000/4.0);
   pub_enc_wheel_vel_.publish(msg);
 
-  
   // Calculate position error
   float caster_error  = cur_caster_pos_ - req_caster_pos_;
   float wheel_error   = cur_wheel_vel_  - req_wheel_vel_;
