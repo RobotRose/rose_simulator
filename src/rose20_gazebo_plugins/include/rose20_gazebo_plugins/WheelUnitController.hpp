@@ -1,15 +1,22 @@
-/** wheel_unit_controller.cpp
- *
- * @class WheelUnitController
- *
- * Contains simulation controller components for a wheelunit
- *
- * \author Okke Hendriks
- * \date 14-10-2013
- * \version 1.0
- */
+/***********************************************************************************
+* Copyright: Rose B.V. (2013)
+*
+* Revision History:
+*  Author: Okke Hendriks
+*  Date  : 2013/12/02
+*     - File created.
+*
+* Description:
+*  Contains simulation controller components for a wheelunit
+* 
+***********************************************************************************/
 #ifndef WHEELUNITCONTROLLER_H
 #define WHEELUNITCONTROLLER_H
+
+#include <stdio.h>
+#include <math.h>
+
+#include <boost/bind.hpp>
 
 #include <ros/ros.h>
 #include <gazebo/gazebo.hh>
@@ -17,9 +24,7 @@
 #include <gazebo/common/common.hh>
 #include <std_msgs/Float64.h>
 
-#include <boost/bind.hpp>
-#include <stdio.h>
-#include <math.h>
+#include "rose20_common/common.hpp"
 
 namespace gazebo
 {   
@@ -33,7 +38,6 @@ public:
 private:  
   void CB_SetRequestedCasterPos(const std_msgs::Float64::ConstPtr& msg);     
   void CB_SetRequestedWheelVel(const std_msgs::Float64::ConstPtr& msg);
-  std::string ReplaceString(std::string subject, const std::string& search, const std::string& replace);
   
   // Publishers
   ros::Publisher pub_enc_caster_pos_;

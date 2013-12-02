@@ -1,0 +1,51 @@
+cmake_minimum_required (VERSION 2.4.6)
+project(rose20_gazebo_plugins)
+
+find_package(catkin REQUIRED COMPONENTS 
+  gazebo_ros
+  roscomm 
+  rose20_common
+)
+
+# Depend on system install of Gazebo
+find_package(gazebo REQUIRED)
+
+
+MESSAGE("gallo: ${rose20_common_DIR}")
+execute_process(COMMAND ${rose20_common_DIR}/catkin_make)
+
+###################################
+## catkin specific configuration ##
+###################################
+## The catkin_package macro generates cmake config files for your package
+## Declare things to be passed to dependent projects
+## INCLUDE_DIRS: uncomment this if you package contains header files
+## LIBRARIES: libraries you create in this project that dependent projects also need
+## CATKIN_DEPENDS: catkin_packages dependent projects also need
+## DEPENDS: system dependencies of this project that dependent projects also need
+
+catkin_package(
+    INCLUDE_DIRS include
+#    LIBRARIES 
+    CATKIN_DEPENDS roscomm rose20_common
+    DEPENDS gazebo_ros
+)
+
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+
+include_directories(${PROJECT_SOURCE_DIR}/include ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS})
+link_directories(${gazebo_LIBS})
+
+add_library(LiftController SHARED src/LiftController.cpp) 
+target_link_libraries(LiftController ${gazebo_LIBS})
+
+add_library(NeckController SHARED src/NeckController.cpp)
+target_link_libraries(NeckController ${gazebo_LIBS})
+
+add_library(WheelUnitController SHARED src/WheelUnitController.cpp)
+target_link_libraries(WheelUnitController ${gazebo_LIBS})
+
+add_dependencies(LiftController 		roscomm rose20_common)
+add_dependencies(NeckController 		roscomm rose20_common)
+add_dependencies(WheelUnitController 	roscomm rose20_common)
+

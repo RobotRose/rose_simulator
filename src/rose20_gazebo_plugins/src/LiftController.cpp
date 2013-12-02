@@ -1,25 +1,28 @@
-/** lift_controller.cpp
- *
- * @class LiftController
- *
- * Contains simulation controller components for the lift actuation system 
- *
- * \author Okke Hendriks
- * \date 10-10-2013
- * \version 1.0
- */
+/***********************************************************************************
+* Copyright: Rose B.V. (2013)
+*
+* Revision History:
+*  Author: Okke Hendriks
+*  Date  : 2013/12/02
+*     - File created.
+*
+* Description:
+*  Contains simulation controller components for the lift actuation system 
+* 
+***********************************************************************************/
 
-#include "LiftController.hpp"
+#include "rose20_gazebo_plugins/LiftController.hpp"
   
 using namespace gazebo;
 
 // Register this plugin with the simulator
 GZ_REGISTER_MODEL_PLUGIN(LiftController)
 
-void LiftController::Load(physics::ModelPtr parent, sdf::ElementPtr /*sdf*/) 
+void LiftController::Load(physics::ModelPtr parent, sdf::ElementPtr sdf) 
 {  
   // Store the pointer to the model
   model_ = parent;
+  sdf_   = sdf;
 
   controller_name_ = "WheelUnitController";
   
@@ -29,13 +32,13 @@ void LiftController::Load(physics::ModelPtr parent, sdf::ElementPtr /*sdf*/)
    // Get the liftjoints  
   if (sdf_->HasElement("bottom_lift_joint"))
   {
-    bottom_joint_string_  = sdf->Get<std::string>("bottom_lift_joint");
+    bottom_joint_string_  = sdf_->Get<std::string>("bottom_lift_joint");
     bottom_joint_         = model_->GetJoint(bottom_joint_string_);
     top_namespace_        = ReplaceString(bottom_joint_string_, "::", "/"); 
   }
   if (sdf_->HasElement("top_lift_joint"))
   {
-    top_joint_string_ = sdf->Get<std::string>("top_lift_joint");
+    top_joint_string_ = sdf_->Get<std::string>("top_lift_joint");
     top_joint_        = model_->GetJoint(top_joint_string_);
     top_namespace_    = ReplaceString(top_joint_string_, "::", "/");  
   }
@@ -61,7 +64,9 @@ void LiftController::Load(physics::ModelPtr parent, sdf::ElementPtr /*sdf*/)
   
   // Force to a start position
   lift_target_pose_ = 1;
-  joint_target_pos_ = 0.00;
+  // Lift at middle position
+  bottom_joint_target_pos_  = M_PI - (M_PI/4.0);
+  top_joint_target_pos_     = M_PI - (M_PI/2.0) + (M_PI/4.0);
   
   ROS_INFO("Loaded LiftController");      
 }
@@ -77,7 +82,7 @@ void LiftController::OnUpdate(const common::UpdateInfo & /*info*/)
   }    
 }
    
-void LiftController::CB_SetLiftStatus(const rosbee_control_wireless::lift::ConstPtr& lift_message)
+void LiftController::CB_SetLiftStatus(const roscomm::lift::ConstPtr& lift_message)
 {
   // Store requested lift pose
   this->lift_target_pose_ = lift_message->pose;
@@ -85,13 +90,19 @@ void LiftController::CB_SetLiftStatus(const rosbee_control_wireless::lift::Const
   switch(lift_target_pose_)
   {
     case 0:
-      joint_target_pos_ = 0.02;
+      // Lift at lowest position
+      bottom_joint_target_pos_  = M_PI;
+      top_joint_target_pos_     = M_PI - (M_PI/2.0);
       break;
     case 1:
-      joint_target_pos_ = 0.00;
+      // Lift at middle position
+      bottom_joint_target_pos_  = M_PI - (M_PI/4.0);
+      top_joint_target_pos_     = M_PI - (M_PI/2.0) + (M_PI/4.0);
       break;
     case 2:
-      joint_target_pos_ = -0.02;                 
+      // Lift at highest position
+      bottom_joint_target_pos_  = M_PI - (M_PI/2.0); 
+      top_joint_target_pos_     = M_PI - (M_PI/2.0) + (M_PI/2.0);                
       break;
     default:
       ROS_WARN("Invalid lift pose requested");
@@ -100,28 +111,37 @@ void LiftController::CB_SetLiftStatus(const rosbee_control_wireless::lift::Const
 
   // Create a new animation from the current position to the requested position
   // Calculate the duration of the animation
-  cur_lift_position_  = lift_prism_joint_->GetAngle(0).Radian();
-  double duration     = (fabs(cur_lift_position_ - joint_target_pos_))/LIFT_PRISMATIC_SPEED;
+  cur_lift_bottom_pos_  = bottom_joint_->GetAngle(0).Radian();
+  cur_lift_top_pos_     = top_joint_->GetAngle(0).Radian();
+  double duration       = (fabs(cur_lift_bottom_pos_ - bottom_joint_target_pos_))/LIFT_PRISMATIC_SPEED;
   createAndAttachAnimation(duration, false);
 }
 
 void LiftController::createAndAttachAnimation(double duration, bool repeat)
 {
-  curr_time_          = model_->GetWorld()->GetSimTime();
-  cur_lift_position_  = lift_prism_joint_->GetAngle(0).Radian();
+  curr_time_            = model_->GetWorld()->GetSimTime();
+  cur_lift_bottom_pos_  = bottom_joint_->GetAngle(0).Radian();
+  cur_lift_top_pos_     = top_joint_->GetAngle(0).Radian();
    
-  anim_["base_lift_prismatic"].reset(new common::NumericAnimation("lift_animation", duration, repeat));
+  // Create the annimations 
+  bottom_anim_["lift_bottom"].reset(new common::NumericAnimation("lift_bottom_animation", duration, repeat));
+  top_anim_["lift_top"].reset(new common::NumericAnimation("lift_top_animation", duration, repeat));
 
-  // Create a starting keyframe
-  common::NumericKeyFrame *key = anim_["base_lift_prismatic"]->CreateKeyFrame(0.0);
-  key->SetValue(cur_lift_position_);
+  // Create a starting keyframes
+  common::NumericKeyFrame *key_bottom = bottom_anim_["lift_bottom_animation"]->CreateKeyFrame(0.0);
+  common::NumericKeyFrame *key_top = top_anim_["lift_top_animation"]->CreateKeyFrame(0.0);
+  key_bottom->SetValue(cur_lift_bottom_pos_);
+  key_top->SetValue(cur_lift_top_pos_);
 
-  // Create the end keyframe 
-  key = anim_["base_lift_prismatic"]->CreateKeyFrame(duration);
-  key->SetValue(joint_target_pos_);
+  // Create the end keyframes 
+  key_bottom = bottom_anim_["lift_bottom_animation"]->CreateKeyFrame(duration);
+  key_top = top_anim_["lift_top_animation"]->CreateKeyFrame(duration);
+  key_bottom->SetValue(bottom_joint_target_pos_);
+  key_top->SetValue(top_joint_target_pos_);
  
-  // Attach the animation to the model
-  model_->SetJointAnimation(anim_);
+  // Attach the animations to the model
+  model_->SetJointAnimation(bottom_anim_);
+  model_->SetJointAnimation(top_anim_);
   
   animation_finished_time_ = curr_time_ + common::Time(duration);
 }

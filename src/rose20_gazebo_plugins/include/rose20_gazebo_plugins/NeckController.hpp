@@ -1,13 +1,15 @@
-/** neck_controller.cpp
- *
- * @class NeckController
- *
- * Contains simulation controller components for the neck actuation system 
- *
- * \author Okke Hendriks
- * \date 10-10-2013
- * \version 1.0
- */
+/***********************************************************************************
+* Copyright: Rose B.V. (2013)
+*
+* Revision History:
+*  Author: Okke Hendriks
+*  Date  : 2013/12/02
+*     - File created.
+*
+* Description:
+*  Contains simulation controller components for the neck actuation system 
+* 
+***********************************************************************************/
 #ifndef NECKCONTROLLER_H
 #define NECKCONTROLLER_H
 

@@ -1,15 +1,16 @@
-/** neck_controller.cpp
- *
- * @class NeckController
- *
- * Contains simulation controller components for the neck actuation system 
- *
- * \author Okke Hendriks
- * \date 10-10-2013
- * \version 1.0
- */
-
-#include "NeckController.hpp"
+/***********************************************************************************
+* Copyright: Rose B.V. (2013)
+*
+* Revision History:
+*  Author: Okke Hendriks
+*  Date  : 2013/12/02
+*     - File created.
+*
+* Description:
+*  Contains simulation controller components for the neck actuation system 
+* 
+***********************************************************************************/
+#include "rose20_gazebo_plugins/NeckController.hpp"
 
 using namespace gazebo;
 

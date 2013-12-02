@@ -1,20 +1,17 @@
-/** wheel_controller.cpp
- *
- * @class WheelUnitController
- *
- * Contains simulation controller components for a wheelunit
- *
- * \author Okke Hendriks
- * \date 14-10-2013
- * \version 1.0
- *
- *
- * //TODO implement encoder rate
- *
- *
- */
+/***********************************************************************************
+* Copyright: Rose B.V. (2013)
+*
+* Revision History:
+*  Author: Okke Hendriks
+*  Date  : 2013/12/02
+*     - File created.
+*
+* Description:
+*  Contains simulation controller components for a wheelunit
+* 
+***********************************************************************************/
 
-#include "WheelUnitController.hpp"
+#include "rose20_gazebo_plugins/WheelUnitController.hpp"
 
 using namespace gazebo;
 
@@ -35,7 +32,7 @@ void WheelUnitController::Load(physics::ModelPtr model, sdf::ElementPtr sdf)
   // Get caster and wheel joints  
   if (sdf_->HasElement("caster"))
   {
-    caster_joint_string_  = sdf->Get<std::string>("caster");
+    caster_joint_string_  = sdf_->Get<std::string>("caster");
     caster_joint_         = model_->GetJoint(caster_joint_string_);
     caster_namespace_     = ReplaceString(caster_joint_string_, "::", "/"); 
 
@@ -46,7 +43,7 @@ void WheelUnitController::Load(physics::ModelPtr model, sdf::ElementPtr sdf)
   }
   if (sdf_->HasElement("wheel"))
   {
-    wheel_joint_string_ = sdf->Get<std::string>("wheel");
+    wheel_joint_string_ = sdf_->Get<std::string>("wheel");
     wheel_joint_        = model_->GetJoint(wheel_joint_string_);
     wheel_namespace_    = ReplaceString(wheel_joint_string_, "::", "/");  
   }
@@ -146,15 +143,3 @@ void WheelUnitController::CB_SetRequestedWheelVel(const std_msgs::Float64::Const
   req_wheel_vel_ = msg->data * wheel_direction_;  
   ROS_INFO("Request wheel vel: %.3frad/s", req_wheel_vel_);
 }
-
-// TODO move this to a util lib
-std::string WheelUnitController::ReplaceString(std::string subject, const std::string& search, const std::string& replace) {
-    size_t pos = 0;
-    while ((pos = subject.find(search, pos)) != std::string::npos) {
-         subject.replace(pos, search.length(), replace);
-         pos += replace.length();
-    }
-    return subject;
-}
-
-
