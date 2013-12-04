@@ -1,0 +1,43 @@
+<launch>
+
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find rose20_worlds)src/rose20.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <!-- Run the map server -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find rosbee_control_wireless)/../maps/rosebv2.yaml"/> 
+ 
+  <!-- Run AMCL (localization)-->
+  <node name="amcl" pkg="amcl" type="amcl" output="screen">
+     <param name="odom_model_type" value="omni"/>
+  </node>
+
+  <!-- Run Laser Filter for clearing -->
+  <node name="laser_clear_filter" pkg="laser_filter" type="laser_clear_filter"/> 
+ 
+  <!-- Run move base (pathplanner) -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find rosbee_control_wireless)/../parameters/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find rosbee_control_wireless)/../parameters/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find rosbee_control_wireless)/../parameters/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find rosbee_control_wireless)/../parameters/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find rosbee_control_wireless)/../parameters/base_local_planner_params.yaml" command="load" />
+  </node>
+
+	<!-- lift transform node -->
+  <node pkg="rosbee_control_wireless" type="lift_frame" name="lift_tf" output="screen" />  
+
+   <!-- platform controller node -->
+  <node pkg="rosbee_control_wireless" type="platform_switch" name="platform_switch" output="screen" />
+  
+  <!-- transforms node -->
+  <node pkg="rosbee_control_wireless" type="platform_tf" name="platform_tf" output="screen" />  
+
+
+</launch>
