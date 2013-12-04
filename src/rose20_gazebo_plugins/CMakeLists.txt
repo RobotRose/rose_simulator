@@ -10,10 +10,6 @@ find_package(catkin REQUIRED COMPONENTS
 # Depend on system install of Gazebo
 find_package(gazebo REQUIRED)
 
-
-MESSAGE("gallo: ${rose20_common_DIR}")
-execute_process(COMMAND ${rose20_common_DIR}/catkin_make)
-
 ###################################
 ## catkin specific configuration ##
 ###################################
@@ -37,13 +33,13 @@ include_directories(${PROJECT_SOURCE_DIR}/include ${catkin_INCLUDE_DIRS} ${GAZEB
 link_directories(${gazebo_LIBS})
 
 add_library(LiftController SHARED src/LiftController.cpp) 
-target_link_libraries(LiftController ${gazebo_LIBS})
+target_link_libraries(LiftController ${gazebo_LIBS} ${rose20_common_LIBRARIES})
 
 add_library(NeckController SHARED src/NeckController.cpp)
-target_link_libraries(NeckController ${gazebo_LIBS})
+target_link_libraries(NeckController ${gazebo_LIBS} ${rose20_common_LIBRARIES})
 
 add_library(WheelUnitController SHARED src/WheelUnitController.cpp)
-target_link_libraries(WheelUnitController ${gazebo_LIBS})
+target_link_libraries(WheelUnitController ${gazebo_LIBS} ${rose20_common_LIBRARIES})
 
 add_dependencies(LiftController 		roscomm rose20_common)
 add_dependencies(NeckController 		roscomm rose20_common)
