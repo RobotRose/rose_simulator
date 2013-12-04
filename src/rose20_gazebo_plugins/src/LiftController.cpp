@@ -64,9 +64,10 @@ void LiftController::Load(physics::ModelPtr parent, sdf::ElementPtr sdf)
   
   // Force to a start position
   lift_target_pose_ = 1;
-  // Lift at middle position
-  bottom_joint_target_pos_  = M_PI - (M_PI/4.0);
-  top_joint_target_pos_     = M_PI - (M_PI/2.0) + (M_PI/4.0);
+  setLiftMid();
+
+  // Create a new animation from the current position to the requested position
+  createAndAttachAnimation(calcAnimationTime(), false);
   
   ROS_INFO("Loaded LiftController");      
 }
@@ -86,35 +87,56 @@ void LiftController::CB_SetLiftStatus(const roscomm::lift::ConstPtr& lift_messag
 {
   // Store requested lift pose
   this->lift_target_pose_ = lift_message->pose;
-  
+  ROS_INFO("Lift pose requested: %d", this->lift_target_pose_);
   switch(lift_target_pose_)
   {
     case 0:
-      // Lift at lowest position
-      bottom_joint_target_pos_  = M_PI;
-      top_joint_target_pos_     = M_PI - (M_PI/2.0);
+      setLiftLow();
       break;
     case 1:
-      // Lift at middle position
-      bottom_joint_target_pos_  = M_PI - (M_PI/4.0);
-      top_joint_target_pos_     = M_PI - (M_PI/2.0) + (M_PI/4.0);
+      setLiftMid();
       break;
     case 2:
-      // Lift at highest position
-      bottom_joint_target_pos_  = M_PI - (M_PI/2.0); 
-      top_joint_target_pos_     = M_PI - (M_PI/2.0) + (M_PI/2.0);                
+      setLiftHigh();
       break;
     default:
       ROS_WARN("Invalid lift pose requested");
       break;           
   }
 
-  // Create a new animation from the current position to the requested position
+}
+
+double LiftController::calcAnimationTime()
+{
   // Calculate the duration of the animation
   cur_lift_bottom_pos_  = bottom_joint_->GetAngle(0).Radian();
   cur_lift_top_pos_     = top_joint_->GetAngle(0).Radian();
   double duration       = (fabs(cur_lift_bottom_pos_ - bottom_joint_target_pos_))/LIFT_PRISMATIC_SPEED;
-  createAndAttachAnimation(duration, false);
+  return duration;
+}
+
+void LiftController::setLiftLow()
+{
+  bottom_joint_target_pos_  =  LIFT_BOTTOM_MIN_ANGLE; 
+  top_joint_target_pos_     = -LIFT_BOTTOM_MIN_ANGLE; 
+  // Create a new animation from the current position to the requested position
+  createAndAttachAnimation(calcAnimationTime(), false);   
+}
+
+void LiftController::setLiftMid()
+{
+  bottom_joint_target_pos_  =  (LIFT_BOTTOM_MIN_ANGLE + LIFT_BOTTOM_MAX_ANGLE)/2; 
+  top_joint_target_pos_     = -(LIFT_BOTTOM_MIN_ANGLE + LIFT_BOTTOM_MAX_ANGLE)/2;   
+  // Create a new animation from the current position to the requested position
+  createAndAttachAnimation(calcAnimationTime(), false);
+}
+
+void LiftController::setLiftHigh()
+{    
+  bottom_joint_target_pos_  =  LIFT_BOTTOM_MAX_ANGLE; 
+  top_joint_target_pos_     = -LIFT_BOTTOM_MAX_ANGLE; 
+  // Create a new animation from the current position to the requested position
+  createAndAttachAnimation(calcAnimationTime(), false);         
 }
 
 void LiftController::createAndAttachAnimation(double duration, bool repeat)
@@ -122,27 +144,31 @@ void LiftController::createAndAttachAnimation(double duration, bool repeat)
   curr_time_            = model_->GetWorld()->GetSimTime();
   cur_lift_bottom_pos_  = bottom_joint_->GetAngle(0).Radian();
   cur_lift_top_pos_     = top_joint_->GetAngle(0).Radian();
-   
+  ROS_DEBUG("cur_lift_bottom_pos_: %.3f", cur_lift_bottom_pos_);
+  ROS_DEBUG("cur_lift_top_pos_: %.3f", cur_lift_top_pos_);
+  ROS_DEBUG("bottom_joint_target_pos_: %.3f", bottom_joint_target_pos_);
+  ROS_DEBUG("top_joint_target_pos_: %.3f", top_joint_target_pos_);
+  ROS_DEBUG("duration: %.3f", duration);
+
   // Create the annimations 
-  bottom_anim_["lift_bottom"].reset(new common::NumericAnimation("lift_bottom_animation", duration, repeat));
-  top_anim_["lift_top"].reset(new common::NumericAnimation("lift_top_animation", duration, repeat));
+  anim_[bottom_joint_string_].reset(new common::NumericAnimation("lift_bottom_animation", duration, repeat));
+  anim_[top_joint_string_].reset(new common::NumericAnimation("lift_top_animation", duration, repeat));
 
   // Create a starting keyframes
-  common::NumericKeyFrame *key_bottom = bottom_anim_["lift_bottom_animation"]->CreateKeyFrame(0.0);
-  common::NumericKeyFrame *key_top = top_anim_["lift_top_animation"]->CreateKeyFrame(0.0);
+  common::NumericKeyFrame *key_bottom = anim_[bottom_joint_string_]->CreateKeyFrame(0.0);
+  common::NumericKeyFrame *key_top    = anim_[top_joint_string_]->CreateKeyFrame(0.0);
   key_bottom->SetValue(cur_lift_bottom_pos_);
   key_top->SetValue(cur_lift_top_pos_);
 
   // Create the end keyframes 
-  key_bottom = bottom_anim_["lift_bottom_animation"]->CreateKeyFrame(duration);
-  key_top = top_anim_["lift_top_animation"]->CreateKeyFrame(duration);
+  key_bottom  = anim_[bottom_joint_string_]->CreateKeyFrame(duration);
+  key_top     = anim_[top_joint_string_]->CreateKeyFrame(duration);
   key_bottom->SetValue(bottom_joint_target_pos_);
   key_top->SetValue(top_joint_target_pos_);
- 
+
   // Attach the animations to the model
-  model_->SetJointAnimation(bottom_anim_);
-  model_->SetJointAnimation(top_anim_);
-  
+  model_->SetJointAnimation(anim_);
+
   animation_finished_time_ = curr_time_ + common::Time(duration);
 }
 

@@ -29,19 +29,25 @@
 #include "roscomm/lift.h"
 #include "roscomm/lift_control.h"
 
-#define LIFT_PRISMATIC_SPEED  0.02  // [m/s]
+#define LIFT_PRISMATIC_SPEED  (M_PI/12.0)  // [rad/s]
+#define LIFT_BOTTOM_MAX_ANGLE (M_PI/2.0 - M_PI/8.0) 
+#define LIFT_BOTTOM_MIN_ANGLE (     0.0 + M_PI/8.0)  
 
 namespace gazebo
 {   
 class LiftController : public ModelPlugin
 {
 public: 
-  void Load(physics::ModelPtr parent, sdf::ElementPtr /*sdf*/);
-  void OnUpdate(const common::UpdateInfo & /*info*/);
+  void    Load(physics::ModelPtr parent, sdf::ElementPtr /*sdf*/);
+  void    OnUpdate(const common::UpdateInfo & /*info*/);
   
 private:     
-  void CB_SetLiftStatus(const roscomm::lift::ConstPtr& lift_message);
-  void createAndAttachAnimation(double duration, bool repeat);
+  void    CB_SetLiftStatus(const roscomm::lift::ConstPtr& lift_message);
+  double  calcAnimationTime();
+  void    createAndAttachAnimation(double duration, bool repeat);
+  void    setLiftLow();
+  void    setLiftMid();
+  void    setLiftHigh();
        
   double                    cur_lift_bottom_pos_;
   double                    cur_lift_top_pos_;
@@ -64,8 +70,7 @@ private:
   
   common::Time              curr_time_;
   common::Time              animation_finished_time_;
-  std::map<std::string, common::NumericAnimationPtr> bottom_anim_;
-  std::map<std::string, common::NumericAnimationPtr> top_anim_;
+  std::map<std::string, common::NumericAnimationPtr> anim_;
 };
 }
 
