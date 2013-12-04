@@ -83,8 +83,8 @@ void WheelUnitController::Load(physics::ModelPtr model, sdf::ElementPtr sdf)
   cur_caster_vel_ = caster_joint_->GetVelocity(1);
   cur_wheel_pos_  = wheel_joint_->GetAngle(1).Radian();
   cur_wheel_vel_  = wheel_joint_->GetVelocity(1);
-  req_caster_pos_ = 0.7507;
-  req_wheel_vel_  = 2.0 * wheel_direction_;
+  req_caster_pos_ = 0.0;
+  req_wheel_vel_  = 0.0 * wheel_direction_;
 }
 
 void WheelUnitController::OnUpdate(const common::UpdateInfo & /*info*/)
