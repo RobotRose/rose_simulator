@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+	<!-- math constants -->
+	<xacro:property name="pi" value="3.1415926535897931" />
+
+	<!-- common macros -->
+	<xacro:macro name="default_inertial" params="mass">
+	   <inertial>
+	   		   <origin xyz="0 0 0" rpy="0 0 0"/>
+	           <mass value="${mass}" />
+	           <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+	                    iyy="1.0" iyz="0.0"
+	                    izz="1.0" />
+	   </inertial>
+	</xacro:macro>
+
+	<xacro:macro name="default_box" params="xyz rpy size">
+	    <collision>
+	      <origin xyz="${xyz}" rpy="${rpy}"/>
+	      <geometry>
+	        <box size="${size}"/>
+	      </geometry>
+	    </collision>
+	    <visual>
+	      <origin xyz="${xyz}" rpy="${rpy}"/>
+	      <geometry>
+	        <box size="${size}"/>
+	      </geometry>
+	    </visual>
+	</xacro:macro>
+
+	<xacro:macro name="collission_box" params="xyz rpy size">
+	    <collision>
+	      <origin xyz="${xyz}" rpy="${rpy}"/>
+	      <geometry>
+	        <box size="${size}"/>
+	      </geometry>
+	    </collision>
+	</xacro:macro>
+
+	<xacro:macro name="default_cylinder" params="xyz rpy radius length">
+	    <collision>
+	      <origin xyz="${xyz}" rpy="${rpy}"/>
+	      <geometry>
+	        <cylinder radius="${radius}" length="${length}"/>
+	      </geometry>
+	    </collision>
+	    <visual>
+	      <origin xyz="${xyz}" rpy="${rpy}"/>
+	      <geometry>
+	        <cylinder radius="${radius}" length="${length}"/>
+	      </geometry>
+	    </visual>
+	</xacro:macro>
+
+	<xacro:macro name="hokuyo_lx30_laser_gazebo_v0" params="name ros_topic update_rate min_angle max_angle">
+    <gazebo reference="${name}_link">
+      <sensor type="ray" name="${name}">
+        <always_on>true</always_on>
+        <update_rate>${update_rate}</update_rate>
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>false</visualize>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>640</samples>
+              <resolution>1</resolution>
+              <min_angle>${min_angle}</min_angle>
+              <max_angle>${max_angle}</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.08</min>
+            <max>10.0</max>
+            <resolution>0.01</resolution>
+          </range>
+        </ray>
+        <plugin name="gazebo_ros_${name}_controller" filename="libgazebo_ros_laser.so">
+          <gaussianNoise>0.005</gaussianNoise>
+          <alwaysOn>true</alwaysOn>
+          <updateRate>${update_rate}</updateRate>
+          <topicName>${ros_topic}</topicName>
+          <frameName>${name}_link</frameName>
+          <hokuyoMinIntensity>101</hokuyoMinIntensity>
+        </plugin>
+      </sensor>
+    </gazebo>
+  	</xacro:macro>
+
+
+
+</robot>

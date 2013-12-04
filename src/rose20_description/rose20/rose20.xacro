@@ -1,0 +1,373 @@
+<robot name="Rose20" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find rose20_description)/common.xacro" />
+  <xacro:include filename="$(find rose20_description)/wheel_unit_60mm/wheel_unit_60mm_macro.xacro" />
+
+  <xacro:property name="base_size_x" value="0.76" />
+  <xacro:property name="base_size_y" value="0.58" />
+  <xacro:property name="base_size_z" value="0.05" />
+  <xacro:property name="base_pose_x" value="0.0" />
+  <xacro:property name="base_pose_y" value="0.0" />
+  <xacro:property name="base_pose_z" value="0.20" />
+
+  <xacro:property name="wheel_front_x"    value="0.28" />
+  <xacro:property name="wheel_back_x"     value="-0.305" />
+  <xacro:property name="wheelbase_width"  value="0.23" />
+
+  <xacro:property name="liftmid_size_x" value="0.41" />
+  <xacro:property name="liftmid_size_y" value="0.115" />
+  <xacro:property name="liftmid_size_z" value="0.05" />
+  <xacro:property name="liftmid_pose_x" value="-0.205" />
+  <xacro:property name="liftmid_pose_y" value="0.0" />
+  <xacro:property name="liftmid_pose_z" value="0.0" />
+
+  <xacro:property name="liftsides_size_x" value="0.41" />
+  <xacro:property name="liftsides_size_y" value="0.09" />
+  <xacro:property name="liftsides_size_z" value="0.05" />
+  <xacro:property name="liftsides_pose_x" value="-0.345" />
+  <xacro:property name="liftsides_pose_y" value="0.24" />
+  <xacro:property name="liftsides_pose_z" value="0.0"/>
+
+  <xacro:property name="lifttopbar_size_x" value="0.06" />
+  <xacro:property name="lifttopbar_size_y" value="0.56" />
+  <xacro:property name="lifttopbar_size_z" value="0.06" />
+  <xacro:property name="lifttopbar_pose_x" value="-0.06" />
+  <xacro:property name="lifttopbar_pose_y" value="0.0" />
+  <xacro:property name="lifttopbar_pose_z" value="0.55"/>
+
+  <xacro:property name="lifttopbox_size_x" value="0.29" />
+  <xacro:property name="lifttopbox_size_y" value="0.24" />
+  <xacro:property name="lifttopbox_size_z" value="0.57" />
+  <xacro:property name="lifttopbox_pose_x" value="0.0" />
+  <xacro:property name="lifttopbox_pose_y" value="0.0" />
+  <xacro:property name="lifttopbox_pose_z" value="0.285"/>
+
+  <xacro:property name="lift_rpy" value="0 0 0"/>
+
+  <xacro:property name="neck_pan_size_x" value="0.05" />
+  <xacro:property name="neck_pan_size_y" value="0.03" />
+  <xacro:property name="neck_pan_size_z" value="0.04" />
+  <xacro:property name="neck_pan_pose_x" value="0.015" />
+  <xacro:property name="neck_pan_pose_y" value="0.00" />
+  <xacro:property name="neck_pan_pose_z" value="0.00" />
+
+  <xacro:property name="neck_tilt_size_x" value="0.033" />
+  <xacro:property name="neck_tilt_size_y" value="0.04" />
+  <xacro:property name="neck_tilt_size_z" value="0.055" />
+  <xacro:property name="neck_tilt_pose_x" value="0.00" />
+  <xacro:property name="neck_tilt_pose_y" value="0.00" />
+  <xacro:property name="neck_tilt_pose_z" value="0.05" />
+  
+  <xacro:property name="kinect_size_x" value="0.073" />
+  <xacro:property name="kinect_size_y" value="0.270" />
+  <xacro:property name="kinect_size_z" value="0.055" />
+  <xacro:property name="kinect_pose_x" value="0.037" />
+  <xacro:property name="kinect_pose_y" value="0.00" />
+  <xacro:property name="kinect_pose_z" value="0.045" />
+
+  <xacro:property name="hokuyo_size_x" value="0.07" />
+  <xacro:property name="hokuyo_size_y" value="0.06" />
+  <xacro:property name="hokuyo_size_z" value="0.06" />
+  <xacro:property name="hokuyo_pose_x" value="0.00" />
+  <xacro:property name="hokuyo_pose_y" value="0.00" />
+  <xacro:property name="hokuyo_pose_z" value="0.00" />
+
+  
+
+  <gazebo>
+    <static>false</static>
+  </gazebo>
+
+  <link name='base'>
+    <xacro:default_box  xyz=  "${base_pose_x} ${base_pose_y} ${base_pose_z}" 
+                        rpy=  "0 0 0" 
+                        size= "${base_size_x} ${base_size_y} ${base_size_z}"/>  
+    <xacro:default_inertial mass="30.0"/>
+  </link>  
+  
+  <!-- Wheel units --> 
+  <xacro:wheel_unit_60mm name="wheel_FL" parent="base" xyz="${wheel_front_x} ${-wheelbase_width} ${base_pose_z - base_size_z/2}" rpy="0 0 ${-pi/2}"/>
+  <xacro:wheel_unit_60mm name="wheel_FR" parent="base" xyz="${wheel_front_x} ${wheelbase_width}  ${base_pose_z - base_size_z/2}" rpy="0 0 ${pi/2}"/>
+  <xacro:wheel_unit_60mm name="wheel_BL" parent="base" xyz="${wheel_back_x}  ${-wheelbase_width} ${base_pose_z - base_size_z/2}" rpy="0 0 ${-pi/2}"/>
+  <xacro:wheel_unit_60mm name="wheel_BR" parent="base" xyz="${wheel_back_x}  ${wheelbase_width}  ${base_pose_z - base_size_z/2}" rpy="0 0 ${pi/2}"/>
+
+  <!-- joint between base and lift_mid --> 
+  <joint name="lift_mid_bottom_joint" type="revolute">
+    <parent link="base"/>
+    <child link="lift_mid"/>
+    <axis xyz="0 1 0" />
+    <origin xyz="${base_size_x/2 - 0.055} 0 ${base_pose_z}" rpy="0 0 0"/>  
+    <dynamics damping="1.0" friction="1.0"/>  
+    <limit effort="10.0" lower="0.0" upper="${pi/2}" velocity="1.0"/>  
+  </joint>
+
+  <!-- Lift mid-->
+  <link name='lift_mid'>
+    <xacro:default_box  xyz=  "${liftmid_pose_x} ${liftmid_pose_y} ${liftmid_pose_z}" 
+                        rpy=  "${lift_rpy}" 
+                        size= "${liftmid_size_x} ${liftmid_size_y} ${liftmid_size_z}"/>  
+    <xacro:default_inertial mass="0.5"/>
+  </link> 
+
+  <!-- joint between base and lift_left --> 
+  <!-- URDF DOES NOT SUPPORT JOINT LOOPS SO ONLY USE ONE BAR OF THE LIFFT FOR NOW
+  <joint name="lift_left_bottom_joint" type="revolute">
+    <parent link="base"/>
+    <child link="lift_left"/>
+    <axis xyz="0 1 0" />
+    <origin xyz="${base_size_x/2 - 0.055 - 0.14} ${liftsides_pose_y} ${base_pose_z}" rpy="0 0 0"/>  
+    <dynamics damping="1.0" friction="1.0"/>  
+    <limit effort="10.0" lower="0.0" upper="${pi/2}" velocity="1.0"/>  
+  </joint>
+  -->
+
+  <!-- lift left -->
+  <!-- URDF DOES NOT SUPPORT JOINT LOOPS SO ONLY USE ONE BAR OF THE LIFFT FOR NOW
+  <link name='lift_left'>
+    <xacro:default_box  xyz=  "${-liftsides_size_x/2} 0 0" 
+                        rpy=  "0 0 0" 
+                        size= "${liftsides_size_x} ${liftsides_size_y} ${liftsides_size_z}"/>  
+    <xacro:default_inertial mass="0.5"/>
+  </link> 
+  -->
+
+  <!-- joint between base and lift_right --> 
+  <!-- URDF DOES NOT SUPPORT JOINT LOOPS SO ONLY USE ONE BAR OF THE LIFFT FOR NOW
+  <joint name="lift_right_bottom_joint" type="revolute">
+    <parent link="base"/>
+    <child link="lift_right"/>
+    <axis xyz="0 1 0" />
+    <origin xyz="${base_size_x/2 - 0.055 - 0.14} ${-liftsides_pose_y} ${base_pose_z}" rpy="0 0 0"/>  
+    <dynamics damping="1.0" friction="1.0"/>  
+    <limit effort="10.0" lower="0.0" upper="${pi/2}" velocity="1.0"/>  
+  </joint>
+  -->
+ 
+  <!-- lift right --> 
+  <!-- URDF DOES NOT SUPPORT JOINT LOOPS SO ONLY USE ONE BAR OF THE LIFFT FOR NOW
+  <link name='lift_right'>
+      <xacro:default_box xyz=  "${-liftsides_size_x/2} 0 0" 
+                          rpy=  "0 0 0" 
+                          size= "${liftsides_size_x} ${liftsides_size_y} ${liftsides_size_z}"/>  
+     <xacro:default_inertial mass="0.5"/>
+  </link>   
+  -->
+
+  <!-- macro for joining the lift bars to the top of rose -->
+  <xacro:macro name="lift_bar_joint" params="parent">
+    <joint name="${parent}_box_joint" type="continuous">
+      <parent link="${parent}"/>
+      <child link="lift_top_box"/>
+      <axis xyz="0 1 0" />
+      <origin xyz="${-liftsides_size_x} 0 0" rpy="0 0 0"/>  
+      <dynamics damping="1.0" friction="1.0"/>  
+      <limit effort="10.0" lower="0" upper="0" velocity="1.0"/>  
+    </joint>
+  </xacro:macro>
+  
+  <!-- lift top box --> 
+  <link name='lift_top_box'> 
+    <xacro:default_box  xyz=  "-0.10 0 ${lifttopbox_size_z/2}" 
+                        rpy=  "0 0 0" 
+                        size= "${lifttopbox_size_x} ${lifttopbox_size_y} ${lifttopbox_size_z}"/>  
+    <xacro:default_inertial mass="0.1"/>
+  </link>  
+
+  <!-- joint between lift_mid and lift_top_box--> 
+  <xacro:lift_bar_joint parent="lift_mid"/> 
+
+  <!-- URDF DOES NOT SUPPORT JOINT LOOPS SO ONLY USE ONE BAR OF THE LIFFT FOR NOW
+  <xacro:lift_bar_joint parent="lift_left"/> 
+  <xacro:lift_bar_joint parent="lift_right"/>
+  -->
+
+  <!-- joint between lift_top_box and lift_top_bar -->
+  <joint name="lift_mid_top_joint" type="fixed">
+    <parent link="lift_top_box"/>
+    <child link="lift_top_bar"/>
+    <axis xyz="0 1 0" />
+    <origin xyz="-0.14 0 0" rpy="0 0 0"/>  
+  </joint>
+
+  <!-- lift top bar -->
+  <link name='lift_top_bar'>
+    <xacro:default_box  xyz=  "0 0 0" 
+                        rpy=  "0 0 0" 
+                        size= "${lifttopbar_size_x} ${lifttopbar_size_y} ${lifttopbar_size_z}"/>  
+    <xacro:default_inertial mass="1.0"/>
+  </link>
+
+  <!-- Lift controller plugin -->
+  <gazebo>
+    <plugin name="LiftController" filename="libLiftController.so">
+      <bottom_lift_joint>lift_mid_bottom_joint</bottom_lift_joint>
+      <top_lift_joint>lift_mid_box_joint</top_lift_joint>
+    </plugin>
+  </gazebo>
+
+  <!-- START neck -->
+
+  <!-- joint between lift_top_box and neck_pan -->
+  <joint name="neck_fixed_joint" type="fixed">
+    <parent link="lift_top_box"/>
+    <child link="neck_pan"/>
+    <axis xyz="0 1 0" />
+    <origin xyz="0 0 ${lifttopbox_size_z}" rpy="0 0 0"/>  
+  </joint>
+
+  <!-- neck_pan --> 
+  <link name='neck_pan'>
+    <xacro:default_box  xyz=  "0 0 ${neck_pan_size_z/2}" 
+                        rpy=  "0 0 0" 
+                        size= "${neck_pan_size_x} ${neck_pan_size_y} ${neck_pan_size_z}"/>  
+    <xacro:default_inertial mass="0.25"/>
+  </link>
+
+  <!-- joint between neck_pan and neck_tilt -->
+  <joint name="neck_pan_joint" type="revolute">
+    <parent link="neck_pan"/>
+    <child link="neck_tilt"/>
+    <axis xyz="0 0 1" />
+    <origin xyz="${neck_pan_pose_x} 0 ${neck_pan_size_z}" rpy="0 0 0"/>  
+    <dynamics damping="1.0" friction="1.0"/>  
+    <limit effort="1.0" lower="-0.7853" upper="0.7853" velocity="10.0"/>  
+  </joint>
+
+  <!-- neck_tilt --> 
+  <link name='neck_tilt'>
+    <xacro:default_box  xyz=  "0 0 ${neck_tilt_size_z/2}" 
+                        rpy=  "0 0 0" 
+                        size= "${neck_tilt_size_x} ${neck_tilt_size_y} ${neck_tilt_size_z}"/>  
+    <xacro:default_inertial mass="0.25"/>
+  </link>
+
+
+
+   <!-- joint between neck_tilt and kinect -->
+  <joint name="neck_tilt_joint" type="revolute">
+    <parent link="neck_tilt"/>
+    <child link="kinect"/>
+    <axis xyz="0 1 0" />
+    <origin xyz="${kinect_pose_x} ${kinect_pose_y} ${kinect_pose_z}" rpy="0 0 0"/>  
+    <dynamics damping="1.0" friction="1.0"/>  
+    <limit effort="1.0" lower="-1.5707" upper="1.5707" velocity="1.0"/>  
+  </joint>
+  
+  <!-- END neck -->
+
+  <!-- START kinect --> 
+  <link name='kinect'>
+    <xacro:collission_box   xyz=  "0 0 0.036" 
+                            rpy=  "0 0 0" 
+                            size= "${kinect_size_x} ${kinect_size_y} ${kinect_size_z}"/>
+    <visual>
+      <origin xyz="0 0 0.036" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://rose20/meshes/kinect.dae"/>
+        </geometry>
+    </visual>                   
+    <xacro:default_inertial mass="0.1"/>       
+  </link>  
+
+  <gazebo reference="kinect">
+    <sensor type="depth" name="kinect">
+      <update_rate>20.0</update_rate>
+      <camera name="head">
+        <horizontal_fov>1.047198</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.050000</near>
+          <far>3.000000</far>
+        </clip>
+      </camera>      
+      <plugin name="kinect_controller" filename="libgazebo_ros_openni_kinect.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>20.0</updateRate>
+        <pointCloudCutoff>0.001</pointCloudCutoff>
+        <imageTopicName>/camera/rgb/image_raw</imageTopicName>
+        <pointCloudTopicName>/camera/depth/points</pointCloudTopicName>
+        <cameraInfoTopicName>/camera/camera_info</cameraInfoTopicName>
+        <depthImageTopicName>/camera/depth/image_raw</depthImageTopicName>
+        <depthImageInfoTopicName>/camera/depth/camera_info</depthImageInfoTopicName> 
+        <depthImageCameraInfoTopicName>/camera/depth/camera_info</depthImageCameraInfoTopicName>    
+        <cameraName>kinect_sensor</cameraName>
+        <frameName>kinect</frameName>
+        <distortion_k1>0.00000001</distortion_k1>
+        <distortion_k2>0.00000001</distortion_k2>
+        <distortion_k3>0.00000001</distortion_k3>
+        <distortion_t1>0.00000001</distortion_t1>
+        <distortion_t2>0.00000001</distortion_t2>
+      </plugin>      
+    </sensor>
+  </gazebo>
+  
+  <gazebo>
+    <plugin name="NeckController" filename="libNeckController.so"/>
+  </gazebo>
+
+    <!-- START Hokuyo -->
+
+  <joint name="hokuyo_joint" type="revolute">
+    <parent link="base"/>
+    <child link="hokuyo"/>
+    <axis xyz="0 1 0" />
+    <origin xyz="${base_size_x/2} 0 0.175" rpy="0 0 0"/> 
+    <dynamics damping="0.0" friction="0.0"/>  
+    <limit effort="0.0" lower="0.0" upper="0.0" velocity="0.0"/>    
+  </joint>
+
+
+  <link name="hokuyo">    
+    <xacro:default_box      xyz=  "0 0 0" 
+                            rpy=  "0 0 0" 
+                            size= "${hokuyo_size_x} ${hokuyo_size_y} ${hokuyo_size_z}"/>
+    <xacro:default_inertial mass="0.1"/>
+  </link>
+
+  <gazebo reference="hokuyo">
+    <sensor name="laser" type="gpu_ray">
+      <pose>0.05 0 0.0175 0 -0 0</pose>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>1024</samples>
+            <resolution>0.36</resolution>
+            <min_angle>-1.5707</min_angle>
+            <max_angle>1.5707</max_angle> 
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.06</min>
+          <max>4</max>
+          <resolution>10</resolution> 
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise parameters based on published spec for Hokuyo laser
+               achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+               stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+               reading. -->
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+
+      <!--<plugin name="laser" filename="libRayPlugin.so" />-->
+      <plugin name="laser_sensor" filename="libgazebo_ros_gpu_laser.so">
+        <topicName>/scan</topicName>
+        <frameName>laser</frameName>
+      </plugin>
+      <always_on>1</always_on>
+      <update_rate>28</update_rate>
+      <visualize>true</visualize>
+    </sensor>
+  </gazebo>
+   
+  <!-- END Hokuyo -->
+
+ 
+</robot>

@@ -1,6 +1,6 @@
 <robot name="wheel_unit_60mm" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <!-- common -->
-  <xacro:include filename="../common.xacro" />
+  <xacro:include filename="$(find rose20_description)/common.xacro" />
   <xacro:include filename="wheel_unit_60mm_macro.xacro" />
 
   <xacro:wheel_unit_60mm name="test"/>
