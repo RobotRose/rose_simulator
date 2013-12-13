@@ -22,7 +22,7 @@ find_package(gazebo REQUIRED)
 
 catkin_package(
     INCLUDE_DIRS include
-#    LIBRARIES 
+    LIBRARIES LiftController NeckController WheelUnitController
     CATKIN_DEPENDS roscomm rose20_common
     DEPENDS gazebo_ros
 )
