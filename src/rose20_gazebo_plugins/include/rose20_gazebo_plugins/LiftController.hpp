@@ -33,6 +33,8 @@
 #define LIFT_BOTTOM_MAX_ANGLE (M_PI/2.0 - M_PI/8.0) 
 #define LIFT_BOTTOM_MIN_ANGLE (     0.0 + M_PI/8.0)  
 
+using namespace rose20_common;
+
 namespace gazebo
 {   
 class LiftController : public ModelPlugin

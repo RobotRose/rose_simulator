@@ -26,6 +26,8 @@
 
 #include "rose20_common/common.hpp"
 
+using namespace rose20_common;
+
 namespace gazebo
 {   
 class WheelUnitController : public ModelPlugin

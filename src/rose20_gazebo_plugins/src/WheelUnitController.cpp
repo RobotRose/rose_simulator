@@ -18,8 +18,6 @@ using namespace gazebo;
 // Register this plugin with the simulator
 GZ_REGISTER_MODEL_PLUGIN(WheelUnitController)
 
-
-
 void WheelUnitController::Load(physics::ModelPtr model, sdf::ElementPtr sdf) 
 {
   sdf_    = sdf;
