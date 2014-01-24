@@ -67,14 +67,14 @@ void WheelUnitController::Load(physics::ModelPtr model, sdf::ElementPtr sdf)
   ros::NodeHandle n_;
   
   // Publishers
-  pub_enc_caster_pos_      = n_.advertise<std_msgs::Float64>("/" + caster_namespace_ + "/enc_pos", 5);
-  //pub_enc_caster_vel_    = n_.advertise<std_msgs::Float64>("/" + caster_namespace_ + "/enc_vel", 5);
-  pub_enc_wheel_pos_       = n_.advertise<std_msgs::Float64>("/" + wheel_namespace_ + "/enc_pos", 5);
-  pub_enc_wheel_vel_     = n_.advertise<std_msgs::Float64>("/" + wheel_namespace_ + "/enc_vel", 5);
+  pub_enc_caster_pos_    = n_.advertise<std_msgs::Float64>("wheel_unit/" + caster_namespace_ + "/enc_pos", 5);
+  pub_enc_caster_vel_    = n_.advertise<std_msgs::Float64>("wheel_unit/" + caster_namespace_ + "/enc_vel", 5);
+  pub_enc_wheel_pos_     = n_.advertise<std_msgs::Float64>("wheel_unit/" + wheel_namespace_ + "/enc_pos", 5);
+  pub_enc_wheel_vel_     = n_.advertise<std_msgs::Float64>("wheel_unit/" + wheel_namespace_ + "/enc_vel", 5);
   
   // Subscribers
-  sub_caster_pos_   = n_.subscribe("/" + caster_namespace_ + "/req_pos", 1, &WheelUnitController::CB_SetRequestedCasterPos, this);
-  sub_wheel_vel_  = n_.subscribe("/" + wheel_namespace_ + "/req_vel", 1, &WheelUnitController::CB_SetRequestedWheelVel, this);
+  sub_caster_pos_   = n_.subscribe("sim_wheel_controller/" + caster_namespace_ + "/req_pos", 1, &WheelUnitController::CB_SetRequestedCasterPos, this);
+  sub_wheel_vel_    = n_.subscribe("sim_wheel_controller/" + wheel_namespace_  + "/req_vel", 1, &WheelUnitController::CB_SetRequestedWheelVel, this);
       
   // Initialize variables
   cur_caster_pos_ = caster_joint_->GetAngle(1).Radian();
@@ -99,16 +99,17 @@ void WheelUnitController::OnUpdate(const common::UpdateInfo & /*info*/)
   // Publish current joint states
   std_msgs::Float64 msg;
   
-  msg.data   = fmod(cur_caster_pos_, 3.14) * (1000.0/3.14);
+  WheelUnit wheel_unit;
+  msg.data   = wheel_unit.toLowLevelSteer(cur_caster_pos_);
   pub_enc_caster_pos_.publish(msg);
   
-  //msg.data   = cur_caster_vel_;
-  //pub_enc_caster_vel_.publish(msg);
+  msg.data   = wheel_unit.toLowLevelSteer(cur_caster_vel_);
+  pub_enc_caster_vel_.publish(msg);
   
-  msg.data   = fmod(cur_wheel_pos_, 3.14) * (10000.0/3.14);
+  msg.data   = wheel_unit.toLowLevelDrive(cur_wheel_pos_);
   pub_enc_wheel_pos_.publish(msg);
   
-  msg.data   = cur_wheel_vel_ * (1000/4.0);
+  msg.data   = wheel_unit.toLowLevelDrive(cur_wheel_vel_);
   pub_enc_wheel_vel_.publish(msg);
 
   // Calculate position error
@@ -131,13 +132,15 @@ void WheelUnitController::OnUpdate(const common::UpdateInfo & /*info*/)
 void WheelUnitController::CB_SetRequestedCasterPos(const std_msgs::Float64::ConstPtr& msg)
 {
   // TODO Limits 
-  req_caster_pos_  = msg->data;  
+  WheelUnit wheel_unit;
+  req_caster_pos_  = -wheel_unit.toAngleRad((float)msg->data);  
   ROS_INFO("Request caster pos: %.3frad", req_caster_pos_);
 }
   
 void WheelUnitController::CB_SetRequestedWheelVel(const std_msgs::Float64::ConstPtr& msg)
 {
   // TODO Limits via param server
-  req_wheel_vel_ = msg->data * wheel_direction_;  
+  WheelUnit wheel_unit("Only For Functions", -1);
+  req_wheel_vel_ = wheel_unit.toVelocityRadPerSec((float)msg->data)*wheel_direction_;  
   ROS_INFO("Request wheel vel: %.3frad/s", req_wheel_vel_);
 }
