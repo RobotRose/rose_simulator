@@ -26,6 +26,8 @@
 
 #include "rose20_common/common.hpp"
 
+#include "wheel_controller/wheel_unit.hpp"
+
 using namespace rose20_common;
 
 namespace gazebo
@@ -43,7 +45,7 @@ private:
   
   // Publishers
   ros::Publisher pub_enc_caster_pos_;
-  //ros::Publisher pub_enc_caster_vel_;
+  ros::Publisher pub_enc_caster_vel_;
   ros::Publisher pub_enc_wheel_pos_;
   ros::Publisher pub_enc_wheel_vel_;
   
