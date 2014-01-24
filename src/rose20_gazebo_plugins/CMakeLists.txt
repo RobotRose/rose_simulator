@@ -5,7 +5,10 @@ find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
   roscomm 
   rose20_common
+  rose20_platform
 )
+
+set(CMAKE_CXX_FLAGS "-std=c++0x -g") # TODO OH: -g is DEBUG FLAG
 
 # Depend on system install of Gazebo
 find_package(gazebo REQUIRED)
@@ -23,7 +26,7 @@ find_package(gazebo REQUIRED)
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES LiftController NeckController WheelUnitController
-    CATKIN_DEPENDS roscomm rose20_common
+    CATKIN_DEPENDS roscomm rose20_common rose20_platform
     DEPENDS gazebo_ros
 )
 
@@ -33,15 +36,17 @@ include_directories(${PROJECT_SOURCE_DIR}/include ${catkin_INCLUDE_DIRS} ${GAZEB
 link_directories(${gazebo_LIBS})
 
 add_library(LiftController SHARED src/LiftController.cpp) 
-target_link_libraries(LiftController ${gazebo_LIBS} ${rose20_common_LIBRARIES})
+target_link_libraries(LiftController ${gazebo_LIBS} ${catkin_LIBRARIES})
 
 add_library(NeckController SHARED src/NeckController.cpp)
-target_link_libraries(NeckController ${gazebo_LIBS} ${rose20_common_LIBRARIES})
+target_link_libraries(NeckController ${gazebo_LIBS} ${catkin_LIBRARIES})
 
 add_library(WheelUnitController SHARED src/WheelUnitController.cpp)
-target_link_libraries(WheelUnitController ${gazebo_LIBS} ${rose20_common_LIBRARIES})
+target_link_libraries(WheelUnitController ${gazebo_LIBS} ${catkin_LIBRARIES})
 
 add_dependencies(LiftController 		roscomm rose20_common)
 add_dependencies(NeckController 		roscomm rose20_common)
 add_dependencies(WheelUnitController 	roscomm rose20_common)
 
+add_executable(SimWheelController 		${PROJECT_SOURCE_DIR}/src/sim_wheel_controller.cpp)
+target_link_libraries(SimWheelController ${gazebo_LIBS} ${catkin_LIBRARIES})

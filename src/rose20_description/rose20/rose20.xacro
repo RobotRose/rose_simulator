@@ -86,10 +86,10 @@
   </link>  
   
   <!-- Wheel units --> 
-  <xacro:wheel_unit_60mm name="wheel_FL" parent="base" xyz="${wheel_front_x} ${-wheelbase_width} ${base_pose_z - base_size_z/2}" rpy="0 0 ${-pi/2}"/>
-  <xacro:wheel_unit_60mm name="wheel_FR" parent="base" xyz="${wheel_front_x} ${wheelbase_width}  ${base_pose_z - base_size_z/2}" rpy="0 0 ${pi/2}"/>
-  <xacro:wheel_unit_60mm name="wheel_BL" parent="base" xyz="${wheel_back_x}  ${-wheelbase_width} ${base_pose_z - base_size_z/2}" rpy="0 0 ${-pi/2}"/>
-  <xacro:wheel_unit_60mm name="wheel_BR" parent="base" xyz="${wheel_back_x}  ${wheelbase_width}  ${base_pose_z - base_size_z/2}" rpy="0 0 ${pi/2}"/>
+  <xacro:wheel_unit_60mm name="FL" parent="base" xyz="${wheel_front_x} ${-wheelbase_width} ${base_pose_z - base_size_z/2}" rpy="0 0 ${-pi/2}"/>
+  <xacro:wheel_unit_60mm name="FR" parent="base" xyz="${wheel_front_x} ${wheelbase_width}  ${base_pose_z - base_size_z/2}" rpy="0 0 ${pi/2}"/>
+  <xacro:wheel_unit_60mm name="BL" parent="base" xyz="${wheel_back_x}  ${-wheelbase_width} ${base_pose_z - base_size_z/2}" rpy="0 0 ${-pi/2}"/>
+  <xacro:wheel_unit_60mm name="BR" parent="base" xyz="${wheel_back_x}  ${wheelbase_width}  ${base_pose_z - base_size_z/2}" rpy="0 0 ${pi/2}"/>
 
   <!-- joint between base and lift_mid --> 
   <joint name="lift_mid_bottom_joint" type="revolute">
@@ -201,7 +201,7 @@
   <gazebo>
     <plugin name="LiftController" filename="libLiftController.so">
       <bottom_lift_joint>lift_mid_bottom_joint</bottom_lift_joint>
-      <top_lift_joint>lift_mid_box_joint</top_lift_joint>
+      <top_lift_joint>lift_mid_box_joint</top_lift_joint> 
     </plugin>
   </gazebo>
 
