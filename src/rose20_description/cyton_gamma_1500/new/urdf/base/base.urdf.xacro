@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+ <include filename="$(find cyton_gamma)/new/urdf/properties/properties.urdf.xacro" />
+
+  <xacro:macro name="cylinder_base" params="suffix radius length jointz parent">
+    <link name="base_link_${suffix}">
+      <visual>
+        <geometry>
+          <cylinder radius="${radius}" length="${length}" />
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <material name="color_black">
+         <color rgba="0 0 0 1"/>
+        </material>
+      </visual>
+    </link>
+   <joint name="base_joint_${suffix}" type="fixed" >
+    <origin xyz="0 0 ${jointz}" rpy="0 0 0" />
+    <parent link="${parent}" />
+    <child link="base_link_${suffix}" />
+   </joint>   
+  </xacro:macro>
+
+  <!-- cyton_gamma_base: part 1 & 2 -->
+ <xacro:macro name="cyton_gamma_base">
+   <link name="world"/>
+
+   <xacro:cylinder_base
+                        suffix=    "1"
+                        radius=    "${base_radius}"
+                        length=    "${base_length}"
+                        jointz=    "${base_length/2}"
+                        parent=    "world" />
+
+  <xacro:cylinder_base
+                        suffix=     "2"
+                        radius=     "${base_radius_2}"
+                        length=     "${base_length_2}"
+                        jointz=     "${base_length/2 + (base_length_2/2)}"
+                        parent=     "base_link_1" />
+  
+ </xacro:macro>
+  
+</robot>

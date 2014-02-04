@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <property name="M_PI" value="3.1415926535897931"/>
+
+  <!--Base-->
+  <property name="base_length" value="0.006" />
+  <property name="base_radius" value="0.075" />
+  <property name="base_length_2" value="0.013" />
+  <property name="base_radius_2" value="0.0375" />
+
+  <!--Arm-->
+  <!--Joint 1-->
+  <property name="j1_l" value="0.0492" />
+  <property name="j1_b" value="0.0445" />
+  <property name="j1_h" value="0.0545" />
+  <property name="j1_radius" value="0.036" />
+  <property name="j1_length" value="0.08" />
+  <!--Joint 2-->
+  <property name="j2_l" value="0.0445" />
+  <property name="j2_b" value="0.0492" />
+  <property name="j2_h" value="0.0505" />
+  <property name="j2_radius" value="0.036" />
+  <property name="j2_length" value="0.08" />
+  <!--Joint 3-->
+  <property name="j3_l" value="0.0454" />
+  <property name="j3_b" value="0.045" />
+  <property name="j3_h" value="0.04385" />
+  <property name="j3_radius" value="0.036" />
+  <property name="j3_length" value="0.08" />
+  <!--Joint 4-->
+  <property name="j4_l" value="0.045" />
+  <property name="j4_b" value="0.045" />
+  <property name="j4_h" value="0.037" />
+  <property name="j4_radius" value="0.0255" />
+  <property name="j4_length" value="0.067" />  
+  <!--Joint 5-->
+  <property name="j5_l" value="0.045" />
+  <property name="j5_b" value="0.045" />
+  <property name="j5_h" value="0.020" />
+  <property name="j5_radius" value="0.0245" />
+  <property name="j5_length" value="0.045" />
+
+  <!--Gripper-->
+  <!--Part 1-->
+  <property name="gr1_1" value="0.04" />
+  <property name="gr1_2" value="0.035" />
+  <!--Part 2-->
+  <property name="gr2_1_l" value="0.065" />
+  <property name="gr2_1_b" value="0.04" />
+  <property name="gr2_1_h" value="0.03" />
+  <property name="gr2_2_l" value="0.01" />
+  <property name="gr2_2_b" value="0.02" />
+  <property name="gr2_2_h" value="0.03" />
+
+</robot>

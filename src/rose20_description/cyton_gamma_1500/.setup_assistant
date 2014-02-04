@@ -1,0 +1,8 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: cyton_gamma
+    relative_path: urdf/cyton_gamma.urdf
+  SRDF:
+    relative_path: config/cyton_gamma.srdf
+  CONFIG:
+    generated_timestamp: 1389285033
