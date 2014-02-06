@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
- <include filename="$(find cyton_gamma)/new/urdf/properties/properties.urdf.xacro" />
+ <xacro:include filename="$(find rose20_description)/cyton_gamma_1500/new/urdf/properties/properties.urdf.xacro" />
 
   <xacro:macro name="part_gripper" params="suffix parent type *origin *limit *size">
    <joint name="gripper_joint_${suffix}" type="${type}" >

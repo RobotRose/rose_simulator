@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro" name="cyton_gamma" >
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="cyton_gamma_1500" >
     
-  <include filename="$(find cyton_gamma)/new/urdf/base/base.urdf.xacro" />
-  <include filename="$(find cyton_gamma)/new/urdf/arm/arm.urdf.xacro" />
-  <include filename="$(find cyton_gamma)/new/urdf/gripper/gripper.urdf.xacro" />
+  <xacro:include filename="$(find rose20_description)/cyton_gamma_1500/new/urdf/base/base.urdf.xacro" />
+  <xacro:include filename="$(find rose20_description)/cyton_gamma_1500/new/urdf/arm/arm.urdf.xacro" />
+  <xacro:include filename="$(find rose20_description)/cyton_gamma_1500/new/urdf/gripper/gripper.urdf.xacro" />
   
   <xacro:cyton_gamma_base/>
   <xacro:cyton_gamma_arm/>

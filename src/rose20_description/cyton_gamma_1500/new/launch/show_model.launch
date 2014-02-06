@@ -1,11 +1,11 @@
 <launch>
 	<!-- <arg name="model" /> -->
 	<arg name="gui" default="False" />
-	<param name="robot_description" command="$(find xacro)/xacro.py '$(find cyton_gamma)/new/urdf/cyton_gamma/cyton_gamma.urdf.xacro'" />
+	<param name="robot_description" command="$(find xacro)/xacro.py '$(find rose20_description)/cyton_gamma_1500/new/urdf/cyton_gamma/cyton_gamma.urdf.xacro'" />
 	<param name="use_gui" value="$(arg gui)"/>
 	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >
 		<param name="use_gui" value="true"/>
 	</node>
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
-        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find cyton_gamma)/new/urdf/cyton_gamma/cyton_gamma.rviz" />
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rose20_description)/cyton_gamma_1500/new/urdf/cyton_gamma/cyton_gamma.rviz" />
 </launch>
