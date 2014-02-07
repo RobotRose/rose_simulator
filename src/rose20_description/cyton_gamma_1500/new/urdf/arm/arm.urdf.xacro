@@ -70,7 +70,7 @@
                   <box size ="${j2_l} ${j2_b} ${j2_h}" />
                   <limit lower="0" upper="0" effort="0" velocity="0"/>
                   <limit lower="-${M_PI/2}" upper="${M_PI/2}" effort="1000" velocity="1000"/>
-                  <origin xyz="0 ${j1_radius + (j2_h /2)} 0" rpy="-${M_PI/2} 0 0"/>
+                  <origin xyz="0 ${j1_radius + (j2_h /2)} 0" rpy="-${M_PI/2} -${M_PI} 0"/>
                   <origin xyz="0 0 ${(j2_h/2) + j2_radius}" rpy="0 ${M_PI/2} 0"/>
   </xacro:joint_arm>
   
@@ -85,7 +85,7 @@
                   <limit lower="0" upper="0" effort="0" velocity="0"/>
                   <limit lower="-${M_PI/2}" upper="${M_PI/2}" effort="1000" velocity="1000"/>
                   <origin xyz="-${j2_radius + (j3_h /2)} 0 0" rpy="0 -${M_PI/2} 0"/>
-                  <origin xyz="0 0 ${(j3_h/2) + j3_radius}" rpy="${M_PI/2} 0 0"/>
+                  <origin xyz="0 0 ${(j3_h/2) + j3_radius}" rpy="${M_PI/2} 0 ${M_PI}"/>
   </xacro:joint_arm>
   
   <xacro:joint_arm 
@@ -98,7 +98,7 @@
                   <box size ="${j4_l} ${j4_b} ${j4_h}" />
                   <limit lower="0" upper="0" effort="0" velocity="0"/>
                   <limit lower="-${M_PI/2}" upper="${M_PI/2}" effort="1000" velocity="1000"/>
-                  <origin xyz="0 ${j3_radius + (j4_h /2)} 0" rpy="-${M_PI/2} 0 0"/>
+                  <origin xyz="0 ${j3_radius + (j4_h /2)} 0" rpy="-${M_PI/2} -${M_PI} 0"/>
                   <origin xyz="0 0 ${(j4_h/2) + j4_radius}" rpy="0 ${M_PI/2} 0"/>
   </xacro:joint_arm>
   
@@ -113,7 +113,7 @@
                   <limit lower="0" upper="0" effort="0" velocity="0"/>
                   <limit lower="-${M_PI/2}" upper="${M_PI/2}" effort="1000" velocity="1000"/>
                   <origin xyz="-${j4_radius + (j5_h /2)} 0 0" rpy="0 -${M_PI/2} 0"/>
-                  <origin xyz="0 0 ${(j5_h/2) + j5_radius}" rpy="${M_PI/2} 0 0"/>
+                  <origin xyz="0 0 ${(j5_h/2) + j5_radius}" rpy="${M_PI/2} 0 ${M_PI}"/>
   </xacro:joint_arm>
 
  </xacro:macro>
