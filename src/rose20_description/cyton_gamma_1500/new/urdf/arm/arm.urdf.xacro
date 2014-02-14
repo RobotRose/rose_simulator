@@ -3,14 +3,15 @@
 
  <xacro:include filename="$(find rose20_description)/cyton_gamma_1500/new/urdf/properties/properties.urdf.xacro" />
 
- <xacro:macro name="joint_arm" params="suffix radius length parent type_box type_cyl *size *limit_box *limit_cyl *origin_box *origin_cyl">
+ <xacro:macro name="joint_arm" params="suffix radius length parent type_box type_cyl *size *limit_box *limit_cyl *origin_box *origin_cyl *axis_box *axis_cyl">
   <!--Part 1: box -->
   <joint name="arm_joint_box_${suffix}" type="${type_box}" >
     <parent link="${parent}" />
     <child link="arm_link_box_${suffix}" />
      <insert_block name="limit_box"/>
-    <axis xyz="0 0 1"/>
+     <insert_block name="axis_box"/>
      <insert_block name="origin_box"/>
+
   </joint>
   <link name="arm_link_box_${suffix}">
     <visual>
@@ -27,9 +28,9 @@
  <joint name="arm_joint_cyl_${suffix}" type="${type_cyl}" >
     <parent link="arm_link_box_${suffix}" />
     <child link="arm_link_cyl_${suffix}" />
-     <insert_block name="limit_cyl"/>
-    <axis xyz="0 0 1"/>
-    <insert_block name="origin_cyl"/>
+    <insert_block name="limit_cyl"/>
+    <insert_block name="axis_cyl"/>
+    <insert_block name="origin_cyl"/>    
   </joint>
   <link name="arm_link_cyl_${suffix}">
     <visual>
@@ -55,9 +56,11 @@
                   type_cyl=  "revolute">
                   <box size ="${j1_l} ${j1_b} ${j1_h}" />
                   <limit lower="-${M_PI}" upper="${M_PI}" effort="1000" velocity="1000"/>
-                  <limit lower="-${M_PI/2}" upper="${M_PI/2}" effort="1000" velocity="1000"/>
+                  <limit lower="${j1_lower_lim}" upper="${j1_upper_lim}" effort="1000" velocity="1000"/>
                   <origin xyz="0 0 ${(base_length_2/2) + (j1_h /2)}" rpy="0 0 0"/>
                   <origin xyz="0 0 ${(j1_h/2) + j1_radius}" rpy="${M_PI/2} 0 0"/>
+                  <axis xyz="0 0 1" />
+                  <axis xyz="0 0 1" />
   </xacro:joint_arm>
   
   <xacro:joint_arm 
@@ -69,9 +72,11 @@
                   type_cyl=  "revolute">
                   <box size ="${j2_l} ${j2_b} ${j2_h}" />
                   <limit lower="0" upper="0" effort="0" velocity="0"/>
-                  <limit lower="-${M_PI/2}" upper="${M_PI/2}" effort="1000" velocity="1000"/>
+                  <limit lower="${j2_lower_lim}" upper="${j2_upper_lim}" effort="1000" velocity="1000"/>
                   <origin xyz="0 ${j1_radius + (j2_h /2)} 0" rpy="-${M_PI/2} -${M_PI} 0"/>
                   <origin xyz="0 0 ${(j2_h/2) + j2_radius}" rpy="0 ${M_PI/2} 0"/>
+                  <axis xyz="0 0 1" />
+                  <axis xyz="0 0 1" />
   </xacro:joint_arm>
   
   <xacro:joint_arm 
@@ -83,9 +88,11 @@
                   type_cyl=  "revolute">
                   <box size ="${j3_l} ${j3_b} ${j3_h}" />
                   <limit lower="0" upper="0" effort="0" velocity="0"/>
-                  <limit lower="-${M_PI/2}" upper="${M_PI/2}" effort="1000" velocity="1000"/>
+                  <limit lower="${j3_lower_lim}" upper="${j3_upper_lim}" effort="1000" velocity="1000"/>
                   <origin xyz="-${j2_radius + (j3_h /2)} 0 0" rpy="0 -${M_PI/2} 0"/>
                   <origin xyz="0 0 ${(j3_h/2) + j3_radius}" rpy="${M_PI/2} 0 ${M_PI}"/>
+                  <axis xyz="0 0 1" />
+                  <axis xyz="0 0 1" />
   </xacro:joint_arm>
   
   <xacro:joint_arm 
@@ -97,9 +104,11 @@
                   type_cyl=  "revolute">
                   <box size ="${j4_l} ${j4_b} ${j4_h}" />
                   <limit lower="0" upper="0" effort="0" velocity="0"/>
-                  <limit lower="-${M_PI/2}" upper="${M_PI/2}" effort="1000" velocity="1000"/>
+                  <limit lower="${j4_lower_lim}" upper="${j4_upper_lim}" effort="1000" velocity="1000"/>
                   <origin xyz="0 ${j3_radius + (j4_h /2)} 0" rpy="-${M_PI/2} -${M_PI} 0"/>
                   <origin xyz="0 0 ${(j4_h/2) + j4_radius}" rpy="0 ${M_PI/2} 0"/>
+                  <axis xyz="0 0 1" />
+                  <axis xyz="0 0 1" />
   </xacro:joint_arm>
   
   <xacro:joint_arm 
@@ -111,9 +120,11 @@
                   type_cyl=  "revolute">
                   <box size ="${j5_l} ${j5_b} ${j5_h}" />
                   <limit lower="0" upper="0" effort="0" velocity="0"/>
-                  <limit lower="-${M_PI/2}" upper="${M_PI/2}" effort="1000" velocity="1000"/>
+                  <limit lower="${j5_lower_lim}" upper="${j5_upper_lim}" effort="1000" velocity="1000"/>
                   <origin xyz="-${j4_radius + (j5_h /2)} 0 0" rpy="0 -${M_PI/2} 0"/>
                   <origin xyz="0 0 ${(j5_h/2) + j5_radius}" rpy="${M_PI/2} 0 ${M_PI}"/>
+                  <axis xyz="0 0 1" />
+                  <axis xyz="0 0 1" />
   </xacro:joint_arm>
 
  </xacro:macro>

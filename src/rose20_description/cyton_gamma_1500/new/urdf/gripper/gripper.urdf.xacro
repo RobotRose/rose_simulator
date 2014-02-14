@@ -25,53 +25,53 @@
   </xacro:macro>
 
   <!-- cyton_gamma_gripper: part 1 & 2 -->
- <xacro:macro name="cyton_gamma_gripper">
+  <xacro:macro name="cyton_gamma_gripper">
 
- <!-- Part 1 -->
- <xacro:part_gripper 
+  <!-- Part 1 -->
+  <xacro:part_gripper 
                   suffix=     "1"
                   parent=     "arm_link_cyl_5"
                   type =      "revolute">
                   <origin xyz="0 ${j5_radius + (gr1_1 /2)} 0" rpy="-${M_PI/2} ${M_PI/2} 0"/>
- 		  <limit lower="-${M_PI}" upper="${M_PI}" effort="1000" velocity="1000"/>
+ 		              <limit lower="${g1_lower_lim}" upper="${g1_upper_lim}" effort="1000" velocity="1000"/>
                   <box size ="${gr1_1} ${gr1_1} ${gr1_1}" />
- </xacro:part_gripper>
- <xacro:part_gripper 
+  </xacro:part_gripper>
+  <xacro:part_gripper 
                   suffix=     "2"
                   parent=     "gripper_link_1"
                   type =      "fixed">
                   <origin xyz="0 0 ${(gr1_1/2) + (gr1_2/2)}" rpy="0 0 0"/>
- 		  <limit lower="0" upper="0" effort="0" velocity="0"/>
+ 		              <limit lower="0" upper="0" effort="0" velocity="0"/>
                   <box size ="${gr1_2} ${gr1_2} ${gr1_2}" />
- </xacro:part_gripper>
+  </xacro:part_gripper>
   <!-- Part 2 -->
   <xacro:part_gripper 
                   suffix=     "3"
                   parent=     "gripper_link_2"
                   type =      "fixed">
                   <origin xyz="0 0 ${(gr1_2/2) + (gr2_1_h/2)}" rpy="0 0 0"/>
- 		  <limit lower="0" upper="0" effort="0" velocity="0"/>
+ 		              <limit lower="0" upper="0" effort="0" velocity="0"/>
                   <box size ="${gr2_1_l} ${gr2_1_b} ${gr2_1_h}" />
- </xacro:part_gripper>
+  </xacro:part_gripper>
 
   <xacro:part_gripper 
                   suffix=     "4"
                   parent=     "gripper_link_3"
                   type =      "fixed">
                   <origin xyz="${gr2_1_l /4} ${(gr2_1_b /2) - (gr2_2_b /2)} ${(gr2_1_h/2) + (gr2_2_h/2)}" rpy="0 0 0"/>
- 		  <limit lower="0" upper="0" effort="0" velocity="0"/>
+ 		              <limit lower="0" upper="0" effort="0" velocity="0"/>
                   <box size ="${gr2_2_l} ${gr2_2_b} ${gr2_2_h}" />
- </xacro:part_gripper>
+  </xacro:part_gripper>
 
- <xacro:part_gripper 
+  <xacro:part_gripper 
                   suffix=     "5"
                   parent=     "gripper_link_3"
                   type =      "fixed">
                   <origin xyz="-${gr2_1_l /4} ${(gr2_1_b /2) - (gr2_2_b /2)} ${(gr2_1_h/2) + (gr2_2_h/2)}" rpy="0 0 0"/>
- 		  <limit lower="0" upper="0" effort="0" velocity="0"/>
+ 		              <limit lower="0" upper="0" effort="0" velocity="0"/>
                   <box size ="${gr2_2_l} ${gr2_2_b} ${gr2_2_h}" />
- </xacro:part_gripper>
+  </xacro:part_gripper>
 
- </xacro:macro>
+  </xacro:macro>
   
 </robot>

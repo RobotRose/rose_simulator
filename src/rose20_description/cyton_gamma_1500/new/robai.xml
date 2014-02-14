@@ -1,0 +1,498 @@
+<Robot name="robai">
+	<KinBody>
+		<Body name="Base" type="dynamic">
+			<!--bottom base -->
+			<!-- Extents go from middle of body that is created--> 
+				<Translation>0.0 0.0 0.002609</Translation>
+				<Geom type="box">
+					<Extents>.075 .0885 .002609</Extents>
+					<diffuseColor>.65 .5 0.05</diffuseColor>
+				</Geom>
+			<!--cylinders for support -->
+				<Geom type="cylinder">
+ 					<rotationaxis>1 0 0 90</rotationaxis>
+					<Translation>-0.05 -0.05  0.034424</Translation>
+					<radius>.00762</radius>
+					<height>0.06384</height>
+					<diffuseColor>.065 .05 0.5</diffuseColor>					
+
+				</Geom>
+				<Geom type="cylinder">
+ 					<rotationaxis>1 0 0 90</rotationaxis>
+					<Translation>0.05 0.025  0.034424</Translation>
+					<radius>.00762</radius>
+					<height>0.06384</height>
+					<diffuseColor>.065 .05 0.5</diffuseColor>					
+
+				</Geom>
+				<Geom type="cylinder">
+ 					<rotationaxis>1 0 0 90</rotationaxis>
+					<Translation>-0.05 0.025  0.034424</Translation>
+					<radius>.00762</radius>
+					<height>0.06384</height>
+					<diffuseColor>.065 .05 0.5</diffuseColor>					
+
+				</Geom>
+				<Geom type="cylinder">
+ 					<rotationaxis>1 0 0 90</rotationaxis>
+					<Translation>0.05 -0.05  0.034424</Translation>
+					<radius>.00762</radius>
+					<height>0.06384</height>
+					<diffuseColor>.065 .05 0.5</diffuseColor>					
+
+				</Geom>
+			<!--top base for support  -->
+				<Geom type="cylinder">
+ 					<rotationaxis>1 0 0 90</rotationaxis>
+					<Translation>0.0 -.0135 0.068848</Translation>
+					<radius>.075</radius>
+					<height>0.00508</height>	
+					<diffuseColor>.05 .5 0.05</diffuseColor>				
+
+				</Geom>
+			<!--power box -->
+				<Geom type="box">
+					<Extents>.015875 .02960237 0.0141605</Extents>
+					<Translation>-.06 -.0175 0.0166645</Translation>
+					<diffuseColor>.65 .25 0.15</diffuseColor>
+				</Geom>
+			<!--center box-->
+				<Geom type="box">
+					<Extents>.02254 .040  0.03192</Extents>
+					<Translation>0.0 -.04 .0345004</Translation>
+					<diffuseColor>.85 .15 0.05</diffuseColor>
+				</Geom>
+			<!--center box top -->
+				<Geom type="cylinder">
+ 					<rotationaxis>1 0 0 90</rotationaxis>
+					<Translation>0.0 -.0135 0.056184</Translation>
+					<radius>.03175</radius>
+					<height>0.02032</height>	
+					<diffuseColor>.85 .15 0.05</diffuseColor>
+
+				</Geom>
+			<!--usb box -->
+				<Geom type="box">
+					<Extents>.00889 .04318 0.022479</Extents>
+					<Translation>.067 .01750 0.024983</Translation>
+					<diffuseColor>.055 .25 0.25</diffuseColor>
+				</Geom>
+			<!--top lip -->
+				<Geom type="cylinder">
+ 					<rotationaxis>1 0 0 90</rotationaxis>
+					<Translation>0.0 -.0135 0.07774</Translation>
+					<radius>0.04445</radius>
+					<height>0.0127</height>	
+					<diffuseColor>.85 .15 0.05</diffuseColor>
+
+				</Geom>
+
+		</Body>
+
+		<Body name="link1" type="dynamic">
+			<Translation>0.0 -.0135 0.086699</Translation>
+			<offsetfrom>Base</offsetfrom>
+			<!--Small base for rotating part-->		
+			<Geom type="cylinder">
+ 					<rotationaxis>1 0 0 90</rotationaxis>
+					<Translation>0.0 0.0 0.0</Translation>
+					<radius>0.028</radius>
+					<height>0.002</height>	
+					<diffuseColor>.1 .3 0.45</diffuseColor>
+
+			</Geom>
+			<!--Arm to the hinge-->
+			<Geom type="box">
+					<Extents>.02032 .02032  0.044825</Extents>
+					<Translation>0.0 0 .045825</Translation>
+					<diffuseColor>.1 .3 0.45</diffuseColor>
+				</Geom>
+			<!--Extend above Hinge-->
+			<Geom type="cylinder">
+ 					<rotationaxis>0 0 1 90</rotationaxis>
+					<Translation>0.0 0.0 0.09165</Translation>
+					<radius>0.03048</radius>
+					<height>0.04191</height>	
+					<diffuseColor>.1 .3 0.45</diffuseColor>
+
+			</Geom>
+			<!--Fatter part of the rapid prototype material -->
+				<Geom type="box">
+					<Extents>.020955 .024384  0.014859</Extents>
+					<Translation>0.0 0 .06858</Translation>
+					<diffuseColor>.1 .3 0.45</diffuseColor>
+				</Geom>
+			<!--Holder -->
+			<Geom type="cylinder">
+ 					<rotationaxis>0 0 1 90</rotationaxis>
+					<Translation>0.03175 0.0 0.09165</Translation>
+					<radius>0.03429</radius>
+					<height>0.018796</height>	
+					<diffuseColor>.1 .3 0.45</diffuseColor>
+
+			</Geom>
+			
+		</Body>
+		<Body name="link2" type="dynamic">
+
+			<Translation>0.0 0 0.10335</Translation>
+			<offsetfrom>link1</offsetfrom>
+			<!--bracket  -->
+			
+			<Geom type="box">
+ 					<rotationaxis>0 1 0 90</rotationaxis>
+					<Extents>  .018034 .01397 0.0005</Extents>
+					<Translation> -0.02233 0.0  .0182245 </Translation>
+					<diffuseColor>.15 .75 0.55</diffuseColor>
+				</Geom>
+			
+			<Geom type="box">
+
+					<Extents>  .02233 .01397 0.001</Extents>
+					<Translation> 0.0 0.0 0.0353  </Translation>
+					<diffuseColor>.15 .75 0.55</diffuseColor>
+				</Geom>
+			<!--servo-->
+			<Geom type="box">
+					<Extents>.02032 .02032  0.044785</Extents>
+					<Translation>0.0 0 .081045</Translation>
+					<diffuseColor>.1 .93 0.45</diffuseColor>
+			</Geom>
+			
+			<!--Extend above Hinge-->
+
+			<Geom type="cylinder">
+ 					<rotationaxis>0 1 0 90</rotationaxis>
+					<Translation>0.0 0.0 0.12583</Translation>
+					<radius>0.03048</radius>
+					<height>0.04191</height>	
+					<diffuseColor>.1 .93 0.45</diffuseColor>
+
+			</Geom>
+		<!--Fatter part of the rapid prototype material -->
+				<Geom type="box">
+					<Extents> .024384 .020955  0.014859</Extents>
+					<Translation>0.0 0 .10276</Translation>
+					<diffuseColor>.1 .93 0.45</diffuseColor>
+				</Geom>
+			<Geom type="cylinder">
+ 					<rotationaxis>0 1 0 90</rotationaxis>
+					<Translation> 0.0 -0.03175 0.12583</Translation>
+					<radius>0.03429</radius>
+					<height>0.018796</height>	
+					<diffuseColor>.1 .93 0.45</diffuseColor>
+			</Geom>
+		</Body>
+
+		<Body name="link3" type="dynamic">
+			<Translation>0.0 0 0.12583</Translation>
+			<offsetfrom>link2</offsetfrom>
+			<Geom type="box">
+ 					<rotationaxis>1 0 0 90</rotationaxis>
+					<Extents>   .01397 .018034 0.001</Extents>
+					<Translation>  0.0 0.021334 .0182245 </Translation>
+					<diffuseColor>.75 .15 0.55</diffuseColor>
+				</Geom>
+		
+			
+			<Geom type="box">
+
+					<Extents>  .01397 .02233 0.001</Extents>
+					<Translation> 0.0 0.0 0.0353  </Translation>
+					<diffuseColor>.75 .15 0.55</diffuseColor>
+				</Geom>
+			<!--servo-->
+			<Geom type="box">
+					<Extents>.017907 .017907  0.03956</Extents>
+					<Translation>0.0 0 .07582</Translation>
+					<diffuseColor>.75 .15 0.55</diffuseColor>
+			</Geom>
+			<!--Extend above Hinge-->
+			<Geom type="cylinder">
+ 					<rotationaxis>0 0 1 90</rotationaxis>
+					<Translation>0.0 0.0 0.11538</Translation>
+					<radius>0.025527</radius>
+					<height>0.035814</height>	
+					<diffuseColor>.75 .15 0.55</diffuseColor>
+			</Geom>
+
+			<!--Fatter part of the rapid prototype material -->
+				<Geom type="box">
+					<Extents>.017907 .020955 0.014859</Extents>
+					<Translation>0.0 0 .09501</Translation>
+					<diffuseColor>.75 .15 0.55</diffuseColor>
+				</Geom>
+
+
+			<!--Holder -->
+			<Geom type="cylinder">
+ 					<rotationaxis>0 0 1 90</rotationaxis>
+					<Translation>0.03 0.0 0.11538</Translation>
+					<radius>0.03429</radius>
+					<height>0.018796</height>	
+					<diffuseColor>.75 .15 0.55</diffuseColor>
+			</Geom>
+
+		</Body>
+		<Body name="link4" type="dynamic">
+			<Translation>0.0 -.0135 0.11538</Translation>
+			<offsetfrom>link3</offsetfrom>
+			<!--bracket  -->
+			<Geom type="box">
+ 					<rotationaxis>0 1 0 90</rotationaxis>
+					<Extents>  .016695 .01397 0.001</Extents>
+					<Translation> 0.019 0.0  .014 </Translation>
+					<diffuseColor>1 1 .45</diffuseColor>
+				</Geom>
+			<Geom type="box">
+ 					<rotationaxis>0 1 0 90</rotationaxis>
+					<Extents>  .016695 .01397 0.001</Extents>
+					<Translation> -0.019 0.0  .014 </Translation>
+					<diffuseColor>1 1 .45</diffuseColor>
+				</Geom>
+			
+			<Geom type="box">
+
+					<Extents> .02 .01397  0.001</Extents>
+					<Translation> 0.0 0.0 0.03  </Translation>
+					<diffuseColor>1 1 .45</diffuseColor>
+				</Geom>
+			<!--Servo-->
+			<Geom type="box">
+					<Extents>.017907 .017907  0.03326</Extents>
+					<Translation>0.0 0 .06426</Translation>
+					<diffuseColor>1 1 .45</diffuseColor>
+			</Geom>
+			<!--Extend above Hinge-->
+			<Geom type="cylinder">
+
+					<Translation>0.0 0.0 0.09752</Translation>
+					<radius>0.025527</radius>
+					<height>0.035814</height>	
+					<diffuseColor>1 1 .45</diffuseColor>
+			</Geom>
+		<Geom type="cylinder">
+
+					<Translation>0.0 0.0 0.09752</Translation>
+					<radius>0.025527</radius>
+					<height>0.035814</height>	
+					<diffuseColor>1 1 .45</diffuseColor>
+			</Geom>
+			<!--Fatter part of the rapid prototype material -->
+			<Geom type="box">
+				<Extents> .020955 .017907 0.014859</Extents>
+				<Translation>0.0 0 .08</Translation>
+				<diffuseColor>1 1 .45</diffuseColor>
+			</Geom>
+			
+
+			<!--Holder -->
+			<Geom type="cylinder">
+
+					<Translation>0.0 -0.03 0.09752</Translation>
+					<radius>0.0174625</radius>
+					<height>0.018796</height>	
+					<diffuseColor>1 1 .45</diffuseColor>
+			</Geom>
+
+
+
+			
+		</Body>
+		<Body name="link5" type="dynamic">
+			<Translation>0.0 0 0.09752</Translation>
+			<offsetfrom>link4</offsetfrom>
+			<!--bracket  -->
+			<Geom type="box">
+ 					<rotationaxis>1 0 0 90</rotationaxis>
+					<Extents> .01397 .01397 0.001</Extents>
+					<Translation>  0.0 0.019  .014 </Translation>
+					<diffuseColor>0.1 0.1 0.1</diffuseColor>
+				</Geom>
+			<Geom type="box">
+ 					<rotationaxis>1 0 0 90</rotationaxis>
+					<Extents>  .01397 .01397 0.001</Extents>
+					<Translation>  0.0 -0.019 .014 </Translation>
+					<diffuseColor>0.1 0.1 0.1</diffuseColor>
+				</Geom>
+			
+			<Geom type="box">
+
+					<Extents> .01397 .02  0.001</Extents>
+					<Translation> 0.0 0.0 0.02697  </Translation>
+					<diffuseColor>0.1 0.1 0.1</diffuseColor>
+				</Geom>
+			<Geom type="box">
+					<Extents>.017907 .017907  0.021835</Extents>
+					<Translation>0.0 0 .049805</Translation>
+					<diffuseColor>0.1 0.1 0.1</diffuseColor>
+			</Geom>
+		<Geom type="cylinder">
+ 					<rotationaxis>0 0 1 90</rotationaxis>
+					<Translation>0.0 0.0 0.07164</Translation>
+					<radius>0.025527</radius>
+					<height>0.035814</height>	
+					<diffuseColor>0.1 0.1 0.1</diffuseColor>
+			</Geom>
+		
+
+		</Body>
+
+		<Body name="link6" type="dynamic">
+			<Translation>0.0 0 0.07164</Translation>
+			<offsetfrom>link5</offsetfrom>
+				<!--bracket  -->
+			<Geom type="box">
+ 					<rotationaxis>0 1 0 90</rotationaxis>
+					<Extents>  .016695 .01397 0.001</Extents>
+					<Translation> 0.019 0.0  .014 </Translation>
+					<diffuseColor>.1 1 1</diffuseColor>
+				</Geom>
+			<Geom type="box">
+ 					<rotationaxis>0 1 0 90</rotationaxis>
+					<Extents>  .016695 .01397 0.001</Extents>
+					<Translation> -0.019 0.0  .014 </Translation>
+					<diffuseColor>.1 1 1</diffuseColor>
+				</Geom>
+			
+			<Geom type="box">
+
+					<Extents> .02 .01397  0.001</Extents>
+					<Translation> 0.0 0.0 0.03  </Translation>
+					<diffuseColor>.1 1 1</diffuseColor>
+				</Geom>
+
+		</Body>
+	<Body name="link7" type="dynamic">
+		<Translation>0.0 0 0.031</Translation>
+			<offsetfrom>link6</offsetfrom>
+				<Geom type="box">
+					<Extents>.017907 .017907  .03752</Extents>
+					<Translation>0.0 0 .03752</Translation>
+					<diffuseColor>.1 1 .1</diffuseColor>
+				</Geom>
+				<Geom type="box">
+					<Extents>.037465 .020955 .0053</Extents>
+					<Translation>0.0 0 .08034</Translation>
+					<diffuseColor>.1 1 .1</diffuseColor>
+				</Geom>
+				<Geom type="box">
+					<Extents>.00762 .01016  .02794</Extents>
+					<Translation>.018 0 .11358</Translation>
+					<diffuseColor>1 0 0 </diffuseColor>
+					</Geom>
+				<Geom type="box">
+					<Extents>.00762 .01016  .02794</Extents>
+					<Translation>-.018 0 .11358</Translation>
+					<diffuseColor>1 0 0 </diffuseColor>
+					</Geom>
+				
+</Body>
+			
+
+
+
+
+
+		<!--Joint 1 300 degrees -->
+		    <Joint name="link1" type="hinge">
+		      <Body>Base</Body>
+		      <Body>link1</Body>
+		      <offsetfrom>link1</offsetfrom>
+		      <weight>3</weight>
+		      <limitsdeg>-150 150</limitsdeg>
+		      <axis>0 0 1</axis>
+		      <maxvel>4</maxvel>
+		      <resolution>1</resolution>
+		    </Joint>
+ 		 <Joint name="link2" type="hinge">
+		      <Body>link1</Body>
+		      <Body>link2</Body>
+		      <offsetfrom>link2</offsetfrom>
+		      <weight>3</weight>
+		      <limitsdeg>-105 105</limitsdeg>
+		      <axis>1 0 0</axis>
+		      <maxvel>4</maxvel>
+		      <resolution>1</resolution>
+		    </Joint>
+ 		<Joint name="link3" type="hinge">
+		      <Body>link2</Body>
+		      <Body>link3</Body>
+		      <offsetfrom>link3</offsetfrom>
+		      <weight>3</weight>
+		      <limitsdeg>-105 105</limitsdeg>
+		      <axis>0 1 0</axis>
+		      <maxvel>4</maxvel>
+		      <resolution>1</resolution>
+		    </Joint>
+		<Joint name="link4" type="hinge">
+		      <Body>link3</Body>
+		      <Body>link4</Body>
+		      <offsetfrom>link4</offsetfrom>
+		      <weight>3</weight>
+		      <limitsdeg>-105 105</limitsdeg>
+		      <axis>1 0 0</axis>
+		      <maxvel>4</maxvel>
+		      <resolution>1</resolution>
+		    </Joint>
+		<Joint name="link5" type="hinge">
+		      <Body>link4</Body>
+		      <Body>link5</Body>
+		      <offsetfrom>link5</offsetfrom>
+		      <weight>3</weight>
+		      <limitsdeg>-105 105</limitsdeg>
+		      <axis>0 1 0</axis>
+		      <maxvel>4</maxvel>
+		      <resolution>1</resolution>
+		    </Joint>
+		<Joint name="link6" type="hinge">
+		      <Body>link5</Body>
+		      <Body>link6</Body>
+		      <offsetfrom>link6</offsetfrom>
+		      <weight>3</weight>
+		      <limitsdeg>-105 105</limitsdeg>
+		      <axis> 1 0 0</axis>
+		      <maxvel>4</maxvel>
+		      <resolution>1</resolution>
+		    </Joint>
+		<Joint name="link7" type="hinge">
+		      <Body>link6</Body>
+		      <Body>link7</Body>
+		      <offsetfrom>link7</offsetfrom>
+		      <weight>3</weight>
+		      <limitsdeg>-150 150</limitsdeg>
+		      <axis>0 0 1</axis>
+		      <maxvel>4</maxvel>
+		      <resolution>1</resolution>
+		    </Joint>
+		<!--<Joint name="LeftGripper" type="slider">
+		      <Body>link7</Body>
+		      <Body>LeftGripper</Body>
+		      <offsetfrom>LeftGripper</offsetfrom>
+		      <limits>-.0135 .0135</limits>
+		      <axis>1 0 0</axis>
+		      <maxvel>4</maxvel>
+		      <resolution>1</resolution>
+		    </Joint>
+<Joint name="RightGripper" type="slider">
+		      <Body>link7</Body>
+		      <Body>RightGripper</Body>
+		      <offsetfrom>RightGripper</offsetfrom>
+		      <limits>-.0135 .0135</limits>
+		      <axis>-1 0 0</axis>
+		      <maxvel>4</maxvel>
+		      <resolution>1</resolution>
+		    </Joint>
+-->
+
+	</KinBody>
+	<Manipulator name="arm">
+		<base>Base</base>
+		<effector>link7</effector>
+
+		
+
+
+	</Manipulator>
+
+</Robot>

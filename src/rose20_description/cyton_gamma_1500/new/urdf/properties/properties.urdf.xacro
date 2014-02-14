@@ -16,35 +16,47 @@
   <property name="j1_h" value="0.0545" />
   <property name="j1_radius" value="0.036" />
   <property name="j1_length" value="0.08" />
+  <property name="j1_lower_lim" value="-2.6" />
+  <property name="j1_upper_lim" value="2.6" />
   <!--Joint 2-->
   <property name="j2_l" value="0.0445" />
   <property name="j2_b" value="0.0492" />
   <property name="j2_h" value="0.0505" />
   <property name="j2_radius" value="0.036" />
   <property name="j2_length" value="0.08" />
+  <property name="j2_lower_lim" value="-1.65" />
+  <property name="j2_upper_lim" value="1.65" />
   <!--Joint 3-->
   <property name="j3_l" value="0.0454" />
   <property name="j3_b" value="0.045" />
   <property name="j3_h" value="0.04385" />
   <property name="j3_radius" value="0.036" />
   <property name="j3_length" value="0.08" />
+  <property name="j3_lower_lim" value="-1.60" />
+  <property name="j3_upper_lim" value="1.60" />
   <!--Joint 4-->
   <property name="j4_l" value="0.045" />
   <property name="j4_b" value="0.045" />
   <property name="j4_h" value="0.037" />
   <property name="j4_radius" value="0.0255" />
   <property name="j4_length" value="0.067" />  
+  <property name="j4_lower_lim" value="-1.75" />
+  <property name="j4_upper_lim" value="1.75" />
   <!--Joint 5-->
   <property name="j5_l" value="0.045" />
   <property name="j5_b" value="0.045" />
   <property name="j5_h" value="0.020" />
   <property name="j5_radius" value="0.0245" />
   <property name="j5_length" value="0.045" />
+  <property name="j5_lower_lim" value="-1.90" />
+  <property name="j5_upper_lim" value="1.90" />
 
   <!--Gripper-->
   <!--Part 1-->
   <property name="gr1_1" value="0.04" />
   <property name="gr1_2" value="0.035" />
+  <property name="g1_lower_lim" value="-2.65" />
+  <property name="g1_upper_lim" value="2.65" />
   <!--Part 2-->
   <property name="gr2_1_l" value="0.065" />
   <property name="gr2_1_b" value="0.04" />
