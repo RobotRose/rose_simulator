@@ -44,9 +44,16 @@ target_link_libraries(NeckController ${gazebo_LIBS} ${catkin_LIBRARIES})
 add_library(WheelUnitController SHARED src/WheelUnitController.cpp)
 target_link_libraries(WheelUnitController ${gazebo_LIBS} ${catkin_LIBRARIES})
 
-add_dependencies(LiftController 		roscomm rose20_common)
-add_dependencies(NeckController 		roscomm rose20_common)
-add_dependencies(WheelUnitController 	roscomm rose20_common)
+add_dependencies(LiftController 			roscomm rose20_common)
+add_dependencies(NeckController 			roscomm rose20_common)
+add_dependencies(WheelUnitController 		roscomm rose20_common)
 
-add_executable(SimWheelController 		${PROJECT_SOURCE_DIR}/src/sim_wheel_controller.cpp)
+
+
+add_executable(SimWheelController 		${PROJECT_SOURCE_DIR}/src/sim_joint.cpp
+										${PROJECT_SOURCE_DIR}/src/sim_wheel_unit_controller.cpp
+										${PROJECT_SOURCE_DIR}/src/sim_wheel_controller.cpp
+										${PROJECT_SOURCE_DIR}/src/sim_wheel_controller_node.cpp
+										)
+
 target_link_libraries(SimWheelController ${gazebo_LIBS} ${catkin_LIBRARIES})
