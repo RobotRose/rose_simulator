@@ -13,114 +13,6 @@
 ***********************************************************************************/
 #include "rose20_gazebo_plugins/sim_wheel_controller.hpp"
 
-int main(int argc, char *argv[])
-{
-    ros::init(argc, argv, "sim_wheel_controller");
-    ros::NodeHandle n;
-    ros::Rate r(15);        
-
-    SimWheelController* sim_wheel_controller = new SimWheelController("sim_wheel_controller", n);
-
-    map<string, WheelUnit>* wheel_units = sim_wheel_controller->getWheelUnits();
-
-
-    float   velocity            = 0.0;
-    float   orientation         = 0.0;
-    float   vel_step            = (2.0*M_PI)/4.0;
-    float   orientation_step    = M_PI/16.0;
-    bool    stop                = false;
-    ros::Time begin;
-
-    while(n.ok() && !stop)
-    {
-        begin = ros::Time::now();
-
-        if(!sim_wheel_controller->isEnabled())
-            continue;
-
-        // Check the watchdog
-        if(!sim_wheel_controller->checkWatchdog())
-        {
-            ROS_WARN_NAMED("sim_wheel_controller", "Watchdog error!");
-
-            sim_wheel_controller->disable();
-            continue;
-        }
-
-        if(kbhit())
-        {
-            uint c = getchar();
-            ROS_DEBUG_NAMED("sim_wheel_controller", "Key pressed: %c", (char)c);
-            switch(c)
-            {
-                case '+':   
-                    velocity += vel_step;           
-                    for(auto it = wheel_units->begin(); it != wheel_units->end(); it++)
-                    {
-                        it->second.setVelocityRadPerSec(velocity);
-                    }
-                    break;
-                case '-':   
-                    velocity -= vel_step;           
-                    for(auto it = wheel_units->begin(); it != wheel_units->end(); it++)
-                    {
-                        it->second.setVelocityRadPerSec(velocity);
-                    }
-                    break;
-                case '*':
-                    orientation += orientation_step;
-                    ROS_INFO_NAMED("sim_wheel_controller", "Orientation: %.2f", orientation);
-                    for(auto it = wheel_units->begin(); it != wheel_units->end(); it++)
-                    {
-                        it->second.setAngleRad(orientation);    
-                    }
-                    break;
-                case '/':
-                    orientation -= orientation_step;
-                    ROS_INFO_NAMED("sim_wheel_controller", "Orientation: %.2f", orientation);
-                    for(auto it = wheel_units->begin(); it != wheel_units->end(); it++)
-                    {
-                        it->second.setAngleRad(orientation);
-                    }           
-                    break;
-                case 's':
-                    velocity    = 0.0;
-                    orientation = 0.0;
-                    for(auto it = wheel_units->begin(); it != wheel_units->end(); it++)
-                    {
-                        it->second.setAngleRad(orientation);
-                        it->second.setVelocityRadPerSec(velocity);  
-                    }       
-                    break;
-                case 'x':
-                    stop = true;
-                    break;
-            }
-            sim_wheel_controller->writeWheelStates();
-
-            ROS_INFO_NAMED("sim_wheel_controller", "Velocity: %f", velocity);
-
-            ROS_INFO_NAMED("sim_wheel_controller", "Angle   : %f", orientation);
-        }
-
-        // Update and publish the wheelunit states if succesfull
-        if(sim_wheel_controller->UpdateWheelUnitStates())
-            sim_wheel_controller->PublishWheelUnitStates();
-
-        ros::spinOnce();
-        r.sleep();
-
-        ros::Time end = ros::Time::now();
-        ros::Duration d = end - begin;
-        ROS_DEBUG_NAMED("sim_wheel_controller", "Rate: %.2f", 1.0/d.toSec());   
-    }
-
-    
-    delete sim_wheel_controller;
-
-    return 0;
-}
-
 SimWheelController::SimWheelController(string name, ros::NodeHandle n)
 {
     n_           	= n;
@@ -140,7 +32,7 @@ SimWheelController::SimWheelController(string name, ros::NodeHandle n)
 
     // Subscribers
     wheelunit_states_sub_   = n_.subscribe("/drive_controller/wheelunit_states_request", 1, &SimWheelController::CB_WheelUnitStatesRequest, this);
-    FR_caster_sub_          = n_.subscribe("/wheel_unit/FR_caster/enc_pos", 1, &SimWheelController::CB_FR_enc_pos, this);
+    FR_caster_sub_          = n_.subscribe("asd"/*/wheel_unit/FR_caster/enc_pos"*/, 1, &SimWheelController::CB_FR_enc_pos, this);
     FR_wheel_sub_           = n_.subscribe("/wheel_unit/FR_wheel/enc_vel", 1 , &SimWheelController::CB_FR_enc_vel, this);
     FL_caster_sub_          = n_.subscribe("/wheel_unit/FL_caster/enc_pos", 1, &SimWheelController::CB_FL_enc_pos, this);
     FL_wheel_sub_           = n_.subscribe("/wheel_unit/FL_wheel/enc_vel", 1 , &SimWheelController::CB_FL_enc_vel, this);
@@ -163,6 +55,12 @@ SimWheelController::SimWheelController(string name, ros::NodeHandle n)
     wheelunit = new WheelUnit("BL", 6);
     wheelunits_.insert( std::pair<string, WheelUnit>(wheelunit->name_, *wheelunit));
     delete wheelunit;
+
+    // Add wheelunit controllers to the map
+    wheelunit_controllers_.insert( std::pair<string, SimWheelUnitController*>("FR", new SimWheelUnitController(n_, "FR", 1)));
+    wheelunit_controllers_.insert( std::pair<string, SimWheelUnitController*>("FL", new SimWheelUnitController(n_, "FL", -1)));
+    wheelunit_controllers_.insert( std::pair<string, SimWheelUnitController*>("BR", new SimWheelUnitController(n_, "BR", 1)));
+    wheelunit_controllers_.insert( std::pair<string, SimWheelUnitController*>("BL", new SimWheelUnitController(n_, "BL", -1)));
 
     ROS_INFO_NAMED(name_, "Started %s", name_.c_str()); 
 
@@ -229,15 +127,18 @@ bool SimWheelController::writeWheelStates()
     return true;
 }
 
-bool SimWheelController::UpdateWheelUnitStates()
+bool SimWheelController::UpdateWheelUnitControllers()
 {
-    // Done via callback
+    pair<string, SimWheelUnitController*> a_pair;
+    BOOST_FOREACH(a_pair, wheelunit_controllers_) 
+        a_pair.second->update();
+
     return true;
 }
 
 bool SimWheelController::PublishWheelUnitStates()
 {
-    ROS_DEBUG_NAMED(name_, "Sim PublishWheelUnitStates");
+    ROS_INFO_NAMED(name_, "Sim PublishWheelUnitStates");
 
     // Fill message with lowlevel values
     roscomm::wheelunit_states wheelunit_states; 
@@ -256,9 +157,7 @@ bool SimWheelController::PublishWheelUnitStates()
 
 void SimWheelController::CB_WheelUnitStatesRequest(const roscomm::wheelunit_states::ConstPtr& wheelunit_states)
 {
-    ROS_INFO_NAMED(name_, "Sim CB_WheelUnitStatesRequest");
-
-    // Transfer data to the wheel units 
+        // Transfer data to the wheel units 
     wheelunits_.at("FR").set_rotation_ = wheelunit_states->angle_FR;
     wheelunits_.at("FL").set_rotation_ = wheelunit_states->angle_FL;
     wheelunits_.at("BR").set_rotation_ = wheelunit_states->angle_BR;
@@ -269,16 +168,20 @@ void SimWheelController::CB_WheelUnitStatesRequest(const roscomm::wheelunit_stat
     wheelunits_.at("BR").set_velocity_ = wheelunit_states->velocity_BR;
     wheelunits_.at("BL").set_velocity_ = wheelunit_states->velocity_BL;
 
+    ROS_INFO_NAMED(name_, "Sim CB_WheelUnitStatesRequest: FR[%2.1f, %2.1f] FL[%2.1f, %2.1f] BR[%2.1f, %2.1f] BL[%2.1f, %2.1f]", wheelunit_states->angle_FR, wheelunit_states->velocity_FR, wheelunit_states->angle_FL, wheelunit_states->velocity_FL, wheelunit_states->angle_BR, wheelunit_states->velocity_BR, wheelunit_states->angle_BL, wheelunit_states->velocity_BL);
+
     writeWheelStates();
 }
 
 void SimWheelController::CB_FR_enc_pos(const std_msgs::Float64::ConstPtr& msg)
 {
+    ROS_INFO_NAMED("SimWheelController", "CB_FR_enc_pos: %.2f", msg->data);
     wheelunits_.at("FR").measured_rotation_ = msg->data;
 }
 
 void SimWheelController::CB_FR_enc_vel(const std_msgs::Float64::ConstPtr& msg)
 {
+    ROS_INFO_NAMED("SimWheelController", "CB_FR_enc_vel: %.2f", msg->data);
     wheelunits_.at("FR").measured_velocity_ = msg->data;
 }
 
