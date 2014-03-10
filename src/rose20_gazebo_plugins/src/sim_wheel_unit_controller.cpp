@@ -27,18 +27,18 @@ SimWheelUnitController::SimWheelUnitController(ros::NodeHandle n, string wheel_u
   wheel_namespace_      = wheel_unit_name_ + "_wheel";
   wheel_direction_      = wheel_direction;
 
-  caster_joint_         = new SimJoint(2.0, 0.3, 1.0);
-  wheel_joint_          = new SimJoint(2.0, 0.3, 1.0);
- 
+  caster_joint_         = new SimJoint(1.0, 50.0, 0.0);
+  wheel_joint_          = new SimJoint(5.0, 75.0, 0.0);
+
   // Initialize caster & wheel PID controllers
-  PID_caster_.initialize(1.0, 0.2, 0.0, -10.0, 10.0, -20.0, 20.0);
-  PID_wheel_.initialize(0.8, 0.2, 0.0, -10.0, 10.0, -20.0, 20.0);
+  PID_caster_.initialize(10.0, 0.1, 0.0, -1.0, 1.0, -5.0, 5.0);
+  PID_wheel_.initialize(10.0, 0.1, 0.0, -1.0, 1.0, -7.5, 7.5);
 
   // Publishers
-  pub_enc_caster_pos_    = n_.advertise<std_msgs::Float64>("/asd", 5); //wheel_unit/" + caster_namespace_ + "/enc_pos", 5);
-  pub_enc_caster_vel_    = n_.advertise<std_msgs::Float64>("wheel_unit/" + caster_namespace_ + "/enc_vel", 5);
-  pub_enc_wheel_pos_     = n_.advertise<std_msgs::Float64>("wheel_unit/" + wheel_namespace_ + "/enc_pos", 5);
-  pub_enc_wheel_vel_     = n_.advertise<std_msgs::Float64>("wheel_unit/" + wheel_namespace_ + "/enc_vel", 5);
+  pub_enc_caster_pos_    = n_.advertise<std_msgs::Float64>("/wheel_unit/" + caster_namespace_ + "/enc_pos", 5);
+  pub_enc_caster_vel_    = n_.advertise<std_msgs::Float64>("/wheel_unit/" + caster_namespace_ + "/enc_vel", 5);
+  pub_enc_wheel_pos_     = n_.advertise<std_msgs::Float64>("/wheel_unit/" + wheel_namespace_ + "/enc_pos", 5);
+  pub_enc_wheel_vel_     = n_.advertise<std_msgs::Float64>("/wheel_unit/" + wheel_namespace_ + "/enc_vel", 5);
   
   // Subscribers
   sub_caster_pos_   = n_.subscribe("sim_wheel_controller/" + caster_namespace_ + "/req_pos", 1, &SimWheelUnitController::CB_SetRequestedCasterPos, this);
@@ -51,6 +51,8 @@ SimWheelUnitController::SimWheelUnitController(ros::NodeHandle n, string wheel_u
   cur_wheel_vel_  = 0.0;
   req_caster_pos_ = 0.0;
   req_wheel_vel_  = 0.0 * wheel_direction_;
+
+  stopstart_error_ = WHEELUNIT_STOP_MOVE_ANGLE_ERR_VAL;
 }
 
 SimWheelUnitController::~SimWheelUnitController()
@@ -82,12 +84,41 @@ void SimWheelUnitController::update()
   msg.data   = wheel_unit.toLowLevelDrive(cur_wheel_pos_);
   pub_enc_wheel_pos_.publish(msg);
   
-  msg.data   = wheel_unit.toLowLevelDrive(cur_wheel_vel_);
+  msg.data   = wheel_unit.toLowLevelDrive(cur_wheel_vel_ );
   pub_enc_wheel_vel_.publish(msg);
 
   // Calculate errors
   float caster_error  = req_caster_pos_ - cur_caster_pos_;
   float wheel_error   = req_wheel_vel_  - cur_wheel_vel_;
+
+  // Set speed to zero if a wheelunit has to rotate more thatn a certain amount (with hysteresis)
+  if (fabs(caster_error) > stopstart_error_)
+  {
+      req_wheel_vel_ = 0.0;
+      wheel_error = req_wheel_vel_ - cur_wheel_vel_;
+      // Wait for totally rotated
+      stopstart_error_ = WHEELUNIT_START_MOVE_ANGLE_ERR_VAL;
+      ROS_WARN_NAMED("SimWheelUnitController", "Setting drive speed to zero to turn wheels, caster_error: %.4f", caster_error);
+
+      // Keep current orientation of the wheels if the speed error is above a certain threshold
+      float stopstart_speed_error_ = 0.1; // [m/s]
+      if (fabs(wheel_error) > stopstart_speed_error_)
+      {
+          req_caster_pos_ = cur_caster_pos_;
+          caster_error  = req_caster_pos_ - cur_caster_pos_;
+          // Wait for speed error small enough
+      //    stopstart_speed_error_ = WHEELUNIT_START_MOVE_ANGLE_ERR_VAL;
+          ROS_WARN_NAMED("SimWheelUnitController", "Keeping orientationto slow down or speedup, wheel_error: %.4f", wheel_error);
+      }
+      //else
+      //    stopstart_speed_error_ = WHEELUNIT_STOP_MOVE_ANGLE_ERR_VAL;
+      
+  }
+  else
+      stopstart_error_ = WHEELUNIT_STOP_MOVE_ANGLE_ERR_VAL;
+
+
+  
    
   // Calculate required PID effort
   float dt = cur_time_.toSec() - prev_time_.toSec();

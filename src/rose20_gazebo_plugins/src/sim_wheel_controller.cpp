@@ -32,7 +32,7 @@ SimWheelController::SimWheelController(string name, ros::NodeHandle n)
 
     // Subscribers
     wheelunit_states_sub_   = n_.subscribe("/drive_controller/wheelunit_states_request", 1, &SimWheelController::CB_WheelUnitStatesRequest, this);
-    FR_caster_sub_          = n_.subscribe("asd"/*/wheel_unit/FR_caster/enc_pos"*/, 1, &SimWheelController::CB_FR_enc_pos, this);
+    FR_caster_sub_          = n_.subscribe("/wheel_unit/FR_caster/enc_pos", 1, &SimWheelController::CB_FR_enc_pos, this);
     FR_wheel_sub_           = n_.subscribe("/wheel_unit/FR_wheel/enc_vel", 1 , &SimWheelController::CB_FR_enc_vel, this);
     FL_caster_sub_          = n_.subscribe("/wheel_unit/FL_caster/enc_pos", 1, &SimWheelController::CB_FL_enc_pos, this);
     FL_wheel_sub_           = n_.subscribe("/wheel_unit/FL_wheel/enc_vel", 1 , &SimWheelController::CB_FL_enc_vel, this);
@@ -40,6 +40,12 @@ SimWheelController::SimWheelController(string name, ros::NodeHandle n)
     BR_wheel_sub_           = n_.subscribe("/wheel_unit/BR_wheel/enc_vel", 1 , &SimWheelController::CB_BR_enc_vel, this);
     BL_caster_sub_          = n_.subscribe("/wheel_unit/BL_caster/enc_pos", 1, &SimWheelController::CB_BL_enc_pos, this);
     BL_wheel_sub_           = n_.subscribe("/wheel_unit/BL_wheel/enc_vel", 1 , &SimWheelController::CB_BL_enc_vel, this);
+
+    // Transforms
+    FR_transform_           = new TFHelper("FR", n_, "/base_link", "FR");
+    FL_transform_           = new TFHelper("FL", n_, "/base_link", "FL");
+    BR_transform_           = new TFHelper("BR", n_, "/base_link", "BR");
+    BL_transform_           = new TFHelper("BL", n_, "/base_link", "BL");
 
     // Add Wheelunits to the map
     WheelUnit* wheelunit;
@@ -58,9 +64,9 @@ SimWheelController::SimWheelController(string name, ros::NodeHandle n)
 
     // Add wheelunit controllers to the map
     wheelunit_controllers_.insert( std::pair<string, SimWheelUnitController*>("FR", new SimWheelUnitController(n_, "FR", 1)));
-    wheelunit_controllers_.insert( std::pair<string, SimWheelUnitController*>("FL", new SimWheelUnitController(n_, "FL", -1)));
+    wheelunit_controllers_.insert( std::pair<string, SimWheelUnitController*>("FL", new SimWheelUnitController(n_, "FL", 1)));
     wheelunit_controllers_.insert( std::pair<string, SimWheelUnitController*>("BR", new SimWheelUnitController(n_, "BR", 1)));
-    wheelunit_controllers_.insert( std::pair<string, SimWheelUnitController*>("BL", new SimWheelUnitController(n_, "BL", -1)));
+    wheelunit_controllers_.insert( std::pair<string, SimWheelUnitController*>("BL", new SimWheelUnitController(n_, "BL", 1)));
 
     ROS_INFO_NAMED(name_, "Started %s", name_.c_str()); 
 
@@ -153,6 +159,19 @@ bool SimWheelController::PublishWheelUnitStates()
     wheelunit_states.velocity_BL    = wheelunits_.at("BL").measured_velocity_;
 
     wheelunit_states_pub_.publish(wheelunit_states);
+
+    // Publish wheel transforms    
+    FR_transform_->setTransform(0.0, 0.0, -wheelunits_.at("FR").getMeasuredAngleRad(), 0.39, -0.29, 0.0);
+    FR_transform_->Broadcast();
+
+    FL_transform_->setTransform(0.0, 0.0, -wheelunits_.at("FL").getMeasuredAngleRad(), 0.39, 0.29, 0.0);
+    FL_transform_->Broadcast();
+
+    BR_transform_->setTransform(0.0, 0.0, -wheelunits_.at("BR").getMeasuredAngleRad(), -0.39, -0.29, 0.0);
+    BR_transform_->Broadcast();
+
+    BL_transform_->setTransform(0.0, 0.0, -wheelunits_.at("BL").getMeasuredAngleRad(), -0.39, 0.29, 0.0);
+    BL_transform_->Broadcast();
 }
 
 void SimWheelController::CB_WheelUnitStatesRequest(const roscomm::wheelunit_states::ConstPtr& wheelunit_states)
@@ -175,42 +194,48 @@ void SimWheelController::CB_WheelUnitStatesRequest(const roscomm::wheelunit_stat
 
 void SimWheelController::CB_FR_enc_pos(const std_msgs::Float64::ConstPtr& msg)
 {
-    ROS_INFO_NAMED("SimWheelController", "CB_FR_enc_pos: %.2f", msg->data);
+    ROS_DEBUG_NAMED("SimWheelController", "CB_FR_enc_pos: %.2f", msg->data);
     wheelunits_.at("FR").measured_rotation_ = msg->data;
 }
 
 void SimWheelController::CB_FR_enc_vel(const std_msgs::Float64::ConstPtr& msg)
 {
-    ROS_INFO_NAMED("SimWheelController", "CB_FR_enc_vel: %.2f", msg->data);
+    ROS_DEBUG_NAMED("SimWheelController", "CB_FR_enc_vel: %.2f", msg->data);
     wheelunits_.at("FR").measured_velocity_ = msg->data;
 }
 
 void SimWheelController::CB_FL_enc_pos(const std_msgs::Float64::ConstPtr& msg)
 {
+    ROS_DEBUG_NAMED("SimWheelController", "CB_FL_enc_pos: %.2f", msg->data);
     wheelunits_.at("FL").measured_rotation_ = msg->data;
 }
 
 void SimWheelController::CB_FL_enc_vel(const std_msgs::Float64::ConstPtr& msg)
 {
+    ROS_DEBUG_NAMED("SimWheelController", "CB_FL_enc_vel: %.2f", msg->data);
     wheelunits_.at("FL").measured_velocity_ = msg->data;
 }
 
 void SimWheelController::CB_BR_enc_pos(const std_msgs::Float64::ConstPtr& msg)
 {
+    ROS_DEBUG_NAMED("SimWheelController", "CB_BR_enc_pos: %.2f", msg->data);
     wheelunits_.at("BR").measured_rotation_ = msg->data;
 }
 
 void SimWheelController::CB_BR_enc_vel(const std_msgs::Float64::ConstPtr& msg)
 {
+    ROS_DEBUG_NAMED("SimWheelController", "CB_BR_enc_vel: %.2f", msg->data);
     wheelunits_.at("BR").measured_velocity_ = msg->data;
 }
 
 void SimWheelController::CB_BL_enc_pos(const std_msgs::Float64::ConstPtr& msg)
 {
+    ROS_DEBUG_NAMED("SimWheelController", "CB_BL_enc_pos: %.2f", msg->data);
     wheelunits_.at("BL").measured_rotation_ = msg->data;
 }
 
 void SimWheelController::CB_BL_enc_vel(const std_msgs::Float64::ConstPtr& msg)
 {
+    ROS_DEBUG_NAMED("SimWheelController", "CB_BL_enc_vel: %.2f", msg->data);
     wheelunits_.at("BL").measured_velocity_ = msg->data;
 }

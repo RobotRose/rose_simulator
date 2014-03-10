@@ -23,7 +23,7 @@ void SimJoint::update(float force)
 	}
 
 
-	float damping_force = -damping_*vel_;
+	float damping_force = -damping_*vel_*dt;
 
 	// Calculate friction
 	float new_friction = 0.0;
@@ -36,7 +36,7 @@ void SimJoint::update(float force)
 
 	float new_force  	= force + damping_force + new_friction;
 
-	float new_acc = new_force/dt;
+	float new_acc = new_force/mass_;
 	float new_vel = vel_ + new_acc*dt;
 	float new_pos = pos_ + new_vel*dt;
 

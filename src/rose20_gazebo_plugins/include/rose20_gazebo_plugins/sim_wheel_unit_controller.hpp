@@ -82,6 +82,8 @@ private:
   
   std::string   caster_namespace_;
   std::string   wheel_namespace_;
+
+  float stopstart_error_;
   
 };
 

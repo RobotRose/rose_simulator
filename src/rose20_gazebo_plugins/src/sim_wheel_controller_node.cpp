@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
         ros::Time end = ros::Time::now();
         ros::Duration d = end - begin;
-        ROS_DEBUG_NAMED("sim_wheel_controller", "Rate: %.2f", 1.0/d.toSec());   
+        ROS_INFO_NAMED("sim_wheel_controller", "Rate: %.2f", 1.0/d.toSec());   
     }
 
     

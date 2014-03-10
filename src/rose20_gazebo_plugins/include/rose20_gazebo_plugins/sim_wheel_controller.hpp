@@ -21,6 +21,7 @@
 #include <boost/foreach.hpp>
 
 #include "rose20_common/common.hpp"
+#include "rose20_common/TF_helper.hpp"
 #include "roscomm/wheelunit_states.h"
 #include <std_msgs/Float64.h>
 
@@ -78,6 +79,12 @@ class SimWheelController
     ros::Subscriber     BR_wheel_sub_;
     ros::Subscriber     BL_caster_sub_;
     ros::Subscriber     BL_wheel_sub_;
+
+
+    TFHelper*          FR_transform_;
+    TFHelper*          FL_transform_;
+    TFHelper*          BR_transform_;
+    TFHelper*          BL_transform_;
 
     
     map<string, WheelUnit>               wheelunits_;
