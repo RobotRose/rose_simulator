@@ -23,8 +23,7 @@
 
 #include "rose20_common/common.hpp"
 #include "rose20_common/PID/PID.hpp"
-
-#include "wheel_controller/wheel_unit.hpp"
+#include "rose20_common/wheel_unit.hpp"
 
 #include "rose20_gazebo_plugins/sim_joint.hpp"
 

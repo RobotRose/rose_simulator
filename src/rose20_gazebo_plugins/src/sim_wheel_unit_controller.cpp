@@ -27,8 +27,8 @@ SimWheelUnitController::SimWheelUnitController(ros::NodeHandle n, string wheel_u
   wheel_namespace_      = wheel_unit_name_ + "_wheel";
   wheel_direction_      = wheel_direction;
 
-  caster_joint_         = new SimJoint(1.0, 50.0, 0.0);
-  wheel_joint_          = new SimJoint(5.0, 75.0, 0.0);
+  caster_joint_         = new SimJoint(1.0, 50.0, 1.0, 10.0);
+  wheel_joint_          = new SimJoint(2.0, 75.0, 1.0, 10.0);
 
   // Initialize caster & wheel PID controllers
   PID_caster_.initialize(10.0, 0.1, 0.0, -1.0, 1.0, -5.0, 5.0);
@@ -108,7 +108,7 @@ void SimWheelUnitController::update()
           caster_error  = req_caster_pos_ - cur_caster_pos_;
           // Wait for speed error small enough
       //    stopstart_speed_error_ = WHEELUNIT_START_MOVE_ANGLE_ERR_VAL;
-          ROS_WARN_NAMED("SimWheelUnitController", "Keeping orientationto slow down or speedup, wheel_error: %.4f", wheel_error);
+          ROS_WARN_NAMED("SimWheelUnitController", "Keeping orientation to slow down or speedup, wheel_error: %.4f", wheel_error);
       }
       //else
       //    stopstart_speed_error_ = WHEELUNIT_STOP_MOVE_ANGLE_ERR_VAL;

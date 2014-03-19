@@ -13,7 +13,7 @@
 class SimJoint
 {
   public:
-  	SimJoint(float mass, float damping, float friction);
+  	SimJoint(float mass, float damping, float friction, float max_force);
 
   	void update(float force);
 
@@ -24,6 +24,7 @@ class SimJoint
   	float mass_;
   	float damping_;
   	float friction_;
+    float max_force_;
   	ros::Time prev_time_;
 
 };

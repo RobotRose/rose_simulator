@@ -7,10 +7,10 @@
 #include <map>
 
 #include "rose20_common/common.hpp"
+#include "rose20_common/wheel_unit.hpp"
 #include "roscomm/wheelunit_states.h"
 #include <std_msgs/Float64.h>
 
-#include "wheel_controller/wheel_unit.hpp"
 #include "sim_wheel_controller.hpp"
 
 

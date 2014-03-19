@@ -1,12 +1,13 @@
 #include "rose20_gazebo_plugins/sim_joint.hpp"
 
-SimJoint::SimJoint(float mass, float damping, float friction)
+SimJoint::SimJoint(float mass, float damping, float friction, float max_force)
 	: mass_(mass)
 	, damping_(damping)
 	, friction_(friction)
 	, pos_(0.0)
 	, vel_(0.0)
 	, prev_time_(ros::Time::now())
+	, max_force_(max_force)
 {}
 
 
@@ -34,7 +35,7 @@ void SimJoint::update(float force)
 	else
 		new_friction = 0.0;
 
-	float new_force  	= force + damping_force + new_friction;
+	float new_force  	= fmin(max_force_, fmax(-max_force_, force + damping_force + new_friction));
 
 	float new_acc = new_force/mass_;
 	float new_vel = vel_ + new_acc*dt;
@@ -43,7 +44,7 @@ void SimJoint::update(float force)
 	vel_ = new_vel;
 	pos_ = new_pos;
 
-	ROS_INFO_NAMED("SimJoint", "Update joint  [force  = %.3f, damping_force  = %.3f, friction  = %.3f, applied_force  = %.3f, acc  = %.3f, vel  = %.3f, pos  = %.3f]", force, damping_force, new_friction, new_force, new_acc, vel_, pos_);
+	ROS_INFO_NAMED("SimJoint", "Update joint dt=%.3f  [force  = %.3f, damping_force  = %.3f, friction  = %.3f, applied_force  = %.3f, acc  = %.3f, vel  = %.3f, pos  = %.3f]", dt, force, damping_force, new_friction, new_force, new_acc, vel_, pos_);
   
 
 

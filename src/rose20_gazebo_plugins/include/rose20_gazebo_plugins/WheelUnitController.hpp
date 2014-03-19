@@ -25,8 +25,8 @@
 #include <std_msgs/Float64.h>
 
 #include "rose20_common/common.hpp"
+#include "rose20_common/wheel_unit.hpp"
 
-#include "wheel_controller/wheel_unit.hpp"
 
 using namespace rose20_common;
 
