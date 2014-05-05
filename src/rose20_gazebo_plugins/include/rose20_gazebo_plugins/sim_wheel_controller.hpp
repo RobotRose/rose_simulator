@@ -21,6 +21,7 @@
 #include <boost/foreach.hpp>
 
 #include "rose20_common/common.hpp"
+#include "rose20_common/ros_name.hpp"
 #include "rose20_common/TF_helper.hpp"
 #include "rose20_common/wheel_unit.hpp"
 #include "roscomm/wheelunit_states.h"

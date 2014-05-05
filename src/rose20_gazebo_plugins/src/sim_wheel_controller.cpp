@@ -68,7 +68,7 @@ SimWheelController::SimWheelController(string name, ros::NodeHandle n)
     wheelunit_controllers_.insert( std::pair<string, SimWheelUnitController*>("BR", new SimWheelUnitController(n_, "BR", 1)));
     wheelunit_controllers_.insert( std::pair<string, SimWheelUnitController*>("BL", new SimWheelUnitController(n_, "BL", 1)));
 
-    ROS_INFO_NAMED(name_, "Started %s", name_.c_str()); 
+    ROS_INFO_NAMED(ROS_NAME, "Started %s", name_.c_str()); 
 
     enable();
 }
@@ -76,7 +76,7 @@ SimWheelController::SimWheelController(string name, ros::NodeHandle n)
 SimWheelController::~SimWheelController()
 {
     disable();
-    ROS_INFO_NAMED(name_, "Stopped %s", name_.c_str());
+    ROS_INFO_NAMED(ROS_NAME, "Stopped %s", name_.c_str());
 }
 
 
@@ -144,7 +144,7 @@ bool SimWheelController::UpdateWheelUnitControllers()
 
 bool SimWheelController::PublishWheelUnitStates()
 {
-    ROS_INFO_NAMED(name_, "Sim PublishWheelUnitStates");
+    ROS_DEBUG_NAMED(ROS_NAME, "Sim PublishWheelUnitStates");
 
     // Fill message with lowlevel values
     roscomm::wheelunit_states wheelunit_states; 
@@ -187,7 +187,7 @@ void SimWheelController::CB_WheelUnitStatesRequest(const roscomm::wheelunit_stat
     wheelunits_.at("BR").set_velocity_ = wheelunit_states->velocity_BR;
     wheelunits_.at("BL").set_velocity_ = wheelunit_states->velocity_BL;
 
-    ROS_INFO_NAMED(name_, "Sim CB_WheelUnitStatesRequest: FR[%2.1f, %2.1f] FL[%2.1f, %2.1f] BR[%2.1f, %2.1f] BL[%2.1f, %2.1f]", wheelunit_states->angle_FR, wheelunit_states->velocity_FR, wheelunit_states->angle_FL, wheelunit_states->velocity_FL, wheelunit_states->angle_BR, wheelunit_states->velocity_BR, wheelunit_states->angle_BL, wheelunit_states->velocity_BL);
+    ROS_DEBUG_NAMED(ROS_NAME, "Sim CB_WheelUnitStatesRequest: FR[%2.1f, %2.1f] FL[%2.1f, %2.1f] BR[%2.1f, %2.1f] BL[%2.1f, %2.1f]", wheelunit_states->angle_FR, wheelunit_states->velocity_FR, wheelunit_states->angle_FL, wheelunit_states->velocity_FL, wheelunit_states->angle_BR, wheelunit_states->velocity_BR, wheelunit_states->angle_BL, wheelunit_states->velocity_BL);
 
     writeWheelStates();
 }

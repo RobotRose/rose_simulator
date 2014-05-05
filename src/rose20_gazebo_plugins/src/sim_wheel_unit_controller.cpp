@@ -98,7 +98,7 @@ void SimWheelUnitController::update()
       wheel_error = req_wheel_vel_ - cur_wheel_vel_;
       // Wait for totally rotated
       stopstart_error_ = WHEELUNIT_START_MOVE_ANGLE_ERR_VAL;
-      ROS_WARN_NAMED("SimWheelUnitController", "Setting drive speed to zero to turn wheels, caster_error: %.4f", caster_error);
+      ROS_WARN_NAMED(ROS_NAME, "Setting drive speed to zero to turn wheels, caster_error: %.4f", caster_error);
 
       // Keep current orientation of the wheels if the speed error is above a certain threshold
       float stopstart_speed_error_ = 0.1; // [m/s]
@@ -108,7 +108,7 @@ void SimWheelUnitController::update()
           caster_error  = req_caster_pos_ - cur_caster_pos_;
           // Wait for speed error small enough
       //    stopstart_speed_error_ = WHEELUNIT_START_MOVE_ANGLE_ERR_VAL;
-          ROS_WARN_NAMED("SimWheelUnitController", "Keeping orientation to slow down or speedup, wheel_error: %.4f", wheel_error);
+          ROS_WARN_NAMED(ROS_NAME, "Keeping orientation to slow down or speedup, wheel_error: %.4f", wheel_error);
       }
       //else
       //    stopstart_speed_error_ = WHEELUNIT_STOP_MOVE_ANGLE_ERR_VAL;
@@ -125,8 +125,8 @@ void SimWheelUnitController::update()
   float caster_effort = PID_caster_.update(caster_error, dt);
   float wheel_effort  = PID_wheel_.update(wheel_error, dt);
 
-  ROS_INFO_NAMED("SimWheelUnitController", "Caster PID [pos = %.3f/%.3f, error = %.3f, effort = %.3f]", cur_caster_pos_, req_caster_pos_, caster_error, caster_effort);
-  ROS_INFO_NAMED("SimWheelUnitController", "Wheel_PID  [vel = %.3f/%.3f, error = %.3f, effort = %.3f]", cur_wheel_vel_, req_wheel_vel_, wheel_error, wheel_effort);
+  ROS_DEBUG_NAMED(ROS_NAME, "Caster PID [pos = %.3f/%.3f, error = %.3f, effort = %.3f]", cur_caster_pos_, req_caster_pos_, caster_error, caster_effort);
+  ROS_DEBUG_NAMED(ROS_NAME, "Wheel_PID  [vel = %.3f/%.3f, error = %.3f, effort = %.3f]", cur_wheel_vel_, req_wheel_vel_, wheel_error, wheel_effort);
   
   // Apply control effort
   caster_joint_->update(caster_effort);
@@ -142,7 +142,7 @@ void SimWheelUnitController::CB_SetRequestedCasterPos(const std_msgs::Float64::C
   // TODO Limits 
   WheelUnit wheel_unit("Only For Functions", -1);
   req_caster_pos_  = -wheel_unit.toAngleRad((float)msg->data);  
-  ROS_INFO_NAMED("SimWheelUnitController", "Request caster pos: %.3frad, current: %.3frad", req_caster_pos_, cur_caster_pos_);
+  ROS_DEBUG_NAMED(ROS_NAME, "Request caster pos: %.3frad, current: %.3frad", req_caster_pos_, cur_caster_pos_);
 }
   
 void SimWheelUnitController::CB_SetRequestedWheelVel(const std_msgs::Float64::ConstPtr& msg)
@@ -150,5 +150,5 @@ void SimWheelUnitController::CB_SetRequestedWheelVel(const std_msgs::Float64::Co
   // TODO Limits via param server
   WheelUnit wheel_unit("Only For Functions", -1);
   req_wheel_vel_ = wheel_unit.toVelocityRadPerSec((float)msg->data)*wheel_direction_;  
-  ROS_INFO_NAMED("SimWheelUnitController", "Request wheel vel: %.3frad/s, current: %.3frad/s", req_wheel_vel_, cur_wheel_vel_);
+  ROS_DEBUG_NAMED(ROS_NAME, "Request wheel vel: %.3frad/s, current: %.3frad/s", req_wheel_vel_, cur_wheel_vel_);
 }

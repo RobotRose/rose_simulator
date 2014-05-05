@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
         // Check the watchdog
         if(!sim_wheel_controller->checkWatchdog())
         {
-            ROS_WARN_NAMED("sim_wheel_controller", "Watchdog error!");
+            ROS_WARN_NAMED(ROS_NAME, "Watchdog error!");
             sim_wheel_controller->disable();
             continue;
         }
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
         if(kbhit())
         {
             uint c = getchar();
-            ROS_DEBUG_NAMED("sim_wheel_controller", "Key pressed: %c", (char)c);
+            ROS_DEBUG_NAMED(ROS_NAME, "Key pressed: %c", (char)c);
             switch(c)
             {
                 case 'x':
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
         ros::Time end = ros::Time::now();
         ros::Duration d = end - begin;
-        ROS_INFO_NAMED("sim_wheel_controller", "Rate: %.2f", 1.0/d.toSec());   
+        ROS_DEBUG_NAMED(ROS_NAME, "Rate: %.2f", 1.0/d.toSec());   
     }
 
     

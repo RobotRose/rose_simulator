@@ -44,7 +44,7 @@ void SimJoint::update(float force)
 	vel_ = new_vel;
 	pos_ = new_pos;
 
-	ROS_INFO_NAMED("SimJoint", "Update joint dt=%.3f  [force  = %.3f, damping_force  = %.3f, friction  = %.3f, applied_force  = %.3f, acc  = %.3f, vel  = %.3f, pos  = %.3f]", dt, force, damping_force, new_friction, new_force, new_acc, vel_, pos_);
+	ROS_DEBUG_NAMED(ROS_NAME, "Update joint dt=%.3f  [force  = %.3f, damping_force  = %.3f, friction  = %.3f, applied_force  = %.3f, acc  = %.3f, vel  = %.3f, pos  = %.3f]", dt, force, damping_force, new_friction, new_force, new_acc, vel_, pos_);
   
 
 

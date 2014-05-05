@@ -8,7 +8,7 @@
 #include <math.h>
 
 #include <ros/ros.h>
-
+#include "rose20_common/ros_name.hpp"
 
 class SimJoint
 {
