@@ -1,12 +1,20 @@
 #include "rose20_gazebo_plugins/sim_wheel_controller_node.hpp"
 
+//! @todo make into class, no global variables
+TFHelper* tf_odom_map;
+
 int main(int argc, char *argv[])
 {
-    ros::init(argc, argv, "sim_wheel_unit_controller");
+    ros::init(argc, argv, "SimWheelController");
     ros::NodeHandle n;
-    ros::Rate r(10);        
+    ros::Rate r(60);        
 
     SimWheelController* sim_wheel_controller = new SimWheelController("sim_wheel_controller", n);
+    tf_odom_map    = new TFHelper("tf_odom_map", n, "/map", "/base_link");
+    tf_odom_map->setTransform(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    //tf_odom_map->Broadcast();
+
+    ros::Subscriber pan_state_sub   = n.subscribe("/initialpose", 1, &CB_initialpose);
 
     bool    stop                = false;
     ros::Time begin;
@@ -14,6 +22,7 @@ int main(int argc, char *argv[])
     while(n.ok() && !stop)
     {
         begin = ros::Time::now();
+        
 
         if(!sim_wheel_controller->isEnabled())
             continue;
@@ -55,3 +64,11 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+void CB_initialpose(const geometry_msgs::PoseWithCovarianceStamped& initial_pose)
+{
+    ROS_DEBUG_NAMED(ROS_NAME, "CB_initialpose");
+    tf_odom_map->setTransform(initial_pose);
+    tf_odom_map->Broadcast();
+}
+

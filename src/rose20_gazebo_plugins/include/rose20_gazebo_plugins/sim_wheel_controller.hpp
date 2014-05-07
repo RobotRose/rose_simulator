@@ -27,10 +27,22 @@
 #include "roscomm/wheelunit_states.h"
 #include <std_msgs/Float64.h>
 
+#include "rose20_common/server_multiple_client/server_multiple_client.hpp"
+
+#include "rose20_platform/wheelunit_states.h"
+#include "rose20_platform/wheelunit_statesAction.h"
+#include "rose20_platform/wheelunit_statesActionGoal.h"
+#include "rose20_platform/wheelunit_statesActionResult.h"
+#include "rose20_platform/wheelunit_statesActionFeedback.h"
+#include "action_result_message.hpp"
+
 #include "rose20_gazebo_plugins/sim_wheel_unit_controller.hpp"
 
 class SimWheelController
 {
+  protected:
+    typedef ServerMultipleClient<rose20_platform::wheelunit_statesAction> SMC;
+
   public:
     SimWheelController();
     SimWheelController(string name, ros::NodeHandle n);
@@ -46,7 +58,7 @@ class SimWheelController
     bool  UpdateWheelUnitControllers();
     bool  PublishWheelUnitStates(); 
 
-    void  CB_WheelUnitStatesRequest(const roscomm::wheelunit_states::ConstPtr& wheelunit_states);
+    //void  CB_WheelUnitStatesRequest(const roscomm::wheelunit_states::ConstPtr& wheelunit_states);
     void  CB_FR_enc_pos(const std_msgs::Float64::ConstPtr& msg);
     void  CB_FR_enc_vel(const std_msgs::Float64::ConstPtr& msg);
     void  CB_FL_enc_pos(const std_msgs::Float64::ConstPtr& msg);
@@ -55,6 +67,8 @@ class SimWheelController
     void  CB_BR_enc_vel(const std_msgs::Float64::ConstPtr& msg);
     void  CB_BL_enc_pos(const std_msgs::Float64::ConstPtr& msg);
     void  CB_BL_enc_vel(const std_msgs::Float64::ConstPtr& msg);
+
+    void  CB_WheelUnitStatesRequest(const rose20_platform::wheelunit_statesGoalConstPtr& goal, SMC* smc);
     
   private:
     string                  name_;
@@ -71,7 +85,7 @@ class SimWheelController
     ros::Publisher      BL_caster_pub_;
     ros::Publisher      BL_wheel_pub_;
     
-    ros::Subscriber     wheelunit_states_sub_;
+    //ros::Subscriber     wheelunit_states_sub_;
     ros::Subscriber     FR_caster_sub_;
     ros::Subscriber     FR_wheel_sub_;
     ros::Subscriber     FL_caster_sub_;
@@ -90,6 +104,8 @@ class SimWheelController
     
     map<string, WheelUnit>               wheelunits_;
     map<string, SimWheelUnitController*> wheelunit_controllers_;
+
+    SMC*                smc_;
 };
 
 #endif // SIM_WHEEL_CONTROLLER_HPP
