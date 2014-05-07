@@ -26,8 +26,8 @@
 #include <gazebo/common/common.hh>
 
 #include "rose20_common/common.hpp"
-#include "roscomm/lift.h"
-#include "roscomm/lift_control.h"
+#include "rose20_platform/lift.h"
+#include "rose20_platform/lift_control.h"
 
 #define LIFT_PRISMATIC_SPEED  (M_PI/12.0)  // [rad/s]
 #define LIFT_BOTTOM_MAX_ANGLE (M_PI/2.0 - M_PI/8.0) 
@@ -44,7 +44,7 @@ public:
   void    OnUpdate(const common::UpdateInfo & /*info*/);
   
 private:     
-  void    CB_SetLiftStatus(const roscomm::lift::ConstPtr& lift_message);
+  void    CB_SetLiftStatus(const rose20_platform::lift::ConstPtr& lift_message);
   double  calcAnimationTime();
   void    createAndAttachAnimation(double duration, bool repeat);
   void    setLiftLow();

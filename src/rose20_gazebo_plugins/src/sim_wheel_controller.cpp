@@ -23,7 +23,7 @@ SimWheelController::SimWheelController(string name, ros::NodeHandle n)
     smc_->startServer();
 
     // Publishers
-    wheelunit_states_pub_   = n.advertise<roscomm::wheelunit_states>("/wheel_controller/wheelunit_states", 1);
+    wheelunit_states_pub_   = n.advertise<rose20_platform::wheelunit_states>("/wheel_controller/wheelunit_states", 1);
     FR_caster_pub_          = n.advertise<std_msgs::Float64>("/sim_wheel_controller/FR_caster/req_pos", 1);
     FR_wheel_pub_           = n.advertise<std_msgs::Float64>("/sim_wheel_controller/FR_wheel/req_vel", 1);
     FL_caster_pub_          = n.advertise<std_msgs::Float64>("/sim_wheel_controller/FL_caster/req_pos", 1);
@@ -150,7 +150,7 @@ bool SimWheelController::PublishWheelUnitStates()
     ROS_DEBUG_NAMED(ROS_NAME, "Sim PublishWheelUnitStates");
 
     // Fill message with lowlevel values
-    roscomm::wheelunit_states wheelunit_states; 
+    rose20_platform::wheelunit_states wheelunit_states; 
     wheelunit_states.angle_FR       = (float)wheelunits_.at("FR").measured_rotation_;   
     wheelunit_states.angle_FL       = (float)wheelunits_.at("FL").measured_rotation_;
     wheelunit_states.angle_BR       = (float)wheelunits_.at("BR").measured_rotation_;

@@ -83,7 +83,7 @@ void LiftController::OnUpdate(const common::UpdateInfo & /*info*/)
   }    
 }
    
-void LiftController::CB_SetLiftStatus(const roscomm::lift::ConstPtr& lift_message)
+void LiftController::CB_SetLiftStatus(const rose20_platform::lift::ConstPtr& lift_message)
 {
   // Store requested lift pose
   this->lift_target_pose_ = lift_message->pose;

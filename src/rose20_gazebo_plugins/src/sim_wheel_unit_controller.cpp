@@ -98,7 +98,7 @@ void SimWheelUnitController::update()
       wheel_error = req_wheel_vel_ - cur_wheel_vel_;
       // Wait for totally rotated
       stopstart_error_ = WHEELUNIT_START_MOVE_ANGLE_ERR_VAL;
-      ROS_WARN_NAMED(ROS_NAME, "Setting drive speed to zero to turn wheels, caster_error: %.4f", caster_error);
+      ROS_DEBUG_NAMED(ROS_NAME, "Setting drive speed to zero to turn wheels, caster_error: %.4f", caster_error);
 
       // Keep current orientation of the wheels if the speed error is above a certain threshold
       float stopstart_speed_error_ = 0.1; // [m/s]
@@ -108,7 +108,7 @@ void SimWheelUnitController::update()
           caster_error  = req_caster_pos_ - cur_caster_pos_;
           // Wait for speed error small enough
       //    stopstart_speed_error_ = WHEELUNIT_START_MOVE_ANGLE_ERR_VAL;
-          ROS_WARN_NAMED(ROS_NAME, "Keeping orientation to slow down or speedup, wheel_error: %.4f", wheel_error);
+          ROS_DEBUG_NAMED(ROS_NAME, "Keeping orientation to slow down or speedup, wheel_error: %.4f", wheel_error);
       }
       //else
       //    stopstart_speed_error_ = WHEELUNIT_STOP_MOVE_ANGLE_ERR_VAL;

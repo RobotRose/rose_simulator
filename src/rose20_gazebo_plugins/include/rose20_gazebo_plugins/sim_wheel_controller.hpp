@@ -24,7 +24,7 @@
 #include "rose20_common/ros_name.hpp"
 #include "rose20_common/TF_helper.hpp"
 #include "rose20_common/wheel_unit.hpp"
-#include "roscomm/wheelunit_states.h"
+#include "rose20_platform/wheelunit_states.h"
 #include <std_msgs/Float64.h>
 
 #include "rose20_common/server_multiple_client/server_multiple_client.hpp"
@@ -58,7 +58,7 @@ class SimWheelController
     bool  UpdateWheelUnitControllers();
     bool  PublishWheelUnitStates(); 
 
-    //void  CB_WheelUnitStatesRequest(const roscomm::wheelunit_states::ConstPtr& wheelunit_states);
+    //void  CB_WheelUnitStatesRequest(const rose20_platform::wheelunit_states::ConstPtr& wheelunit_states);
     void  CB_FR_enc_pos(const std_msgs::Float64::ConstPtr& msg);
     void  CB_FR_enc_vel(const std_msgs::Float64::ConstPtr& msg);
     void  CB_FL_enc_pos(const std_msgs::Float64::ConstPtr& msg);
