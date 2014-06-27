@@ -10,7 +10,6 @@
 #include "rose20_common/ros_name.hpp"
 #include "rose20_common/wheel_unit.hpp"
 #include "rose20_platform/wheelunit_states.h"
-#include <std_msgs/Float64.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 
 

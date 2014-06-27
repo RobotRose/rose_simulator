@@ -35,10 +35,10 @@ SimWheelUnitController::SimWheelUnitController(ros::NodeHandle n, string wheel_u
   PID_wheel_.initialize(25.0, 0.0, 0.0, -1.0, 1.0, -5.0, 5.0);
 
   // Publishers
-  pub_enc_caster_pos_    = n_.advertise<std_msgs::Float64>("/wheel_unit/" + caster_namespace_ + "/enc_pos", 5);
-  pub_enc_caster_vel_    = n_.advertise<std_msgs::Float64>("/wheel_unit/" + caster_namespace_ + "/enc_vel", 5);
-  pub_enc_wheel_pos_     = n_.advertise<std_msgs::Float64>("/wheel_unit/" + wheel_namespace_ + "/enc_pos", 5);
-  pub_enc_wheel_vel_     = n_.advertise<std_msgs::Float64>("/wheel_unit/" + wheel_namespace_ + "/enc_vel", 5);
+  pub_enc_caster_pos_    = n_.advertise<std_msgs::Int32>("/wheel_unit/" + caster_namespace_ + "/enc_pos", 5);
+  pub_enc_caster_vel_    = n_.advertise<std_msgs::Int32>("/wheel_unit/" + caster_namespace_ + "/enc_vel", 5);
+  pub_enc_wheel_pos_     = n_.advertise<std_msgs::Int32>("/wheel_unit/" + wheel_namespace_ + "/enc_pos", 5);
+  pub_enc_wheel_vel_     = n_.advertise<std_msgs::Int32>("/wheel_unit/" + wheel_namespace_ + "/enc_vel", 5);
   
   // Subscribers
   sub_caster_pos_   = n_.subscribe("sim_wheel_controller/" + caster_namespace_ + "/req_pos", 1, &SimWheelUnitController::CB_SetRequestedCasterPos, this);
@@ -72,7 +72,7 @@ void SimWheelUnitController::update()
   cur_wheel_vel_    = wheel_joint_->vel_;
    
   // Publish current joint states
-  std_msgs::Float64 msg;
+  std_msgs::Int32 msg;
   
   WheelUnit wheel_unit;
   msg.data   = wheel_unit.toLowLevelSteer(cur_caster_pos_);
@@ -137,7 +137,7 @@ void SimWheelUnitController::update()
 }
 
 
-void SimWheelUnitController::CB_SetRequestedCasterPos(const std_msgs::Float64::ConstPtr& msg)
+void SimWheelUnitController::CB_SetRequestedCasterPos(const std_msgs::Int32::ConstPtr& msg)
 {
   // TODO Limits 
   WheelUnit wheel_unit("Only For Functions", -1);
@@ -145,7 +145,7 @@ void SimWheelUnitController::CB_SetRequestedCasterPos(const std_msgs::Float64::C
   ROS_DEBUG_NAMED(ROS_NAME, "Request caster pos: %.3frad, current: %.3frad", req_caster_pos_, cur_caster_pos_);
 }
   
-void SimWheelUnitController::CB_SetRequestedWheelVel(const std_msgs::Float64::ConstPtr& msg)
+void SimWheelUnitController::CB_SetRequestedWheelVel(const std_msgs::Int32::ConstPtr& msg)
 {
   // TODO Limits via param server
   WheelUnit wheel_unit("Only For Functions", -1);

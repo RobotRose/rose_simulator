@@ -19,22 +19,27 @@ SimWheelController::SimWheelController(string name, ros::NodeHandle n)
     name_       	= name;
     enabled_ 	 	= false;
 
+    FR_prev_T_      = ros::Time::now(); 
+    FL_prev_T_      = ros::Time::now(); 
+    BR_prev_T_      = ros::Time::now(); 
+    BL_prev_T_      = ros::Time::now(); 
+
     smc_ = new SMC(n_, "wheel_controller", boost::bind(&SimWheelController::CB_WheelUnitStatesRequest, this, _1, _2));
     smc_->startServer();
 
     // Publishers
     wheelunit_states_pub_   = n.advertise<rose20_platform::wheelunit_states>("/wheel_controller/wheelunit_states", 1);
-    FR_caster_pub_          = n.advertise<std_msgs::Float64>("/sim_wheel_controller/FR_caster/req_pos", 1);
-    FR_wheel_pub_           = n.advertise<std_msgs::Float64>("/sim_wheel_controller/FR_wheel/req_vel", 1);
-    FL_caster_pub_          = n.advertise<std_msgs::Float64>("/sim_wheel_controller/FL_caster/req_pos", 1);
-    FL_wheel_pub_           = n.advertise<std_msgs::Float64>("/sim_wheel_controller/FL_wheel/req_vel", 1);
-    BR_caster_pub_          = n.advertise<std_msgs::Float64>("/sim_wheel_controller/BR_caster/req_pos", 1);
-    BR_wheel_pub_           = n.advertise<std_msgs::Float64>("/sim_wheel_controller/BR_wheel/req_vel", 1);
-    BL_caster_pub_          = n.advertise<std_msgs::Float64>("/sim_wheel_controller/BL_caster/req_pos", 1);
-    BL_wheel_pub_           = n.advertise<std_msgs::Float64>("/sim_wheel_controller/BL_wheel/req_vel", 1);
+    FR_caster_pub_          = n.advertise<std_msgs::Int32>("/sim_wheel_controller/FR_caster/req_pos", 1);
+    FR_wheel_pub_           = n.advertise<std_msgs::Int32>("/sim_wheel_controller/FR_wheel/req_vel", 1);
+    FL_caster_pub_          = n.advertise<std_msgs::Int32>("/sim_wheel_controller/FL_caster/req_pos", 1);
+    FL_wheel_pub_           = n.advertise<std_msgs::Int32>("/sim_wheel_controller/FL_wheel/req_vel", 1);
+    BR_caster_pub_          = n.advertise<std_msgs::Int32>("/sim_wheel_controller/BR_caster/req_pos", 1);
+    BR_wheel_pub_           = n.advertise<std_msgs::Int32>("/sim_wheel_controller/BR_wheel/req_vel", 1);
+    BL_caster_pub_          = n.advertise<std_msgs::Int32>("/sim_wheel_controller/BL_caster/req_pos", 1);
+    BL_wheel_pub_           = n.advertise<std_msgs::Int32>("/sim_wheel_controller/BL_wheel/req_vel", 1);
 
     // Subscribers
-    //wheelunit_states_sub_   = n_.subscribe("/drive_controller/wheelunit_states_request", 1, &SimWheelController::CB_WheelUnitStatesRequest, this);
+    // wheelunit_states_sub_   = n_.subscribe("/drive_controller/wheelunit_states_request", 1, &SimWheelController::CB_WheelUnitStatesRequest, this);
     FR_caster_sub_          = n_.subscribe("/wheel_unit/FR_caster/enc_pos", 1, &SimWheelController::CB_FR_enc_pos, this);
     FR_wheel_sub_           = n_.subscribe("/wheel_unit/FR_wheel/enc_vel", 1 , &SimWheelController::CB_FR_enc_vel, this);
     FL_caster_sub_          = n_.subscribe("/wheel_unit/FL_caster/enc_pos", 1, &SimWheelController::CB_FL_enc_pos, this);
@@ -110,8 +115,8 @@ bool SimWheelController::checkWatchdog()
 
 bool SimWheelController::writeWheelStates()
 {
-    std_msgs::Float64 msg_rot;
-    std_msgs::Float64 msg_vel;    
+    std_msgs::Int32 msg_rot;
+    std_msgs::Int32 msg_vel;    
 
     msg_rot.data = wheelunits_.at("FR").getAngleLowLevel();
     msg_vel.data = wheelunits_.at("FR").getVelocityLowLevel();
@@ -161,6 +166,16 @@ bool SimWheelController::PublishWheelUnitStates()
     wheelunit_states.velocity_BR    = wheelunits_.at("BR").measured_velocity_;
     wheelunit_states.velocity_BL    = wheelunits_.at("BL").measured_velocity_;
 
+    wheelunit_states.diff_FR        = wheelunits_.at("FR").measured_drive_encoder_diff_;
+    wheelunit_states.diff_FL        = wheelunits_.at("FL").measured_drive_encoder_diff_;
+    wheelunit_states.diff_BR        = wheelunits_.at("BR").measured_drive_encoder_diff_;
+    wheelunit_states.diff_BL        = wheelunits_.at("BL").measured_drive_encoder_diff_;
+
+    wheelunit_states.dT_FR          = wheelunits_.at("FR").dT_;
+    wheelunit_states.dT_FL          = wheelunits_.at("FL").dT_;
+    wheelunit_states.dT_BR          = wheelunits_.at("BR").dT_;
+    wheelunit_states.dT_BL          = wheelunits_.at("BL").dT_;
+
     wheelunit_states_pub_.publish(wheelunit_states);
 
     // Publish wheel transforms    
@@ -190,7 +205,7 @@ void SimWheelController::CB_WheelUnitStatesRequest(const rose20_platform::wheelu
     wheelunits_.at("BR").set_velocity_ = goal->requested_state.velocity_BR;
     wheelunits_.at("BL").set_velocity_ = goal->requested_state.velocity_BL;
 
-    ROS_DEBUG_NAMED(ROS_NAME, "Sim CB_WheelUnitStatesRequest: FR[%2.1f, %2.1f] FL[%2.1f, %2.1f] BR[%2.1f, %2.1f] BL[%2.1f, %2.1f]", goal->requested_state.angle_FR, goal->requested_state.velocity_FR, goal->requested_state.angle_FL, goal->requested_state.velocity_FL, goal->requested_state.angle_BR, goal->requested_state.velocity_BR, goal->requested_state.angle_BL, goal->requested_state.velocity_BL);
+    ROS_DEBUG_NAMED(ROS_NAME, "Sim CB_WheelUnitStatesRequest: FR[%df, %2.1f] FL[%df, %2.1f] BR[%df, %2.1f] BL[%df, %2.1f]", goal->requested_state.angle_FR, goal->requested_state.velocity_FR, goal->requested_state.angle_FL, goal->requested_state.velocity_FL, goal->requested_state.angle_BR, goal->requested_state.velocity_BR, goal->requested_state.angle_BL, goal->requested_state.velocity_BL);
 
     // Write to the simulation controller
     rose20_platform::wheelunit_statesResult server_result;
@@ -210,50 +225,62 @@ void SimWheelController::CB_WheelUnitStatesRequest(const rose20_platform::wheelu
     }
 }
 
-void SimWheelController::CB_FR_enc_pos(const std_msgs::Float64::ConstPtr& msg)
+void SimWheelController::CB_FR_enc_pos(const std_msgs::Int32::ConstPtr& msg)
 {
-    ROS_DEBUG_NAMED(ROS_NAME, "CB_FR_enc_pos: %.2f", msg->data);
-    wheelunits_.at("FR").measured_rotation_ = msg->data;
+    ROS_DEBUG_NAMED(ROS_NAME, "CB_FR_enc_pos: %d", msg->data);
+    wheelunits_.at("FR").measured_rotation_             = msg->data;   
 }
 
-void SimWheelController::CB_FR_enc_vel(const std_msgs::Float64::ConstPtr& msg)
+void SimWheelController::CB_FR_enc_vel(const std_msgs::Int32::ConstPtr& msg)
 {
-    ROS_DEBUG_NAMED(ROS_NAME, "CB_FR_enc_vel: %.2f", msg->data);
-    wheelunits_.at("FR").measured_velocity_ = msg->data;
+    ROS_DEBUG_NAMED(ROS_NAME, "CB_FR_enc_vel: %d", msg->data);
+    wheelunits_.at("FR").dT_                            = ros::Time::now().toSec() - FR_prev_T_.toSec();  
+    FR_prev_T_                                          = ros::Time::now();  
+    wheelunits_.at("FR").measured_velocity_             = (float)msg->data;
+    wheelunits_.at("FR").measured_drive_encoder_diff_   = (int)(wheelunits_.at("FR").measured_velocity_*wheelunits_.at("FR").dT_);
 }
 
-void SimWheelController::CB_FL_enc_pos(const std_msgs::Float64::ConstPtr& msg)
+void SimWheelController::CB_FL_enc_pos(const std_msgs::Int32::ConstPtr& msg)
 {
-    ROS_DEBUG_NAMED(ROS_NAME, "CB_FL_enc_pos: %.2f", msg->data);
-    wheelunits_.at("FL").measured_rotation_ = msg->data;
+    ROS_DEBUG_NAMED(ROS_NAME, "CB_FL_enc_pos: %d", msg->data);
+    wheelunits_.at("FL").measured_rotation_             = msg->data;    
 }
 
-void SimWheelController::CB_FL_enc_vel(const std_msgs::Float64::ConstPtr& msg)
+void SimWheelController::CB_FL_enc_vel(const std_msgs::Int32::ConstPtr& msg)
 {
-    ROS_DEBUG_NAMED(ROS_NAME, "CB_FL_enc_vel: %.2f", msg->data);
-    wheelunits_.at("FL").measured_velocity_ = msg->data;
+    ROS_DEBUG_NAMED(ROS_NAME, "CB_FL_enc_vel: %d", msg->data);
+    wheelunits_.at("FL").dT_                            = ros::Time::now().toSec() - FL_prev_T_.toSec();  
+    FL_prev_T_                                          = ros::Time::now();  
+    wheelunits_.at("FL").measured_velocity_             = (float)msg->data;
+    wheelunits_.at("FL").measured_drive_encoder_diff_   = (int)(wheelunits_.at("FL").measured_velocity_*wheelunits_.at("FL").dT_);
 }
 
-void SimWheelController::CB_BR_enc_pos(const std_msgs::Float64::ConstPtr& msg)
+void SimWheelController::CB_BR_enc_pos(const std_msgs::Int32::ConstPtr& msg)
 {
-    ROS_DEBUG_NAMED(ROS_NAME, "CB_BR_enc_pos: %.2f", msg->data);
-    wheelunits_.at("BR").measured_rotation_ = msg->data;
+    ROS_DEBUG_NAMED(ROS_NAME, "CB_BR_enc_pos: %d", msg->data);
+    wheelunits_.at("BR").measured_rotation_             = msg->data;   
 }
 
-void SimWheelController::CB_BR_enc_vel(const std_msgs::Float64::ConstPtr& msg)
+void SimWheelController::CB_BR_enc_vel(const std_msgs::Int32::ConstPtr& msg)
 {
-    ROS_DEBUG_NAMED(ROS_NAME, "CB_BR_enc_vel: %.2f", msg->data);
-    wheelunits_.at("BR").measured_velocity_ = msg->data;
+    ROS_DEBUG_NAMED(ROS_NAME, "CB_BR_enc_vel: %d", msg->data);
+    wheelunits_.at("BR").dT_                            = ros::Time::now().toSec() - BR_prev_T_.toSec();  
+    BR_prev_T_                                          = ros::Time::now();  
+    wheelunits_.at("BR").measured_velocity_             = (float)msg->data;
+    wheelunits_.at("BR").measured_drive_encoder_diff_   = (int)(wheelunits_.at("BR").measured_velocity_*wheelunits_.at("BR").dT_);
 }
 
-void SimWheelController::CB_BL_enc_pos(const std_msgs::Float64::ConstPtr& msg)
+void SimWheelController::CB_BL_enc_pos(const std_msgs::Int32::ConstPtr& msg)
 {
-    ROS_DEBUG_NAMED(ROS_NAME, "CB_BL_enc_pos: %.2f", msg->data);
-    wheelunits_.at("BL").measured_rotation_ = msg->data;
+    ROS_DEBUG_NAMED(ROS_NAME, "CB_BL_enc_pos: %d", msg->data);
+    wheelunits_.at("BL").measured_rotation_             = msg->data;       
 }
 
-void SimWheelController::CB_BL_enc_vel(const std_msgs::Float64::ConstPtr& msg)
+void SimWheelController::CB_BL_enc_vel(const std_msgs::Int32::ConstPtr& msg)
 {
-    ROS_DEBUG_NAMED(ROS_NAME, "CB_BL_enc_vel: %.2f", msg->data);
-    wheelunits_.at("BL").measured_velocity_ = msg->data;
+    ROS_DEBUG_NAMED(ROS_NAME, "CB_BL_enc_vel: %d", msg->data);
+    wheelunits_.at("BL").dT_                            = ros::Time::now().toSec() - BL_prev_T_.toSec();  
+    BL_prev_T_                                          = ros::Time::now();  
+    wheelunits_.at("BL").measured_velocity_             = (float)msg->data;
+    wheelunits_.at("BL").measured_drive_encoder_diff_   = (int)(wheelunits_.at("BL").measured_velocity_*wheelunits_.at("BL").dT_);
 }

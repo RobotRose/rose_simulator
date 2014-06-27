@@ -20,6 +20,7 @@
 
 #include <ros/ros.h>
 #include <std_msgs/Float64.h>
+#include <std_msgs/Int32.h>
 
 #include "rose20_common/common.hpp"
 #include "rose20_common/PID/PID.hpp"
@@ -42,8 +43,8 @@ public:
   
 
 private:  
-  void CB_SetRequestedCasterPos(const std_msgs::Float64::ConstPtr& msg);     
-  void CB_SetRequestedWheelVel(const std_msgs::Float64::ConstPtr& msg);
+  void CB_SetRequestedCasterPos(const std_msgs::Int32::ConstPtr& msg);     
+  void CB_SetRequestedWheelVel(const std_msgs::Int32::ConstPtr& msg);
 
   ros::NodeHandle n_;
   

@@ -26,6 +26,7 @@
 #include "rose20_common/wheel_unit.hpp"
 #include "rose20_platform/wheelunit_states.h"
 #include <std_msgs/Float64.h>
+#include <std_msgs/Int32.h>
 
 #include "rose20_common/server_multiple_client/server_multiple_client.hpp"
 
@@ -59,14 +60,14 @@ class SimWheelController
     bool  PublishWheelUnitStates(); 
 
     //void  CB_WheelUnitStatesRequest(const rose20_platform::wheelunit_states::ConstPtr& wheelunit_states);
-    void  CB_FR_enc_pos(const std_msgs::Float64::ConstPtr& msg);
-    void  CB_FR_enc_vel(const std_msgs::Float64::ConstPtr& msg);
-    void  CB_FL_enc_pos(const std_msgs::Float64::ConstPtr& msg);
-    void  CB_FL_enc_vel(const std_msgs::Float64::ConstPtr& msg);
-    void  CB_BR_enc_pos(const std_msgs::Float64::ConstPtr& msg);
-    void  CB_BR_enc_vel(const std_msgs::Float64::ConstPtr& msg);
-    void  CB_BL_enc_pos(const std_msgs::Float64::ConstPtr& msg);
-    void  CB_BL_enc_vel(const std_msgs::Float64::ConstPtr& msg);
+    void  CB_FR_enc_pos(const std_msgs::Int32::ConstPtr& msg);
+    void  CB_FR_enc_vel(const std_msgs::Int32::ConstPtr& msg);
+    void  CB_FL_enc_pos(const std_msgs::Int32::ConstPtr& msg);
+    void  CB_FL_enc_vel(const std_msgs::Int32::ConstPtr& msg);
+    void  CB_BR_enc_pos(const std_msgs::Int32::ConstPtr& msg);
+    void  CB_BR_enc_vel(const std_msgs::Int32::ConstPtr& msg);
+    void  CB_BL_enc_pos(const std_msgs::Int32::ConstPtr& msg);
+    void  CB_BL_enc_vel(const std_msgs::Int32::ConstPtr& msg);
 
     void  CB_WheelUnitStatesRequest(const rose20_platform::wheelunit_statesGoalConstPtr& goal, SMC* smc);
     
@@ -95,11 +96,16 @@ class SimWheelController
     ros::Subscriber     BL_caster_sub_;
     ros::Subscriber     BL_wheel_sub_;
 
+    TFHelper*           FR_transform_;
+    TFHelper*           FL_transform_;
+    TFHelper*           BR_transform_;
+    TFHelper*           BL_transform_;
 
-    TFHelper*          FR_transform_;
-    TFHelper*          FL_transform_;
-    TFHelper*          BR_transform_;
-    TFHelper*          BL_transform_;
+    ros::Time           FR_prev_T_;
+    ros::Time           FL_prev_T_;
+    ros::Time           BR_prev_T_;
+    ros::Time           BL_prev_T_;
+
 
     
     map<string, WheelUnit>               wheelunits_;
