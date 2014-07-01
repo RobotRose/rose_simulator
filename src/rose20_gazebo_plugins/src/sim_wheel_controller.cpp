@@ -171,16 +171,20 @@ bool SimWheelController::writeWheelStates()
             ROS_DEBUG_NAMED(ROS_NAME, "Keeping orientation to slow down or speedup, wheel_error.");
         }
     }
-    else
+    else 
         stopstart_angle_treshold_ = WHEELUNIT_STOP_MOVE_ANGLE_ERR_VAL;
 
-    // Publish setpoints
+
+    // Publish setpoints    
     FR_caster_pub_.publish(FR_msg_rot);
     FR_wheel_pub_.publish(FR_msg_vel); 
+
     FL_caster_pub_.publish(FL_msg_rot);
     FL_wheel_pub_.publish(FL_msg_vel);
+
     BR_caster_pub_.publish(BR_msg_rot);
     BR_wheel_pub_.publish(BR_msg_vel);
+
     BL_caster_pub_.publish(BL_msg_rot);
     BL_wheel_pub_.publish(BL_msg_vel);  
 
@@ -228,16 +232,16 @@ bool SimWheelController::PublishWheelUnitStates()
     wheelunit_states_pub_.publish(wheelunit_states);
 
     // Publish wheel transforms    
-    FR_transform_->setTransform(0.0, 0.0, -wheelunits_.at("FR").getMeasuredAngleRad(), 0.58/2.0, -0.48/2.0, 0.0);
+    FR_transform_->setTransform(0.0, 0.0, -(wheelunits_.at("FR").getMeasuredAngleRad()), 0.58/2.0, -0.48/2.0, 0.0);
     FR_transform_->Broadcast();
 
-    FL_transform_->setTransform(0.0, 0.0, -wheelunits_.at("FL").getMeasuredAngleRad(), 0.58/2.0, 0.48/2.0, 0.0);
+    FL_transform_->setTransform(0.0, 0.0, -(wheelunits_.at("FL").getMeasuredAngleRad()), 0.58/2.0, 0.48/2.0, 0.0);
     FL_transform_->Broadcast();
 
-    BR_transform_->setTransform(0.0, 0.0, -wheelunits_.at("BR").getMeasuredAngleRad(), -0.58/2.0, -0.48/2.0, 0.0);
+    BR_transform_->setTransform(0.0, 0.0, -(wheelunits_.at("BR").getMeasuredAngleRad()), -0.58/2.0, -0.48/2.0, 0.0);
     BR_transform_->Broadcast();
 
-    BL_transform_->setTransform(0.0, 0.0, -wheelunits_.at("BL").getMeasuredAngleRad(), -0.58/2.0, 0.48/2.0, 0.0);
+    BL_transform_->setTransform(0.0, 0.0, -(wheelunits_.at("BL").getMeasuredAngleRad()), -0.58/2.0, 0.48/2.0, 0.0);
     BL_transform_->Broadcast();
 }
 
@@ -291,6 +295,7 @@ void SimWheelController::CB_FR_enc_vel(const std_msgs::Int32::ConstPtr& msg)
 
 void SimWheelController::CB_FL_enc_pos(const std_msgs::Int32::ConstPtr& msg)
 {
+    WheelUnit wheel_unit("Only For Functions", -1);
     ROS_DEBUG_NAMED(ROS_NAME, "CB_FL_enc_pos: %d", msg->data);
     wheelunits_.at("FL").measured_rotation_             = msg->data;    
 }
@@ -321,6 +326,7 @@ void SimWheelController::CB_BR_enc_vel(const std_msgs::Int32::ConstPtr& msg)
 
 void SimWheelController::CB_BL_enc_pos(const std_msgs::Int32::ConstPtr& msg)
 {
+    WheelUnit wheel_unit("Only For Functions", -1);
     ROS_DEBUG_NAMED(ROS_NAME, "CB_BL_enc_pos: %d", msg->data);
     wheelunits_.at("BL").measured_rotation_             = msg->data;       
 }
