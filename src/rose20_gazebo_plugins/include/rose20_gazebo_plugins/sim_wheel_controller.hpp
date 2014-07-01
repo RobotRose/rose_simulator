@@ -75,6 +75,7 @@ class SimWheelController
     string                  name_;
     ros::NodeHandle         n_;
     int                     enabled_;
+    SMC*                    smc_;
     
     ros::Publisher      wheelunit_states_pub_;
     ros::Publisher      FR_caster_pub_;
@@ -106,12 +107,14 @@ class SimWheelController
     ros::Time           BR_prev_T_;
     ros::Time           BL_prev_T_;
 
+    float               stopstart_angle_treshold_;
+    int                 stopstart_speed_treshold_;
 
+    typedef std::map<string, WheelUnit>     wheelunit_map;
+    wheelunit_map                           wheelunits_;
     
-    map<string, WheelUnit>               wheelunits_;
-    map<string, SimWheelUnitController*> wheelunit_controllers_;
-
-    SMC*                smc_;
+    typedef std::map<string, SimWheelUnitController*>   wheelunit_controller_map;
+    wheelunit_controller_map                            wheelunit_controllers_;
 };
 
 #endif // SIM_WHEEL_CONTROLLER_HPP

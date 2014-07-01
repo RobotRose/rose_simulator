@@ -27,12 +27,12 @@ SimWheelUnitController::SimWheelUnitController(ros::NodeHandle n, string wheel_u
   wheel_namespace_      = wheel_unit_name_ + "_wheel";
   wheel_direction_      = wheel_direction;
 
-  caster_joint_         = new SimJoint(1.0, 500.0, 0.0, 500.0);
-  wheel_joint_          = new SimJoint(2.0, 500.0, 0.0, 500.0);
+  caster_joint_         = new SimJoint(2.0, 30.0, 0.0, 250.0);
+  wheel_joint_          = new SimJoint(4.0, 30.0, 0.0, 250.0);
 
   // Initialize caster & wheel PID controllers
-  PID_caster_.initialize(25.0, 0.0, 0.0, -1.0, 1.0, -10.0, 10.0);
-  PID_wheel_.initialize(25.0, 0.0, 0.0, -1.0, 1.0, -5.0, 5.0);
+  PID_caster_.initialize(200.0, 100.0, 0.0, -200.0, 200.0, -150.0, 150.0);
+  PID_wheel_.initialize(200.0, 100.0, 0.0, -200.0, 200.0, -250.0, 250.0);
 
   // Publishers
   pub_enc_caster_pos_    = n_.advertise<std_msgs::Int32>("/wheel_unit/" + caster_namespace_ + "/enc_pos", 5);
@@ -49,10 +49,8 @@ SimWheelUnitController::SimWheelUnitController(ros::NodeHandle n, string wheel_u
   cur_caster_vel_ = 0.0;
   cur_wheel_pos_  = 0.0;
   cur_wheel_vel_  = 0.0;
-  req_caster_pos_ = 0.0;
+  req_caster_pos_ = 0.0 ;
   req_wheel_vel_  = 0.0 * wheel_direction_;
-
-  stopstart_error_ = WHEELUNIT_STOP_MOVE_ANGLE_ERR_VAL;
 }
 
 SimWheelUnitController::~SimWheelUnitController()
@@ -60,7 +58,8 @@ SimWheelUnitController::~SimWheelUnitController()
   
 }
 
-void SimWheelUnitController::update()
+
+void SimWheelUnitController::update(string name)
 {
   // Get current sim time 
   cur_time_ = ros::Time::now(); 
@@ -75,10 +74,10 @@ void SimWheelUnitController::update()
   std_msgs::Int32 msg;
   
   WheelUnit wheel_unit;
-  msg.data   = wheel_unit.toLowLevelSteer(cur_caster_pos_);
+  msg.data   = -wheel_unit.toLowLevelSteer(cur_caster_pos_);
   pub_enc_caster_pos_.publish(msg);
   
-  msg.data   = wheel_unit.toLowLevelSteer(cur_caster_vel_);
+  msg.data   = -wheel_unit.toLowLevelSteer(cur_caster_vel_);
   pub_enc_caster_vel_.publish(msg);
   
   msg.data   = wheel_unit.toLowLevelDrive(cur_wheel_pos_);
@@ -90,50 +89,20 @@ void SimWheelUnitController::update()
   // Calculate errors
   float caster_error  = req_caster_pos_ - cur_caster_pos_;
   float wheel_error   = req_wheel_vel_  - cur_wheel_vel_;
-
-  // Set speed to zero if a wheelunit has to rotate more thatn a certain amount (with hysteresis)
-  if (fabs(caster_error) > stopstart_error_)
-  {
-      req_wheel_vel_ = 0.0;
-      wheel_error = req_wheel_vel_ - cur_wheel_vel_;
-      // Wait for totally rotated
-      stopstart_error_ = WHEELUNIT_START_MOVE_ANGLE_ERR_VAL;
-      ROS_DEBUG_NAMED(ROS_NAME, "Setting drive speed to zero to turn wheels, caster_error: %.4f", caster_error);
-
-      // Keep current orientation of the wheels if the speed error is above a certain threshold
-      float stopstart_speed_error_ = 0.1; // [m/s]
-      if (fabs(wheel_error) > stopstart_speed_error_)
-      {
-          req_caster_pos_ = cur_caster_pos_;
-          caster_error  = req_caster_pos_ - cur_caster_pos_;
-          // Wait for speed error small enough
-      //    stopstart_speed_error_ = WHEELUNIT_START_MOVE_ANGLE_ERR_VAL;
-          ROS_DEBUG_NAMED(ROS_NAME, "Keeping orientation to slow down or speedup, wheel_error: %.4f", wheel_error);
-      }
-      //else
-      //    stopstart_speed_error_ = WHEELUNIT_STOP_MOVE_ANGLE_ERR_VAL;
-      
-  }
-  else
-      stopstart_error_ = WHEELUNIT_STOP_MOVE_ANGLE_ERR_VAL;
-
-
-  
    
   // Calculate required PID effort
-  float dt = cur_time_.toSec() - prev_time_.toSec();
-  float caster_effort = PID_caster_.update(caster_error, dt);
-  float wheel_effort  = PID_wheel_.update(wheel_error, dt);
+  float caster_effort = PID_caster_.update(caster_error);
+  float wheel_effort  = PID_wheel_.update(wheel_error);
+  
+  // Save finish sim time
+  prev_time_ = ros::Time::now();
 
-  ROS_DEBUG_NAMED(ROS_NAME, "Caster PID [pos = %.3f/%.3f, error = %.3f, effort = %.3f]", cur_caster_pos_, req_caster_pos_, caster_error, caster_effort);
-  ROS_DEBUG_NAMED(ROS_NAME, "Wheel_PID  [vel = %.3f/%.3f, error = %.3f, effort = %.3f]", cur_wheel_vel_, req_wheel_vel_, wheel_error, wheel_effort);
+  ROS_DEBUG_NAMED(ROS_NAME, "%s CasterPID [pos = %.3frad/s -> %.3frad/s, error = %.3f, effort = %.3f]", name.c_str(), cur_caster_pos_, req_caster_pos_, caster_error, caster_effort);
+  ROS_DEBUG_NAMED(ROS_NAME, "%s WheelPID  [vel = %.3frad/s -> %.3frad/s, error = %.3f, effort = %.3f]", name.c_str(), cur_wheel_vel_, req_wheel_vel_, wheel_error, wheel_effort);
   
   // Apply control effort
   caster_joint_->update(caster_effort);
   wheel_joint_->update(wheel_effort);
-  
-  // Save finish sim time
-  prev_time_ = ros::Time::now();
 }
 
 
@@ -150,5 +119,5 @@ void SimWheelUnitController::CB_SetRequestedWheelVel(const std_msgs::Int32::Cons
   // TODO Limits via param server
   WheelUnit wheel_unit("Only For Functions", -1);
   req_wheel_vel_ = wheel_unit.toVelocityRadPerSec((float)msg->data)*wheel_direction_;  
-  ROS_DEBUG_NAMED(ROS_NAME, "Request wheel vel: %.3frad/s, current: %.3frad/s", req_wheel_vel_, cur_wheel_vel_);
+  ROS_DEBUG_NAMED(ROS_NAME, "Request wheel vel: %.3frad/s %dpulses/s, current: %.3frad/s", req_wheel_vel_, wheel_unit.toLowLevelDrive(req_wheel_vel_), cur_wheel_vel_);
 }

@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
     ros::init(argc, argv, "SimWheelController");
     ros::NodeHandle n;
-    ros::Rate r(25);        
+    ros::Rate r(100);        
 
     SimWheelController* sim_wheel_controller = new SimWheelController("sim_wheel_controller", n);
     tf_odom_map    = new TFHelper("tf_odom_map", n, "/map", "/base_link");

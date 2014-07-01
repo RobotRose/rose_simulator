@@ -24,7 +24,7 @@ void SimJoint::update(float force)
 	}
 
 
-	float damping_force = -damping_*vel_*dt;
+	float damping_force = -damping_*vel_;
 
 	// Calculate friction
 	float new_friction = 0.0;

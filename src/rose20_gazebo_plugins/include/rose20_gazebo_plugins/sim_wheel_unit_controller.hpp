@@ -37,10 +37,9 @@ public:
   SimWheelUnitController();
   SimWheelUnitController(ros::NodeHandle n, string wheel_unit_name, int wheel_direction);
   ~SimWheelUnitController();
-  void update();
+  void update(string name = "");
 
-  std::string               wheel_unit_name_;
-  
+  std::string               wheel_unit_name_; 
 
 private:  
   void CB_SetRequestedCasterPos(const std_msgs::Int32::ConstPtr& msg);     
@@ -81,10 +80,7 @@ private:
   float   wheel_direction_;
   
   std::string   caster_namespace_;
-  std::string   wheel_namespace_;
-
-  float stopstart_error_;
-  
+  std::string   wheel_namespace_;  
 };
 
 #endif // WHEELUNITCONTROLLER_H
