@@ -27,8 +27,8 @@ SimWheelUnitController::SimWheelUnitController(ros::NodeHandle n, string wheel_u
   wheel_namespace_      = wheel_unit_name_ + "_wheel";
   wheel_direction_      = wheel_direction;
 
-  caster_joint_         = new SimJoint(2.0, 10.0, 0.0, 250.0);
-  wheel_joint_          = new SimJoint(4.0, 10.0, 0.0, 250.0);
+  caster_joint_         = new SimJoint(2.0, 50.0, 0.0, 250.0);
+  wheel_joint_          = new SimJoint(4.0, 20.0, 0.0, 250.0);
 
   // Initialize caster & wheel PID controllers
   PID_caster_.initialize(200.0, 50.0, 0.0, -200.0, 200.0, -150.0, 150.0);
