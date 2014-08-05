@@ -24,6 +24,7 @@
 #include "rose20_common/ros_name.hpp"
 #include "rose20_common/TF_helper.hpp"
 #include "rose20_common/wheel_unit.hpp"
+#include "action_result_message.hpp"
 #include "rose20_platform/wheelunit_states.h"
 #include <std_msgs/Float64.h>
 #include <std_msgs/Int32.h>
@@ -35,7 +36,6 @@
 #include "rose20_platform/wheelunit_statesActionGoal.h"
 #include "rose20_platform/wheelunit_statesActionResult.h"
 #include "rose20_platform/wheelunit_statesActionFeedback.h"
-#include "action_result_message.hpp"
 
 #include "rose20_gazebo_plugins/sim_wheel_unit_controller.hpp"
 
