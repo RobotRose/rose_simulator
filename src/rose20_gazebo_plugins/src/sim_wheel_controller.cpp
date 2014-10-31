@@ -14,12 +14,22 @@
 #include "rose20_gazebo_plugins/sim_wheel_controller.hpp"
 
 SimWheelController::SimWheelController(string name, ros::NodeHandle n)
+    : sh_platform_controller_alarm_(SharedVariable<bool>("platform_controller_alarm"))
+    , sh_platform_controller_reset_(SharedVariable<bool>("platform_controller_reset"))
 {
     n_           	= n;
     name_       	= name;
     enabled_ 	 	= false;
     stopstart_angle_treshold_ = WHEELUNIT_STOP_MOVE_ANGLE_ERR_VAL;
     stopstart_speed_treshold_ = 15;                                         //! @todo: OH Make viam define and settable in lowlevel
+
+    // Host read-only, published alarm state, max publish rate is 10 hz
+    sh_platform_controller_alarm_.host(false, true, ros::Rate(10.0));
+    sh_platform_controller_alarm_ = false;
+
+    // Host mutable, non-published reset boolean
+    sh_platform_controller_reset_.host(false, false);
+    sh_platform_controller_reset_ = false;
 
     FR_prev_T_      = ros::Time::now(); 
     FL_prev_T_      = ros::Time::now(); 

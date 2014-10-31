@@ -26,6 +26,9 @@
 #include "rose20_common/wheel_unit.hpp"
 #include "action_result_message.hpp"
 #include "rose20_platform/wheelunit_states.h"
+
+#include "shared_variables/shared_variable.hpp"
+
 #include <std_msgs/Float64.h>
 #include <std_msgs/Int32.h>
 
@@ -38,6 +41,8 @@
 #include "rose20_platform/wheelunit_statesActionFeedback.h"
 
 #include "rose20_gazebo_plugins/sim_wheel_unit_controller.hpp"
+
+using namespace shared_variables;
 
 class SimWheelController
 {
@@ -115,6 +120,10 @@ class SimWheelController
     
     typedef std::map<string, SimWheelUnitController*>   wheelunit_controller_map;
     wheelunit_controller_map                            wheelunit_controllers_;
+
+    SharedVariable<bool>            sh_platform_controller_alarm_;
+    SharedVariable<bool>            sh_platform_controller_reset_;
+
 };
 
 #endif // SIM_WHEEL_CONTROLLER_HPP

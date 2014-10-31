@@ -45,6 +45,7 @@
   <build_depend>roscomm</build_depend>
   <build_depend>rose20_common</build_depend>
   <build_depend>rose20_platform</build_depend>
+  <build_depend>shared_variables</build_depend>
   <build_depend>gazebo_ros</build_depend>
   
 
@@ -52,6 +53,7 @@
   <run_depend>roscomm</run_depend>
   <run_depend>rose20_common</run_depend>
   <run_depend>rose20_platform</run_depend>
+  <run_depend>shared_variables</run_depend>
   <run_depend>gazebo_ros</run_depend>
 
 

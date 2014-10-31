@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscomm 
   rose20_common
   rose20_platform
+  shared_variables
 )
 
 set(CMAKE_CXX_FLAGS "-std=c++0x -g") # TODO OH: -g is DEBUG FLAG
@@ -26,7 +27,7 @@ find_package(gazebo REQUIRED)
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES LiftController NeckController WheelUnitController
-    CATKIN_DEPENDS roscomm rose20_common rose20_platform
+    CATKIN_DEPENDS roscomm rose20_common rose20_platform shared_variables
     DEPENDS gazebo_ros
 )
 
