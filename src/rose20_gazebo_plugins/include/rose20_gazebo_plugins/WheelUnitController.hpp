@@ -25,7 +25,7 @@
 #include <std_msgs/Float64.h>
 
 #include "rose_common/common.hpp"
-#include "rose_conversions/converions.hpp"
+#include "rose_conversions/conversions.hpp"
 #include "opteq_wheelunits_01/wheel_unit.hpp"
 
 namespace gazebo

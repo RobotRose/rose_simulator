@@ -32,7 +32,7 @@ void WheelUnitController::Load(physics::ModelPtr model, sdf::ElementPtr sdf)
   {
     caster_joint_string_  = sdf_->Get<std::string>("caster");
     caster_joint_         = model_->GetJoint(caster_joint_string_);
-    caster_namespace_     = ReplaceString(caster_joint_string_, "::", "/"); 
+    caster_namespace_     = rose_conversions::replaceString(caster_joint_string_, "::", "/"); 
 
     if(caster_joint_->GetChild()->GetWorldPose().rot.z >= 0)
       wheel_direction_ = 1.0;
@@ -43,7 +43,7 @@ void WheelUnitController::Load(physics::ModelPtr model, sdf::ElementPtr sdf)
   {
     wheel_joint_string_ = sdf_->Get<std::string>("wheel");
     wheel_joint_        = model_->GetJoint(wheel_joint_string_);
-    wheel_namespace_    = ReplaceString(wheel_joint_string_, "::", "/");  
+    wheel_namespace_    = rose_conversions::replaceString(wheel_joint_string_, "::", "/");  
   }
     
   if(caster_joint_)
