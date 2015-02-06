@@ -43,6 +43,7 @@
   
   <build_depend>gazebo_ros</build_depend>
   <build_depend>roscomm</build_depend>
+  <build_depend>rose_converions</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>rose20_platform</build_depend>
   <build_depend>rose_common</build_depend>
@@ -51,6 +52,7 @@
 
   <run_depend>gazebo_ros</run_depend>
   <run_depend>roscomm</run_depend>
+  <run_depend>rose_converions</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>rose20_platform</run_depend>
   <run_depend>rose_common</run_depend>
