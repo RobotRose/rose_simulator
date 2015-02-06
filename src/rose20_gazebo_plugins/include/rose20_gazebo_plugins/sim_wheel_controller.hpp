@@ -32,7 +32,7 @@
 #include <std_msgs/Float64.h>
 #include <std_msgs/Int32.h>
 
-#include "rose20_common/server_multiple_client/server_multiple_client.hpp"
+#include "server_multiple_client/server_multiple_client.hpp"
 
 #include "rose20_platform/wheelunit_states.h"
 #include "rose20_platform/wheelunit_statesAction.h"

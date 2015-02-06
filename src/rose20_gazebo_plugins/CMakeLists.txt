@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscomm 
   rose_common
   rose20_platform
+  server_multiple_client
   shared_variables
 )
 
@@ -35,6 +36,7 @@ catkin_package(
       roscomm 
       rose_common 
       rose20_platform 
+      server_multiple_client
       shared_variables
     DEPENDS 
       gazebo_ros
