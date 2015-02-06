@@ -277,14 +277,14 @@ void SimWheelController::CB_WheelUnitStatesRequest(const rose20_platform::wheelu
         ROS_DEBUG_NAMED(ROS_NAME, "Successfully set requested wheelunits states.");
 
         server_result.return_code = SUCCESS;
-        smc_->sendServerResult<rose20_platform::wheelunit_statesAction>(true, server_result);
+        smc_->sendServerResult(true, server_result);
     }
     else
     {
         ROS_DEBUG_NAMED(ROS_NAME, "Failed to set requested wheelunits states.");
 
         server_result.return_code = LOWLEVEL_ERROR;
-        smc_->sendServerResult<rose20_platform::wheelunit_statesAction>(false, server_result);
+        smc_->sendServerResult(false, server_result);
     }
 }
 
