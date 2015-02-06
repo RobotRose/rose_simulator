@@ -34,13 +34,13 @@ void LiftController::Load(physics::ModelPtr parent, sdf::ElementPtr sdf)
   {
     bottom_joint_string_  = sdf_->Get<std::string>("bottom_lift_joint");
     bottom_joint_         = model_->GetJoint(bottom_joint_string_);
-    top_namespace_        = ReplaceString(bottom_joint_string_, "::", "/"); 
+    top_namespace_        = rose_conversions::replaceString(bottom_joint_string_, "::", "/"); 
   }
   if (sdf_->HasElement("top_lift_joint"))
   {
     top_joint_string_ = sdf_->Get<std::string>("top_lift_joint");
     top_joint_        = model_->GetJoint(top_joint_string_);
-    top_namespace_    = ReplaceString(top_joint_string_, "::", "/");  
+    top_namespace_    = rose_conversions::replaceString(top_joint_string_, "::", "/");  
   }
 
   // Check if we sucessfully got the joints from the model

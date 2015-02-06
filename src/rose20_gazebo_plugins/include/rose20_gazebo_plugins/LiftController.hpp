@@ -26,6 +26,7 @@
 #include <gazebo/common/common.hh>
 
 #include "rose_common/common.hpp"
+#include "rose_conversions/conversions.hpp"
 #include "rose20_platform/lift.h"
 #include "rose20_platform/lift_control.h"
 
