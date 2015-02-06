@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
             continue;
         }
 
-        if(rose_converions::kbhit())
+        if(rose_conversions::kbhit())
         {
             uint c = getchar();
             ROS_DEBUG_NAMED(ROS_NAME, "Key pressed: %c", (char)c);

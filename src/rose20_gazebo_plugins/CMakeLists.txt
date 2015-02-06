@@ -35,7 +35,7 @@ catkin_package(
     CATKIN_DEPENDS 
       roscomm 
       rose_common 
-      rose_converions
+      rose_conversions
       rose20_platform 
       server_multiple_client
       shared_variables
