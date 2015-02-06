@@ -4,7 +4,7 @@ project(rose20_gazebo_plugins)
 find_package(catkin REQUIRED COMPONENTS 
   gazebo_ros
   roscomm 
-  rose20_common
+  rose_common
   rose20_platform
   shared_variables
 )
@@ -25,10 +25,19 @@ find_package(gazebo REQUIRED)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 
 catkin_package(
-    INCLUDE_DIRS include
-    LIBRARIES LiftController NeckController WheelUnitController
-    CATKIN_DEPENDS roscomm rose20_common rose20_platform shared_variables
-    DEPENDS gazebo_ros
+    INCLUDE_DIRS 
+      include
+    LIBRARIES 
+      LiftController 
+      NeckController 
+      WheelUnitController
+    CATKIN_DEPENDS 
+      roscomm 
+      rose_common 
+      rose20_platform 
+      shared_variables
+    DEPENDS 
+      gazebo_ros
 )
 
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
@@ -45,9 +54,9 @@ target_link_libraries(NeckController ${gazebo_LIBS} ${catkin_LIBRARIES})
 add_library(WheelUnitController SHARED src/WheelUnitController.cpp)
 target_link_libraries(WheelUnitController ${gazebo_LIBS} ${catkin_LIBRARIES})
 
-add_dependencies(LiftController 			roscomm rose20_common)
-add_dependencies(NeckController 			roscomm rose20_common)
-add_dependencies(WheelUnitController 		roscomm rose20_common)
+add_dependencies(LiftController 			roscomm rose_common)
+add_dependencies(NeckController 			roscomm rose_common)
+add_dependencies(WheelUnitController 		roscomm rose_common)
 
 
 

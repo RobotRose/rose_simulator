@@ -20,10 +20,10 @@
 #include <map>
 #include <boost/foreach.hpp>
 
-#include "rose20_common/common.hpp"
-#include "rose20_common/ros_name.hpp"
-#include "rose20_common/TF_helper.hpp"
-#include "rose20_common/wheel_unit.hpp"
+#include "rose_common/common.hpp"
+#include "ros_name/ros_name.hpp"
+#include "rose_transformations/TF_helper.hpp"
+#include "opteq_wheelunits_01/wheel_unit.hpp"
 #include "action_result_message.hpp"
 #include "rose20_platform/wheelunit_states.h"
 

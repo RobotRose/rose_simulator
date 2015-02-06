@@ -25,15 +25,13 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 
-#include "rose20_common/common.hpp"
+#include "rose_common/common.hpp"
 #include "rose20_platform/lift.h"
 #include "rose20_platform/lift_control.h"
 
 #define LIFT_PRISMATIC_SPEED  (M_PI/12.0)  // [rad/s]
 #define LIFT_BOTTOM_MAX_ANGLE (M_PI/2.0 - M_PI/8.0) 
 #define LIFT_BOTTOM_MIN_ANGLE (     0.0 + M_PI/8.0)  
-
-using namespace rose20_common;
 
 namespace gazebo
 {   

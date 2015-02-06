@@ -22,14 +22,13 @@
 #include <std_msgs/Float64.h>
 #include <std_msgs/Int32.h>
 
-#include "rose20_common/common.hpp"
-#include "rose20_common/PID/PID.hpp"
-#include "rose20_common/wheel_unit.hpp"
+#include "rose_common/common.hpp"
+#include "PID/PID.hpp"
+#include "opteq_wheelunits_01/wheel_unit.hpp"
 
 #include "rose20_gazebo_plugins/sim_joint.hpp"
 
 using namespace std;
-using namespace rose20_common;
 
 class SimWheelUnitController
 {
@@ -67,8 +66,8 @@ private:
 
   ros::Time                 cur_time_;
   ros::Time                 prev_time_;    
-  rose20_common::PID        PID_caster_;
-  rose20_common::PID        PID_wheel_;
+  PID                       PID_caster_;
+  PID                       PID_wheel_;
   
   // State
   float   cur_caster_pos_;

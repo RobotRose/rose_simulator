@@ -24,11 +24,8 @@
 #include <gazebo/common/common.hh>
 #include <std_msgs/Float64.h>
 
-#include "rose20_common/common.hpp"
-#include "rose20_common/wheel_unit.hpp"
-
-
-using namespace rose20_common;
+#include "rose_common/common.hpp"
+#include "opteq_wheelunits_01/wheel_unit.hpp"
 
 namespace gazebo
 {   
