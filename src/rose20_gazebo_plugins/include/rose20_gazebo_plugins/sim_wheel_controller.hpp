@@ -11,8 +11,8 @@
 * 
 ***********************************************************************************/
 
-#ifndef SIM_WHEEL_CONTROLLER_HPP
-#define SIM_WHEEL_CONTROLLER_HPP
+#ifndef SIM_PLATFORM_CONTROLLER_HPP
+#define SIM_PLATFORM_CONTROLLER_HPP
 
 #include <iostream>
 #include <stdio.h>
@@ -126,4 +126,4 @@ class SimWheelController
 
 };
 
-#endif // SIM_WHEEL_CONTROLLER_HPP
+#endif // SIM_PLATFORM_CONTROLLER_HPP

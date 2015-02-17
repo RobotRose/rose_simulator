@@ -1,5 +1,5 @@
-#ifndef SIM_WHEEL_CONTROLLER__NODE_HPP
-#define SIM_WHEEL_CONTROLLER__NODE_HPP
+#ifndef SIM_PLATFORM_CONTROLLER_NODE_HPP
+#define SIM_PLATFORM_CONTROLLER_NODE_HPP
 
 #include <iostream>
 #include <stdio.h>
@@ -10,11 +10,11 @@
 #include "rose_conversions/conversions.hpp"
 #include "ros_name/ros_name.hpp"
 #include "opteq_wheelunits_01/wheel_unit.hpp"
-#include "rose20_platform/wheelunit_states.h"
+#include "rose_base_msgs/wheelunit_states.h"
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 
 #include "sim_wheel_controller.hpp"
 
 void CB_initialpose(const geometry_msgs::PoseWithCovarianceStamped& initial_pose);
 
-#endif // SIM_WHEEL_CONTROLLER__NODE_HPP
+#endif // SIM_PLATFORM_CONTROLLER_NODE_HPP
