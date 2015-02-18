@@ -3,9 +3,12 @@ project(rose20_gazebo_plugins)
 
 find_package(catkin REQUIRED COMPONENTS 
   gazebo_ros
+  opteq_wheelunits_01
   roscomm 
+  roscpp
   rose_base_msgs
   rose_common
+  rose_transformations
   server_multiple_client
   shared_variables
 )
@@ -34,9 +37,12 @@ catkin_package(
       WheelUnitController
     CATKIN_DEPENDS 
       gazebo_ros
+      opteq_wheelunits_01
       roscomm 
+      roscpp
       rose_base_msgs
       rose_common
+      rose_transformations
       server_multiple_client
       shared_variables
     DEPENDS 

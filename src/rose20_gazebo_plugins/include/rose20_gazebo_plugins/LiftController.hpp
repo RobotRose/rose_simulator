@@ -52,7 +52,7 @@ private:
   double                    cur_lift_top_pos_;
   double                    bottom_joint_target_pos_;
   double                    top_joint_target_pos_;
-  int                       lift_target_pose_;
+  int                       lift_target_percentage_;
   std::string               controller_name_;
   sdf::ElementPtr           sdf_;
   

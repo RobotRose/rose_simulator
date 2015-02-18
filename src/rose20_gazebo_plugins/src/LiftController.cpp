@@ -85,7 +85,7 @@ void LiftController::OnUpdate(const common::UpdateInfo & /*info*/)
 void LiftController::CB_SetLiftStatus(const rose_base_msgs::lift_command::ConstPtr& lift_message)
 {
   setLift(this->lift_target_percentage_);
-  ROS_INFO("Lift position requested: %d\%", this->lift_target_percentage_);
+  ROS_INFO("Lift position requested: %d%%", this->lift_target_percentage_);
 }
 
 double LiftController::calcAnimationTime()
