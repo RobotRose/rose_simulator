@@ -63,8 +63,7 @@ void LiftController::Load(physics::ModelPtr parent, sdf::ElementPtr sdf)
   lift_pose_request_sub_  = n_.subscribe("lift_pose_request", 50, &LiftController::CB_SetLiftStatus, this);
   
   // Force to a start position
-  lift_target_pose_ = 1;
-  setLiftMid();
+  setLift(50.0);
 
   // Create a new animation from the current position to the requested position
   createAndAttachAnimation(calcAnimationTime(), false);
@@ -83,27 +82,10 @@ void LiftController::OnUpdate(const common::UpdateInfo & /*info*/)
   }    
 }
    
-void LiftController::CB_SetLiftStatus(const rose20_platform::lift::ConstPtr& lift_message)
+void LiftController::CB_SetLiftStatus(const rose_base_msgs::lift_command::ConstPtr& lift_message)
 {
-  // Store requested lift pose
-  this->lift_target_pose_ = lift_message->pose;
-  ROS_INFO("Lift pose requested: %d", this->lift_target_pose_);
-  switch(lift_target_pose_)
-  {
-    case 0:
-      setLiftLow();
-      break;
-    case 1:
-      setLiftMid();
-      break;
-    case 2:
-      setLiftHigh();
-      break;
-    default:
-      ROS_WARN("Invalid lift pose requested");
-      break;           
-  }
-
+  setLift(this->lift_target_percentage_);
+  ROS_INFO("Lift position requested: %d\%", this->lift_target_percentage_);
 }
 
 double LiftController::calcAnimationTime()
@@ -115,28 +97,16 @@ double LiftController::calcAnimationTime()
   return duration;
 }
 
-void LiftController::setLiftLow()
+//! @todo OH [IMPR]: Implement speed_percentage.
+void LiftController::setLift(float percentage)
 {
-  bottom_joint_target_pos_  =  LIFT_BOTTOM_MIN_ANGLE; 
-  top_joint_target_pos_     = -LIFT_BOTTOM_MIN_ANGLE; 
-  // Create a new animation from the current position to the requested position
-  createAndAttachAnimation(calcAnimationTime(), false);   
-}
+  lift_target_percentage_   = percentage;
 
-void LiftController::setLiftMid()
-{
-  bottom_joint_target_pos_  =  (LIFT_BOTTOM_MIN_ANGLE + LIFT_BOTTOM_MAX_ANGLE)/2; 
-  top_joint_target_pos_     = -(LIFT_BOTTOM_MIN_ANGLE + LIFT_BOTTOM_MAX_ANGLE)/2;   
+  bottom_joint_target_pos_  = percentage * ( (LIFT_BOTTOM_MIN_ANGLE + LIFT_BOTTOM_MAX_ANGLE)/100.0 ); 
+  top_joint_target_pos_     = percentage * ( -(LIFT_BOTTOM_MIN_ANGLE + LIFT_BOTTOM_MAX_ANGLE)/100.0 );   
+  
   // Create a new animation from the current position to the requested position
   createAndAttachAnimation(calcAnimationTime(), false);
-}
-
-void LiftController::setLiftHigh()
-{    
-  bottom_joint_target_pos_  =  LIFT_BOTTOM_MAX_ANGLE; 
-  top_joint_target_pos_     = -LIFT_BOTTOM_MAX_ANGLE; 
-  // Create a new animation from the current position to the requested position
-  createAndAttachAnimation(calcAnimationTime(), false);         
 }
 
 void LiftController::createAndAttachAnimation(double duration, bool repeat)

@@ -31,11 +31,11 @@
   </node> -->
 
 
-  <node pkg="rose20_platform" type="platform_tf" name="platform_tf" output="screen" />
+  <node pkg="rose21_platform_tf" type="rose21_platform_tf" name="platform_tf" output="screen" />
 
-  <node pkg="rose20_platform" type="drive_controller" name="drive_controller" output="screen" />
+  <node pkg="rose21_platform" type="drive_controller" name="drive_controller" output="screen" />
 
-  <node pkg="rose20_platform" type="lift_tf" name="lift_tf" output="screen" />
+  <node pkg="rose21_lift_tf" type="rose21_lift_tf" name="lift_tf" output="screen" />
 
   <node pkg="rose20_gazebo_plugins" type="SimWheelController" name="sim_lift_controller" output="screen" />
 

@@ -27,8 +27,8 @@
 
 #include "rose_common/common.hpp"
 #include "rose_conversions/conversions.hpp"
-#include "rose20_platform/lift.h"
-#include "rose20_platform/lift_control.h"
+#include "rose_base_msgs/lift_command.h"
+#include "rose_base_msgs/lift_state.h"
 
 #define LIFT_PRISMATIC_SPEED  (M_PI/12.0)  // [rad/s]
 #define LIFT_BOTTOM_MAX_ANGLE (M_PI/2.0 - M_PI/8.0) 
@@ -43,12 +43,10 @@ public:
   void    OnUpdate(const common::UpdateInfo & /*info*/);
   
 private:     
-  void    CB_SetLiftStatus(const rose20_platform::lift::ConstPtr& lift_message);
+  void    CB_SetLiftStatus(const rose_base_msgs::lift_command::ConstPtr& lift_message);
   double  calcAnimationTime();
   void    createAndAttachAnimation(double duration, bool repeat);
-  void    setLiftLow();
-  void    setLiftMid();
-  void    setLiftHigh();
+  void    setLift(float percentage);
        
   double                    cur_lift_bottom_pos_;
   double                    cur_lift_top_pos_;

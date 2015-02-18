@@ -25,7 +25,7 @@
 #include "tf_helper/tf_helper.hpp"
 #include "opteq_wheelunits_01/wheel_unit.hpp"
 #include "action_result_message.hpp"
-#include "rose20_platform/wheelunit_states.h"
+#include "rose_base_msgs/wheelunit_states.h"
 
 #include "shared_variables/shared_variable.hpp"
 
@@ -34,11 +34,11 @@
 
 #include "server_multiple_client/server_multiple_client.hpp"
 
-#include "rose20_platform/wheelunit_states.h"
-#include "rose20_platform/wheelunit_statesAction.h"
-#include "rose20_platform/wheelunit_statesActionGoal.h"
-#include "rose20_platform/wheelunit_statesActionResult.h"
-#include "rose20_platform/wheelunit_statesActionFeedback.h"
+#include "rose_base_msgs/wheelunit_states.h"
+#include "rose_base_msgs/wheelunit_statesAction.h"
+#include "rose_base_msgs/wheelunit_statesActionGoal.h"
+#include "rose_base_msgs/wheelunit_statesActionResult.h"
+#include "rose_base_msgs/wheelunit_statesActionFeedback.h"
 
 #include "rose20_gazebo_plugins/sim_wheel_unit_controller.hpp"
 
@@ -47,7 +47,7 @@ using namespace shared_variables;
 class SimWheelController
 {
   protected:
-    typedef ServerMultipleClient<rose20_platform::wheelunit_statesAction> SMC;
+    typedef ServerMultipleClient<rose_base_msgs::wheelunit_statesAction> SMC;
 
   public:
     SimWheelController();
@@ -64,7 +64,7 @@ class SimWheelController
     bool  UpdateWheelUnitControllers();
     bool  PublishWheelUnitStates(); 
 
-    //void  CB_WheelUnitStatesRequest(const rose20_platform::wheelunit_states::ConstPtr& wheelunit_states);
+    //void  CB_WheelUnitStatesRequest(const rose_base_msgs::wheelunit_states::ConstPtr& wheelunit_states);
     void  CB_FR_enc_pos(const std_msgs::Int32::ConstPtr& msg);
     void  CB_FR_enc_vel(const std_msgs::Int32::ConstPtr& msg);
     void  CB_FL_enc_pos(const std_msgs::Int32::ConstPtr& msg);
@@ -74,7 +74,7 @@ class SimWheelController
     void  CB_BL_enc_pos(const std_msgs::Int32::ConstPtr& msg);
     void  CB_BL_enc_vel(const std_msgs::Int32::ConstPtr& msg);
 
-    void  CB_WheelUnitStatesRequest(const rose20_platform::wheelunit_statesGoalConstPtr& goal, SMC* smc);
+    void  CB_WheelUnitStatesRequest(const rose_base_msgs::wheelunit_statesGoalConstPtr& goal, SMC* smc);
     
   private:
     string                  name_;

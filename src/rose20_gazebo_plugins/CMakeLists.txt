@@ -4,8 +4,8 @@ project(rose20_gazebo_plugins)
 find_package(catkin REQUIRED COMPONENTS 
   gazebo_ros
   roscomm 
+  rose_base_msgs
   rose_common
-  rose20_platform
   server_multiple_client
   shared_variables
 )
@@ -33,10 +33,10 @@ catkin_package(
       NeckController 
       WheelUnitController
     CATKIN_DEPENDS 
+      gazebo_ros
       roscomm 
-      rose_common 
-      rose_conversions
-      rose20_platform 
+      rose_base_msgs
+      rose_common
       server_multiple_client
       shared_variables
     DEPENDS 

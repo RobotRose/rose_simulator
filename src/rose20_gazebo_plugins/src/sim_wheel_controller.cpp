@@ -40,7 +40,7 @@ SimWheelController::SimWheelController(string name, ros::NodeHandle n)
     smc_->startServer();
 
     // Publishers
-    wheelunit_states_pub_   = n.advertise<rose20_platform::wheelunit_states>("/wheel_controller/wheelunit_states", 1);
+    wheelunit_states_pub_   = n.advertise<rose_base_msgs::wheelunit_states>("/wheel_controller/wheelunit_states", 1);
     FR_caster_pub_          = n.advertise<std_msgs::Int32>("/sim_wheel_controller/FR_caster/req_pos", 1);
     FR_wheel_pub_           = n.advertise<std_msgs::Int32>("/sim_wheel_controller/FR_wheel/req_vel", 1);
     FL_caster_pub_          = n.advertise<std_msgs::Int32>("/sim_wheel_controller/FL_caster/req_pos", 1);
@@ -218,7 +218,7 @@ bool SimWheelController::PublishWheelUnitStates()
     ROS_DEBUG_NAMED(ROS_NAME, "Sim PublishWheelUnitStates");
 
     // Fill message with lowlevel values
-    rose20_platform::wheelunit_states wheelunit_states; 
+    rose_base_msgs::wheelunit_states wheelunit_states; 
     wheelunit_states.angle_FR       = (float)wheelunits_.at("FR").measured_rotation_;   
     wheelunit_states.angle_FL       = (float)wheelunits_.at("FL").measured_rotation_;
     wheelunit_states.angle_BR       = (float)wheelunits_.at("BR").measured_rotation_;
@@ -255,7 +255,7 @@ bool SimWheelController::PublishWheelUnitStates()
     BL_transform_->Broadcast();
 }
 
-void SimWheelController::CB_WheelUnitStatesRequest(const rose20_platform::wheelunit_statesGoalConstPtr& goal, SMC* smc)
+void SimWheelController::CB_WheelUnitStatesRequest(const rose_base_msgs::wheelunit_statesGoalConstPtr& goal, SMC* smc)
 {
     // Transfer data to the wheel units 
     wheelunits_.at("FR").set_rotation_ = goal->requested_state.angle_FR;
@@ -271,7 +271,7 @@ void SimWheelController::CB_WheelUnitStatesRequest(const rose20_platform::wheelu
     ROS_DEBUG_NAMED(ROS_NAME, "Sim CB_WheelUnitStatesRequest: FR[%d, %2.1f] FL[%d, %2.1f] BR[%d, %2.1f] BL[%d, %2.1f]", goal->requested_state.angle_FR, goal->requested_state.velocity_FR, goal->requested_state.angle_FL, goal->requested_state.velocity_FL, goal->requested_state.angle_BR, goal->requested_state.velocity_BR, goal->requested_state.angle_BL, goal->requested_state.velocity_BL);
 
     // Write to the simulation controller
-    rose20_platform::wheelunit_statesResult server_result;
+    rose_base_msgs::wheelunit_statesResult server_result;
     if(writeWheelStates())  //!  @todo OH what if canceled in the mean time?
     {
         ROS_DEBUG_NAMED(ROS_NAME, "Successfully set requested wheelunits states.");
