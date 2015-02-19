@@ -27,7 +27,7 @@
 #include "action_result_message.hpp"
 #include "rose_base_msgs/wheelunit_states.h"
 
-#include "shared_variables/shared_variable.hpp"
+#include "rose_shared_variables/shared_variable.hpp"
 
 #include <std_msgs/Float64.h>
 #include <std_msgs/Int32.h>
@@ -42,7 +42,7 @@
 
 #include "rose20_gazebo_plugins/sim_wheel_unit_controller.hpp"
 
-using namespace shared_variables;
+using namespace rose_shared_variables;
 
 class SimWheelController
 {
