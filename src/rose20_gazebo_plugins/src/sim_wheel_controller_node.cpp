@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     ros::NodeHandle n;
     ros::Rate r(100);        
 
-    SimWheelController* sim_wheel_controller = new SimWheelController("sim_wheel_controller", n);
+    SimWheelController* sim_platform_controller = new SimWheelController("sim_platform_controller", n);
     tf_odom_map    = new TFHelper("tf_odom_map", n, "/map", "/base_link");
     tf_odom_map->setTransform(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
     //tf_odom_map->Broadcast();
@@ -24,14 +24,14 @@ int main(int argc, char *argv[])
         begin = ros::Time::now();
         
 
-        if(!sim_wheel_controller->isEnabled())
+        if(!sim_platform_controller->isEnabled())
             continue;
 
         // Check the watchdog
-        if(!sim_wheel_controller->checkWatchdog())
+        if(!sim_platform_controller->checkWatchdog())
         {
             ROS_WARN_NAMED(ROS_NAME, "Watchdog error!");
-            sim_wheel_controller->disable();
+            sim_platform_controller->disable();
             continue;
         }
 
@@ -48,8 +48,8 @@ int main(int argc, char *argv[])
         }
 
         // Update and publish the wheelunit states if succesfull
-        if(sim_wheel_controller->UpdateWheelUnitControllers())
-            sim_wheel_controller->PublishWheelUnitStates();
+        if(sim_platform_controller->UpdateWheelUnitControllers())
+            sim_platform_controller->PublishWheelUnitStates();
 
         ros::spinOnce();
         r.sleep();
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     }
 
     
-    delete sim_wheel_controller;
+    delete sim_platform_controller;
 
     return 0;
 }

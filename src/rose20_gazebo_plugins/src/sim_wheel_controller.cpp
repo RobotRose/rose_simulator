@@ -36,19 +36,19 @@ SimWheelController::SimWheelController(string name, ros::NodeHandle n)
     BR_prev_T_      = ros::Time::now(); 
     BL_prev_T_      = ros::Time::now(); 
 
-    smc_ = new SMC(n_, "wheel_controller", boost::bind(&SimWheelController::CB_WheelUnitStatesRequest, this, _1, _2));
+    smc_ = new SMC(n_, "platform_controller", boost::bind(&SimWheelController::CB_WheelUnitStatesRequest, this, _1, _2));
     smc_->startServer();
 
     // Publishers
-    wheelunit_states_pub_   = n.advertise<rose_base_msgs::wheelunit_states>("/wheel_controller/wheelunit_states", 1);
-    FR_caster_pub_          = n.advertise<std_msgs::Int32>("/sim_wheel_controller/FR_caster/req_pos", 1);
-    FR_wheel_pub_           = n.advertise<std_msgs::Int32>("/sim_wheel_controller/FR_wheel/req_vel", 1);
-    FL_caster_pub_          = n.advertise<std_msgs::Int32>("/sim_wheel_controller/FL_caster/req_pos", 1);
-    FL_wheel_pub_           = n.advertise<std_msgs::Int32>("/sim_wheel_controller/FL_wheel/req_vel", 1);
-    BR_caster_pub_          = n.advertise<std_msgs::Int32>("/sim_wheel_controller/BR_caster/req_pos", 1);
-    BR_wheel_pub_           = n.advertise<std_msgs::Int32>("/sim_wheel_controller/BR_wheel/req_vel", 1);
-    BL_caster_pub_          = n.advertise<std_msgs::Int32>("/sim_wheel_controller/BL_caster/req_pos", 1);
-    BL_wheel_pub_           = n.advertise<std_msgs::Int32>("/sim_wheel_controller/BL_wheel/req_vel", 1);
+    wheelunit_states_pub_   = n.advertise<rose_base_msgs::wheelunit_states>("/platform_controller/wheelunit_states", 1);
+    FR_caster_pub_          = n.advertise<std_msgs::Int32>("/sim_platform_controller/FR_caster/req_pos", 1);
+    FR_wheel_pub_           = n.advertise<std_msgs::Int32>("/sim_platform_controller/FR_wheel/req_vel", 1);
+    FL_caster_pub_          = n.advertise<std_msgs::Int32>("/sim_platform_controller/FL_caster/req_pos", 1);
+    FL_wheel_pub_           = n.advertise<std_msgs::Int32>("/sim_platform_controller/FL_wheel/req_vel", 1);
+    BR_caster_pub_          = n.advertise<std_msgs::Int32>("/sim_platform_controller/BR_caster/req_pos", 1);
+    BR_wheel_pub_           = n.advertise<std_msgs::Int32>("/sim_platform_controller/BR_wheel/req_vel", 1);
+    BL_caster_pub_          = n.advertise<std_msgs::Int32>("/sim_platform_controller/BL_caster/req_pos", 1);
+    BL_wheel_pub_           = n.advertise<std_msgs::Int32>("/sim_platform_controller/BL_wheel/req_vel", 1);
 
     // Subscribers
     // wheelunit_states_sub_   = n_.subscribe("/drive_controller/wheelunit_states_request", 1, &SimWheelController::CB_WheelUnitStatesRequest, this);
