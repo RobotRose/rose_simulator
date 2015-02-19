@@ -10,7 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   rose_common
   rose_transformations
   server_multiple_client
-  shared_variables
+  rose_shared_variables
 )
 
 set(CMAKE_CXX_FLAGS "-std=c++0x -g") # TODO OH: -g is DEBUG FLAG
@@ -44,7 +44,7 @@ catkin_package(
       rose_common
       rose_transformations
       server_multiple_client
-      shared_variables
+      rose_shared_variables
     DEPENDS 
       gazebo_ros
 )

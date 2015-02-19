@@ -19,7 +19,7 @@
   <build_depend>rose_common</build_depend>
   <build_depend>rose_transformations</build_depend>
   <build_depend>server_multiple_client</build_depend>
-  <build_depend>shared_variables</build_depend>
+  <build_depend>rose_shared_variables</build_depend>
 
   <run_depend>gazebo_ros</run_depend>
   <run_depend>opteq_wheelunits_01</run_depend>
@@ -29,7 +29,7 @@
   <run_depend>rose_common</run_depend>
   <run_depend>rose_transformations</run_depend>
   <run_depend>server_multiple_client</run_depend>
-  <run_depend>shared_variables</run_depend>
+  <run_depend>rose_shared_variables</run_depend>
 
   <export>
   </export>
