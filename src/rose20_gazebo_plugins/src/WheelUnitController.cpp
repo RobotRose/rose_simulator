@@ -73,8 +73,8 @@ void WheelUnitController::Load(physics::ModelPtr model, sdf::ElementPtr sdf)
   pub_enc_wheel_vel_     = n_.advertise<std_msgs::Float64>("wheel_unit/" + wheel_namespace_ + "/enc_vel", 5);
   
   // Subscribers
-  sub_caster_pos_   = n_.subscribe("sim_wheel_controller/" + caster_namespace_ + "/req_pos", 1, &WheelUnitController::CB_SetRequestedCasterPos, this);
-  sub_wheel_vel_    = n_.subscribe("sim_wheel_controller/" + wheel_namespace_  + "/req_vel", 1, &WheelUnitController::CB_SetRequestedWheelVel, this);
+  sub_caster_pos_   = n_.subscribe("sim_platform_controller/" + caster_namespace_ + "/req_pos", 1, &WheelUnitController::CB_SetRequestedCasterPos, this);
+  sub_wheel_vel_    = n_.subscribe("sim_platform_controller/" + wheel_namespace_  + "/req_vel", 1, &WheelUnitController::CB_SetRequestedWheelVel, this);
       
   // Initialize variables
   cur_caster_pos_ = caster_joint_->GetAngle(1).Radian();

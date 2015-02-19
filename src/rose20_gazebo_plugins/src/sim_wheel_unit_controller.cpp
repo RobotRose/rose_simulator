@@ -41,8 +41,8 @@ SimWheelUnitController::SimWheelUnitController(ros::NodeHandle n, string wheel_u
   pub_enc_wheel_vel_     = n_.advertise<std_msgs::Int32>("/wheel_unit/" + wheel_namespace_ + "/enc_vel", 5);
   
   // Subscribers
-  sub_caster_pos_   = n_.subscribe("sim_wheel_controller/" + caster_namespace_ + "/req_pos", 1, &SimWheelUnitController::CB_SetRequestedCasterPos, this);
-  sub_wheel_vel_    = n_.subscribe("sim_wheel_controller/" + wheel_namespace_  + "/req_vel", 1, &SimWheelUnitController::CB_SetRequestedWheelVel, this);
+  sub_caster_pos_   = n_.subscribe("sim_platform_controller/" + caster_namespace_ + "/req_pos", 1, &SimWheelUnitController::CB_SetRequestedCasterPos, this);
+  sub_wheel_vel_    = n_.subscribe("sim_platform_controller/" + wheel_namespace_  + "/req_vel", 1, &SimWheelUnitController::CB_SetRequestedWheelVel, this);
       
   cur_caster_vel_ = 0.0;
   cur_caster_pos_ = 0.0;
