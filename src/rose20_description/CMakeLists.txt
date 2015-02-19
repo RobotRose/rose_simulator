@@ -30,5 +30,6 @@ add_custom_command(
       COMMAND gzsdf print ${PROJECT_SOURCE_DIR}/rose20/rose20.urdf > ${PROJECT_SOURCE_DIR}/rose20/rose20.sdf
   	  DEPENDS ${PROJECT_SOURCE_DIR}/rose20/rose20.urdf)
 
-add_custom_target(generate_rose20_urdf ALL DEPENDS ${PROJECT_SOURCE_DIR}/rose20/rose20.urdf )
 add_custom_target(generate_rose20_sdf ALL DEPENDS ${PROJECT_SOURCE_DIR}/rose20/rose20.sdf)
+
+#! @todo OH [IMPR]: Add install of urdf's and sdf's
